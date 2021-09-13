@@ -5,6 +5,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## To do
+- Materiaux étoile
+    - Ajouter la lumière émise par l'étoile
+    - Ajouter une texture à l'étoile
+    - Ajouter un halo pour l'étoile
+    - Paramétrage de couleur de l'étoile
+    - Lien entre la couleur de l'étoile et sa température
+- Ajouter une texture pour la planète
+- Supprimer le reflet de la planète (euh)
+- Mini-appli : visualiseur d'étoiles (splittable)
+- Mini-appli : visualiseur de planètes (splittable)
 
 ## [Unreleased]
 ### Added
