@@ -1,21 +1,25 @@
 const planetsRevolving = function (scene) {
 
-    let starOptions = {
+    const starOptions = {
         diameter: 2,
         updatable: true
     };
 
-    let planetOptions = {
+    const planetOptions = {
         diameter: 1,
         updatable: true
     };
 
-    const star = BABYLON.MeshBuilder.CreateSphere("star", starOptions);
-    const planet = BABYLON.MeshBuilder.CreateSphere("planet", planetOptions);  
-    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, new BABYLON.Vector3(0, 0, 0));
-    
     const trajectoryRadius = 4;
     const precisionSteps = 50;
+
+    const V_ORIGIN = new BABYLON.Vector3(0,0,0);    //Origine du repère
+
+    const star = BABYLON.MeshBuilder.CreateSphere("star", starOptions);
+    const planet = BABYLON.MeshBuilder.CreateSphere("planet", planetOptions);  
+    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, V_ORIGIN);
+    
+    
     let trajectory = [];
 
     // TODO : faire une fonction qui calcule n'importe quelle trajectoire elliptique, pas juste un cercle
@@ -25,14 +29,20 @@ const planetsRevolving = function (scene) {
     let trajectoryLine = BABYLON.MeshBuilder.CreateLines("trajectory", {points: trajectory});
     trajectoryLine.color = new BABYLON.Color4(1,0,0,1);
 
-    const pos = new BABYLON.Vector3(trajectoryRadius,0,0);
-    planet.position = pos;
+    const PLANET_POSITION = new BABYLON.Vector3(trajectoryRadius,0,0);
+    planet.position = PLANET_POSITION;
     camera.attachControl(canvas, true);
 
-    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(4, 4, 0));
+    //De nouveaux paramètres pourront être ajoutés pour les visuels, comme la température de l'étoile (pour sa couleur) ou la luminosité souhaitée
+    const visualsParameters = {
+        star: star, 
+        planet: planet, 
+        originLight: V_ORIGIN
+    };
+
+    objectVisuals (scene, visualsParameters);
+
     let frame = 0;
-
-
     //Partie animation de la planète
     scene.onBeforeRenderObservable.add(()=> {
         planet.position = trajectory[frame];     //La planète suivra toujours les coordonées utilisées pour créer la trajectoire, garder absolument ce système
