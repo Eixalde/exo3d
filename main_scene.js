@@ -1,6 +1,7 @@
 const createScene = function (engine) {
     const scene = new BABYLON.Scene(engine); 
-    planetsRevolving(scene);
+    const generalUI = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("generalUI");
+    planetsRevolving(scene,generalUI);
     scene.debugLayer.show({ // L'inspector fourni par babylon.js, permet de manipuler assez largement la scène pendant son exécution
         embedMode: true
     });
