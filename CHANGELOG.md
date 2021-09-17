@@ -4,14 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## To do
-- Materiaux étoile
-    - Lien entre la couleur de l'étoile et sa température
-- Ajouter une texture pour la planète
-- Mini-appli : visualiseur d'étoiles (splittable)
-- Mini-appli : visualiseur de planètes (splittable)
-
 ## [Unreleased]
+
+## [O.O.6] - 2021-09-16
+### Added
+- Ajout d'une mini-interface pour la vitesse de simulation
+- Implémentation des changements de vitesse via les boutons
+
+### Changed
+- Modification du système d'animation
+
+## [0.0.5] - 2021-09-15
 ### Added
 - Ajout d'une texture basique pour l'étoile
 - Déplacement de la source de lumière au centre de l'étoile
