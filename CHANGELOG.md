@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+# [0.0.7] - 2021-09-16
+### Fixed
+- Remplacement de la source de la texture pour une version locale
+
 ## [O.O.6] - 2021-09-16
 ### Added
 - Ajout d'une mini-interface pour la vitesse de simulation
@@ -21,9 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ajout de l'effet de brillance pour l'étoile
 - Ajout d'un paramétrage de couleur pour l'étoile
 - Création d'un fichier "objectVisuals" pour l'aspect visuel du projet
+>>>>>>> CHANGELOG.md
 
 ### Changed
-- Mise à jour de l'UI debug avec l'inspector babylon
+- Passage de la texture en niveaux de gris
 
 ## [0.0.4] - 2021-09-13
 ### Changed

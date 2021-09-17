@@ -1,7 +1,6 @@
 const objectVisuals = function (scene, {star, planet, originLight}){
-    // Texture de la Lune (le seul résultat en noir et blanc qui s'accorde avec l'aspect que l'on veut donner à l'étoile pour l'instant)
-    // TODO : trouver/faire une vraie texture d'étoile en noir et blanc
-    const STAR_TEXTURE =  "https://lh3.googleusercontent.com/proxy/sUOBaBXqE3pCFrG9jqwHYB1K_q0i5tQnvMapmex3fr7VhXOhsEP80-Hu77Dbwckq0zQlNt2hAhXV_Yd9sCpBwv8HmFHHzHy_vlY";
+    // Source de la texture : https://www.solarsystemscope.com/textures/
+    const STAR_TEXTURE =  "resources/2k_sun.svg";
     
     let starColor = new BABYLON.Color3(1,0.6,0.5);
     let starMat = new BABYLON.StandardMaterial("starMat",scene);    
