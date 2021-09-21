@@ -17,7 +17,6 @@ const planetsRevolving = function (scene, UI) {
 
     const star = BABYLON.MeshBuilder.CreateSphere("star", starOptions);
     const planet = BABYLON.MeshBuilder.CreateSphere("planet", planetOptions);  
-    const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 5, V_ORIGIN);
     
     const trajectory = new Array(PRECISION_STEPS+1);    //Il faut compter un point supplémentaire pour fermer la trajectoire
 
@@ -30,7 +29,6 @@ const planetsRevolving = function (scene, UI) {
 
     const PLANET_POSITION = new BABYLON.Vector3(TRAJECTORY_RADIUS,0,0);
     planet.position = PLANET_POSITION;
-    camera.attachControl(canvas, true);
 
     //De nouveaux paramètres pourront être ajoutés pour les visuels, comme la température de l'étoile (pour sa couleur) ou la luminosité souhaitée
     const visualsParameters = {
@@ -58,4 +56,5 @@ const planetsRevolving = function (scene, UI) {
     const animSpeed = 0.5;
     animatable = scene.beginAnimation(planet,0,PRECISION_STEPS,true,animSpeed);   //Il faut aller jusqu'au dernier indice, donc "PRECISION_STEPS"
     emulSpeed(scene,UI,animatable);
+    cameraModes(scene,UI,star,planet);
 };
