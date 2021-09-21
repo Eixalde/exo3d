@@ -6,7 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-# [0.0.7] - 2021-09-16
+## [0.0.8] - 2021-09-20
+### Added
+- Ajout d'un générateur de menus à boutons
+- Possibilité de changer de caméra pour suivre la planète
+- Ajout d'une caméra libre
+
+### Changed
+- Prise en compte des collisions pour les caméras
+
+## [0.0.7] - 2021-09-16
 ### Fixed
 - Remplacement de la source de la texture pour une version locale
 
