@@ -16,7 +16,14 @@ const planetsRevolving = function (scene, UI) {
     const V_ORIGIN = new BABYLON.Vector3(0,0,0);    //Origine du repère
 
     const star = BABYLON.MeshBuilder.CreateSphere("star", starOptions);
-    const planet = BABYLON.MeshBuilder.CreateSphere("planet", planetOptions);  
+
+    //Planet is now an object so it can handle properties, like the fact that it is from the solar system or not, or its diameter
+    //This shall be applied to star as well, especially for camera settings and other dimension-dependant features in general
+    const planet = { 
+        mesh: BABYLON.MeshBuilder.CreateSphere("planet", planetOptions),
+        isFromSolarSystem : true,
+        diameter: planetOptions.diameter
+    } 
     
     const trajectory = new Array(PRECISION_STEPS+1);    //Il faut compter un point supplémentaire pour fermer la trajectoire
 
@@ -28,15 +35,18 @@ const planetsRevolving = function (scene, UI) {
     trajectoryLine.color = new BABYLON.Color4(1,0,0,1);
 
     const PLANET_POSITION = new BABYLON.Vector3(TRAJECTORY_RADIUS,0,0);
-    planet.position = PLANET_POSITION;
+    planet.mesh.position = PLANET_POSITION;
+    
+    planet.mesh.animations = [];
+    const ANIM_SPEED = 6;   //Custom parameter : define the number of frames needed between two keys of animation. Higher = slower animation
 
     //De nouveaux paramètres pourront être ajoutés pour les visuels, comme la température de l'étoile (pour sa couleur) ou la luminosité souhaitée
     const visualsParameters = {
         star: star, 
         planet: planet, 
-        originLight: V_ORIGIN
+        originLight: V_ORIGIN,
+        animationSpeed: ANIM_SPEED
     };
-    
     objectVisuals (scene, visualsParameters);
     
     //Inspiré du tutoriel de babylon.js sur l'animation avec clés : https://doc.babylonjs.com/start/chap3/animation
@@ -44,17 +54,15 @@ const planetsRevolving = function (scene, UI) {
     const planetKeys = new Array(PRECISION_STEPS+1);    //Il faut compter une position supplémentaire pour boucler l'animation
     for (const i of planetKeys.keys()){
         planetKeys[i] = {
-            frame: i,
+            frame: ANIM_SPEED*i,
             value: trajectory[i]
         };
     }
     animPlanet.setKeys(planetKeys);
-    planet.animations = [];
-    planet.animations.push(animPlanet);
+    planet.mesh.animations.push(animPlanet);
 
     let animatable;     //Inspiré de l'exemple suivant : https://www.babylonjs-playground.com/#14EGUT#26
-    const animSpeed = 0.5;
-    animatable = scene.beginAnimation(planet,0,PRECISION_STEPS,true,animSpeed);   //Il faut aller jusqu'au dernier indice, donc "PRECISION_STEPS"
+    animatable = scene.beginAnimation(planet.mesh,0,ANIM_SPEED*PRECISION_STEPS, true);   //From first frame "0" to last "ANIM_SPEED*PRECISION_STEPS"
     emulSpeed(scene,UI,animatable);
     cameraModes(scene,UI,star,planet);
 };

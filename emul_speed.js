@@ -5,7 +5,7 @@ const emulSpeed = function (scene,UI,animatable){
         buttonLabels : ["Pause", "Ralenti", "Normal"]           //Nom des boutons
     }
 
-    const ANIMATION_SPEEDS = [0, 0.2, 0.5];
+    const ANIMATION_SPEEDS = [0, 0.4, 1];
 
     const gridParameters = {
         UI: UI,

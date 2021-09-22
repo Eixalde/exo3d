@@ -1,12 +1,32 @@
-const objectVisuals = function (scene, {star, planet, originLight}){
+const objectVisuals = function (scene, {star, planet, originLight, animationSpeed}){
     // Source de la texture : https://www.solarsystemscope.com/textures/
     const STAR_TEXTURE =  "resources/2k_sun.svg";
+    const PLANET_TEXTURE = "resources/2k_earth.svg";
     
     let starColor = new BABYLON.Color3(1,0.6,0.5);
     let starMat = new BABYLON.StandardMaterial("starMat",scene);    
     starMat.diffuseTexture = new BABYLON.Texture (STAR_TEXTURE, scene);
     starMat.emissiveColor = starColor;
     star.material = starMat;
+
+    const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3);             //Arbitrary color (brown), not in caps because it will depend on other parameters
+    let planetMat = new BABYLON.StandardMaterial("planetMat",scene);
+    if (planet.isFromSolarSystem){
+        planetMat.diffuseTexture = new BABYLON.Texture (PLANET_TEXTURE, scene, {invertY: false});
+    } else {
+        planetMat.diffuseColor = planetColor;
+    }
+    planet.mesh.material = planetMat;
+
+    //Reminder : 60 is the fps value, no need to use a variable to stock it
+    const planetRotateAnim = new BABYLON.Animation("rotateAnim", "rotation.y", 60, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    const REVOLUTION_PERIOD = 50;  //Arbitrary period of revolution (in frames) !! Warning : do not make it equal to PRECISION_STEPS (see planets_revolving.js)
+    const planetRotateKeys = [{frame: 0, value: 2 * Math.PI},                       //Counterclockwise rotation, from 2*pi to 0
+                              {frame: animationSpeed*REVOLUTION_PERIOD, value: 0}];
+
+    planetRotateAnim.setKeys(planetRotateKeys);
+    planet.mesh.animations.push(planetRotateAnim);
+    scene.beginAnimation(planet.mesh,0,animationSpeed*REVOLUTION_PERIOD,true);
 
     // Partie lumière/brillance de l'étoile
 
