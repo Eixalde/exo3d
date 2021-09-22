@@ -11,7 +11,7 @@ const cameraModes = function (scene,UI,star,planet){
 
     //Caméra centrée sur la planète
     const planetCamDist = 3;    //Devra dépendre de la taille de la planète
-    const planetCamera = new BABYLON.ArcFollowCamera("planetCamera",-Math.PI / 2, Math.PI / 6, planetCamDist, planet, scene);
+    const planetCamera = new BABYLON.ArcFollowCamera("planetCamera",-Math.PI / 2, Math.PI / 6, planetCamDist, planet.mesh, scene);
 
     //Caméra libre
     //TODO : prévoir un mini tutoriel pour les commandes
@@ -26,7 +26,7 @@ const cameraModes = function (scene,UI,star,planet){
     freeCamera.checkCollisions = true;
     freeCamera.ellipsoid = new BABYLON.Vector3(hitboxRadius, hitboxRadius, hitboxRadius);
     star.checkCollisions = true;
-    planet.checkCollisions = true;
+    planet.mesh.checkCollisions = true;
 
     const CAMERA_MODES_LABELS = {
         menuLabel: "Type de caméra :",                          //Nom de l'interface
