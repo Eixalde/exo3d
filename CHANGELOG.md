@@ -12,13 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Applied Moon texture on the satellite
 - Made the satellite rotate around the planet
 
-## [0.0.9] - 2021-09-22
-## Added
+## [0.0.11] - 2021-09-22
+### Added
+- Made a Milky Way-textured skybox
+
+## [O.0.9] - 2021-09-22
+### Added
 - Added texture of the Earth to directory
 - Applied texture on the planet
 - Made the planet rotate on itself
 
-## Changed
+### Changed
 - Made the planet an object with properties
 
 ## [0.0.8] - 2021-09-20

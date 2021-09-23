@@ -3,6 +3,7 @@ const objectVisuals = function (scene, {star, planet, satellite, originLight, an
     const STAR_TEXTURE =  "resources/2k_sun.svg";
     const PLANET_TEXTURE = "resources/2k_earth.svg";
     const SATELLITE_TEXTURE = "resources/2k_moon.jpg";
+    const SKYBOX_TEXTURE = "resources/8k_stars.jpg";
     
     let starColor = new BABYLON.Color3(1,0.6,0.5);
     let starMat = new BABYLON.StandardMaterial("starMat",scene);    
@@ -62,4 +63,9 @@ const objectVisuals = function (scene, {star, planet, satellite, originLight, an
     let gl = new BABYLON.GlowLayer("glow", scene);
     gl.intensity = 1.25;
     gl.referenceMeshToUseItsOwnMaterial(star);
+
+    const SKYBOX_SIZE = 3;      //Arbitrary factor for the size of the skybox (quite large at 3 though)
+    let starsSkybox = new BABYLON.PhotoDome("skybox", SKYBOX_TEXTURE, {}, scene);
+    starsSkybox.scaling = new BABYLON.Vector3(SKYBOX_SIZE, SKYBOX_SIZE, SKYBOX_SIZE);   //Need to enlarge the skybox so the user doesn't zoom out into the skybox limit too early
+    starsSkybox.mesh.checkCollisions = true;    //Ensures that the user can't go out of the universe (forbidden by physicists)
 };
