@@ -10,6 +10,11 @@ const planetsRevolving = function (scene, UI) {
         updatable: true
     };
 
+    const satelliteOptions = {
+        diameter: 0.3,
+        updatable: true
+    };
+
     const TRAJECTORY_RADIUS = 8;
     const PRECISION_STEPS = 100;
 
@@ -24,6 +29,15 @@ const planetsRevolving = function (scene, UI) {
         isFromSolarSystem : true,
         diameter: planetOptions.diameter
     } 
+
+    const satellite = {
+        mesh: BABYLON.MeshBuilder.CreateSphere("satellite",satelliteOptions),
+        diameter: satelliteOptions.diameter,
+        distance: 2      //Arbitrary position relative to the planet
+    }
+
+    satellite.mesh.parent = planet.mesh;
+    satellite.mesh.position = new BABYLON.Vector3(satellite.distance, 0, 0);
     
     const trajectory = new Array(PRECISION_STEPS+1);    //Il faut compter un point supplémentaire pour fermer la trajectoire
 
@@ -44,6 +58,7 @@ const planetsRevolving = function (scene, UI) {
     const visualsParameters = {
         star: star, 
         planet: planet, 
+        satellite: satellite,
         originLight: V_ORIGIN,
         animationSpeed: ANIM_SPEED
     };
