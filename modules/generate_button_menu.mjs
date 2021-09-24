@@ -30,3 +30,5 @@ const generateButtonMenu = function ({UI, gridLabels, actionOnClick, hAlignment,
     }
     UI.addControl(menuGrid);
 };
+
+export {generateButtonMenu};

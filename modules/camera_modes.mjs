@@ -1,4 +1,6 @@
-const cameraModes = function (scene,UI,star,planet){
+import { generateButtonMenu } from "../modules.mjs";
+
+const cameraModes = function (scene, UI, star, planet, canvas){
 
     //TODO : trouver un moyen de définir les trois variables hitboxRadius, starCamDist et planetCamDist en fonction des dimensions des corps célestes
     //Note : les constantes ci-dessous sont amenées à dépendre d'un autre paramètre et ne sont pas des constante pures, elles ne sont pas en majuscules
@@ -63,3 +65,5 @@ const cameraModes = function (scene,UI,star,planet){
 
     generateButtonMenu(cameraGridParameters);
 };
+
+export {cameraModes};

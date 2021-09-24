@@ -32,3 +32,5 @@ const debugUI = function (scene){
         meshIndex++;
     }));    
 };
+
+export {debugUI};

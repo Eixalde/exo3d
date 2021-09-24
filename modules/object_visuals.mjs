@@ -69,3 +69,5 @@ const objectVisuals = function (scene, {star, planet, satellite, originLight, an
     starsSkybox.scaling = new BABYLON.Vector3(SKYBOX_SIZE, SKYBOX_SIZE, SKYBOX_SIZE);   //Need to enlarge the skybox so the user doesn't zoom out into the skybox limit too early
     starsSkybox.mesh.checkCollisions = true;    //Ensures that the user can't go out of the universe (forbidden by physicists)
 };
+
+export {objectVisuals};

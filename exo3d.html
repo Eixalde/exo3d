@@ -26,31 +26,11 @@
         <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
         <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
         <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
-        <script src="planets_revolving.js"></script>
-        <script src="main_scene.js"></script>
-        <script src="debug_UI.js"></script>
-        <script src="objectVisuals.js"></script>
-        <script src="emul_speed.js"></script>
-        <script src="camera_modes.js"></script>
-        <script src="generate_button_menu.js"></script>
+        <script type="module" src="main_scene.js"></script>
     </head>
 
     <body>
         <canvas id="renderCanvas" touch-action="none"></canvas> <!-- touch-action="none" for best results from PEP -->
-
-        <script>
-            const canvas = document.getElementById("renderCanvas");
-            const engine = new BABYLON.Engine(canvas, true);
-            const scene = createScene(engine); 
-
-            engine.runRenderLoop(function () {
-                    scene.render();
-            });
-
-            window.addEventListener("resize", function () {
-                    engine.resize();
-            });
-        </script>
    </body>
 
 </html>
