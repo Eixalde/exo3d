@@ -6,15 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.12] - 2021-09-24
+### Changed
+- Changed the project's framework into a module-based one
+- Renamed the .js files as .mjs files
+
+## [0.0.11] - 2021-09-22
+### Added
+- Made a Milky Way-textured skybox
+
 ## [0.0.10] - 2021-09-22
 ### Added
 - Created a satellite that follows the planet
 - Applied Moon texture on the satellite
 - Made the satellite rotate around the planet
-
-## [0.0.11] - 2021-09-22
-### Added
-- Made a Milky Way-textured skybox
 
 ## [O.0.9] - 2021-09-22
 ### Added

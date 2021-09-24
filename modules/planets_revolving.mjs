@@ -1,4 +1,6 @@
-const planetsRevolving = function (scene, UI) {
+import { objectVisuals, emulSpeed, cameraModes } from "../modules.mjs";
+
+const planetsRevolving = function (scene, UI, canvas) {
 
     const starOptions = {
         diameter: 2,
@@ -78,6 +80,8 @@ const planetsRevolving = function (scene, UI) {
 
     let animatable;     //Inspiré de l'exemple suivant : https://www.babylonjs-playground.com/#14EGUT#26
     animatable = scene.beginAnimation(planet.mesh,0,ANIM_SPEED*PRECISION_STEPS, true);   //From first frame "0" to last "ANIM_SPEED*PRECISION_STEPS"
-    emulSpeed(scene,UI,animatable);
+    emulSpeed(scene, UI, animatable, canvas);   //giving canvas as parameter for emulSpeed
     cameraModes(scene,UI,star,planet);
 };
+
+export {planetsRevolving};

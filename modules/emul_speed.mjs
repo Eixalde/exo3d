@@ -1,3 +1,5 @@
+import { generateButtonMenu } from "../modules.mjs";
+
 const emulSpeed = function (scene,UI,animatable){
 
     const EMUL_SPEED_LABELS = {
@@ -25,3 +27,5 @@ const emulSpeed = function (scene,UI,animatable){
 
     generateButtonMenu(gridParameters);
 };
+
+export {emulSpeed};
