@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.4] - 2021-10-06
+
+### Changed
+
+- Changed the project to OOP
+
 ## [0.8.3] - 2021-09-27
 
 ### Added
@@ -42,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Applied Moon texture on the satellite
 - Made the satellite rotate around the planet
 
-## [O.6.0] - 2021-09-22
+## [0.6.0] - 2021-09-22
 
 ### Added
 
@@ -72,7 +78,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remplacement de la source de la texture pour une version locale
 
-## [O.4.0] - 2021-09-16
+## [0.4.0] - 2021-09-16
 
 ### Added
 
