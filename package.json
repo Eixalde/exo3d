@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "packageManager": "yarn@3.0.2",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "jest-environment-node",
+    "transform": {}
+  },
+  "devDependencies": {
+    "jest": "^27.2.4"
+  },
+  "dependencies": {}
+}
