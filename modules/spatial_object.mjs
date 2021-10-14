@@ -17,26 +17,26 @@ class SpatialObject {
       texture,
       color,
       inclinationAngle,
-      temperature,
+      temperature
     },
     scene
   ) {
-    this.mesh = BABYLON.MeshBuilder.CreateSphere('celestialBody', {
-      diameter: diameter,
-      updatable: true,
-    })
     this.texture = texture
     this.color = color
     this.objectMat = new BABYLON.StandardMaterial('cbMat', scene)
     this.texture = new BABYLON.Texture(texture, scene)
     this.distanceToParent = distanceToParent
-    this.mesh.position = originalPosition
   }
 }
 
 class Star extends SpatialObject {
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
+    this.mesh = BABYLON.CreateSphere('celestialBody', {
+      diameter: this.diameter,
+      updatable: true
+    })
+    this.mesh.position = spatialObjectParams.originalPosition
     this.objectMat.diffuseTexture = this.texture // Applies both texture and color, only for the star
     this.objectMat.emissiveColor = this.color
     this.mesh.material = this.objectMat
@@ -46,6 +46,11 @@ class Star extends SpatialObject {
 class Planet extends SpatialObject {
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
+    this.mesh = BABYLON.CreateSphere('celestialBody', {
+      diameter: spatialObjectParams.diameter,
+      updatable: true
+    })
+    this.mesh.position = spatialObjectParams.originalPosition
     if (this.texture) {
       this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the planet, texture by default (if existing)
     } else {
@@ -55,4 +60,17 @@ class Planet extends SpatialObject {
   }
 }
 
-export { Star, Planet }
+class Ring extends SpatialObject {
+  constructor(spatialObjectParams, scene) {
+    super(spatialObjectParams, scene)
+    this.mesh = BABYLON.CreateDisc('disc', {
+      radius: spatialObjectParams.diameter / 2,
+      sideOrientation: BABYLON.Mesh.DOUBLESIDE
+    })
+    this.objectMat.diffuseTexture = this.texture
+    this.mesh.material = this.objectMat
+    this.mesh.rotation.x = Math.PI / 2 - Math.PI / 9
+  }
+}
+
+export { Star, Planet, Ring }

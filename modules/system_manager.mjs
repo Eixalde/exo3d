@@ -4,6 +4,7 @@ import {
   AnimManager,
   Star,
   Planet,
+  Ring
 } from '../exo3d.mjs'
 
 class GravitationalSystemManager {
@@ -20,6 +21,7 @@ class GravitationalSystemManager {
     const PLANET_TEXTURE = 'resources/2k_earth.svg'
     const SATELLITE_TEXTURE = 'resources/2k_moon.jpg'
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
+    const RING_TEXTURE = 'resources/ring.svg'
 
     const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
     const starOptions = {
@@ -29,7 +31,7 @@ class GravitationalSystemManager {
       color: starColor,
       originalPosition: V_ORIGIN,
       inclinationAngle: 0, // inclination and temperature aren't important now, but they're ready for the next features
-      temperature: 5000,
+      temperature: 5000
     }
 
     const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown), not in caps because it will depend on other parameters
@@ -41,7 +43,7 @@ class GravitationalSystemManager {
       color: planetColor,
       originalPosition: PLANET_POSITION,
       inclinationAngle: 0,
-      temperature: 0, // may seem cold, but it's not as cold as my office right now
+      temperature: 0 // may seem cold, but it's not as cold as my office right now
     }
 
     const satelliteOptions = {
@@ -51,14 +53,26 @@ class GravitationalSystemManager {
       color: undefined, // satellite does not need a color, only a texture
       originalPosition: undefined, // same for its original position, as it will be modified just as it becomes a child of the planet
       inclinationAngle: 0,
-      temperature: 0,
+      temperature: 0
+    }
+
+    const ringOptions = {
+      diameter: 3,
+      texture: RING_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      originalPosition: new BABYLON.Vector3(0, 0, 0),
+      inclinationAngle: 0,
+      temperature: 0
     }
 
     const star = new Star(starOptions, scene)
     const planet = new Planet(planetOptions, scene)
     const satellite = new Planet(satelliteOptions, scene) // satellite is considered a planet because it has the same parameters right now
+    const ring = new Ring(ringOptions, scene)
 
     satellite.mesh.parent = planet.mesh
+    ring.mesh.parent = planet.mesh
     satellite.mesh.position = new BABYLON.Vector3(
       satellite.distanceToParent,
       0,
@@ -76,7 +90,7 @@ class GravitationalSystemManager {
       )
     }
     let trajectoryLine = BABYLON.MeshBuilder.CreateLines('trajectory', {
-      points: trajectory,
+      points: trajectory
     })
     trajectoryLine.color = new BABYLON.Color4(1, 0, 0, 1)
 
@@ -85,7 +99,7 @@ class GravitationalSystemManager {
       path: trajectory,
       planet: planet,
       satellite: satellite,
-      steps: PRECISION_STEPS,
+      steps: PRECISION_STEPS
     }
 
     const anims = new Animations(scene, animationParameters)
@@ -101,6 +115,7 @@ class GravitationalSystemManager {
     this.light.diffuse = star.color // Couleur projetée sur les objets autour de l'étoile
     this.light.specular = new BABYLON.Color3.Black() //Empêche les reflets de type "boule de billard"
     this.light.range = 100 // Ce paramètre doit être soigneusement retenu, c'est ce qui permettra d'éclairer - ou pas - les objets éloignés de l'étoile
+    this.light.intensity = 2
 
     const gl = new BABYLON.GlowLayer('glow', scene)
     gl.intensity = 1.25
