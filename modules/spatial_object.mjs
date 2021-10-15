@@ -9,6 +9,13 @@ class SpatialObject {
   texture
   color
   objectMat
+
+  /**
+   * Creates a spatial object (no specific classification).
+   * @param {object} spatialObjectParams - Multiple paramaters needed for any spatial object.
+   * @param {scene} scene - The current scene.
+   */
+
   constructor(
     {
       diameter,
@@ -17,13 +24,13 @@ class SpatialObject {
       texture,
       color,
       inclinationAngle,
-      temperature,
+      temperature
     },
     scene
   ) {
     this.mesh = BABYLON.MeshBuilder.CreateSphere('celestialBody', {
       diameter: diameter,
-      updatable: true,
+      updatable: true
     })
     this.texture = texture
     this.color = color
@@ -35,6 +42,11 @@ class SpatialObject {
 }
 
 class Star extends SpatialObject {
+  /**
+   * Creates a spatial object : a star.
+   * @param {object} spatialObjectParams - Multiple paramaters needed for any spatial object.
+   * @param {scene} scene - The current scene.
+   */
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
     this.objectMat.diffuseTexture = this.texture // Applies both texture and color, only for the star
@@ -44,6 +56,11 @@ class Star extends SpatialObject {
 }
 
 class Planet extends SpatialObject {
+  /**
+   * Creates a spatial object : a planet or a satellite.
+   * @param {object} spatialObjectParams - Multiple paramaters needed for any spatial object.
+   * @param {scene} scene - The current scene.
+   */
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
     if (this.texture) {

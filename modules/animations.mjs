@@ -4,7 +4,7 @@ class Animations {
   animatable
   constructor(scene, { path, planet, satellite, steps }) {
     planet.mesh.animations = []
-    const ANIM_SPEED = 6 // Custom parameter : define the number of frames needed between two keys of animation. Higher = slower animation
+    const ANIM_SPEED = 4 // Custom parameter : define the number of frames needed between two keys of animation. Higher = slower animation
     // Inspiré du tutoriel de babylon.js sur l'animation avec clés : https://doc.babylonjs.com/start/chap3/animation
     const animPlanet = new BABYLON.Animation(
       'xPlanet',
@@ -17,7 +17,7 @@ class Animations {
     for (const i of planetKeys.keys()) {
       planetKeys[i] = {
         frame: ANIM_SPEED * i,
-        value: path[i],
+        value: path[i]
       }
     }
     animPlanet.setKeys(planetKeys)
@@ -34,7 +34,7 @@ class Animations {
     const PLANET_REVOLUTION_PERIOD = 50 // Arbitrary period of revolution (in frames) !! Warning : do not make it equal to PRECISION_STEPS (see planets_revolving.js)
     const planetRotateKeys = [
       { frame: 0, value: 2 * Math.PI }, // Counterclockwise rotation, from 2*pi to 0
-      { frame: ANIM_SPEED * PLANET_REVOLUTION_PERIOD, value: 0 },
+      { frame: ANIM_SPEED * PLANET_REVOLUTION_PERIOD, value: 0 }
     ]
 
     planetRotateAnim.setKeys(planetRotateKeys)
@@ -69,7 +69,7 @@ class Animations {
           0,
           satellite.distanceToParent *
             Math.sin((Math.PI / (SATELLITE_REVOLUTION_PERIOD / 2)) * i)
-        ),
+        )
       }
     }
     satelliteMoveAnim.setKeys(satelliteKeys)

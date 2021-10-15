@@ -3,14 +3,20 @@ import { ButtonMenu } from '../exo3d.mjs'
 class AnimManager {
   currentAnimRatio
   menu
-  // Note : the animatable parameter will be removed when the whole trajectory/animation shift will be effective
+  // NOTE : the animatable parameter will be removed when the whole trajectory/animation shift will be effective
+
+  /**
+   * Creates the animation manager.
+   * @param {object} animatable - An object that contains all animations.
+   */
+
   constructor(animatable) {
     this.currentAnimRatio = 1
     const ALL_ANIM_RATIOS = [0, 0.5, 1, 2]
 
     const EMUL_SPEED_LABELS = {
       menuLabel: "Vitesse de l'animation :", // Nom de l'interface
-      buttonLabels: ['Pause', 'Ralenti', 'Normal', 'Accéléré'], // Nom des boutons
+      buttonLabels: ['Pause', 'Ralenti', 'Normal', 'Accéléré'] // Nom des boutons
     }
 
     const gridParameters = {
@@ -25,7 +31,7 @@ class AnimManager {
             animatable.speedRatio = ALL_ANIM_RATIOS[idx] // animatable.speedRatio will become 'this.currentAnimRatio' after the shift
           }
         }
-      },
+      }
     }
 
     this.menu = new ButtonMenu(gridParameters)
