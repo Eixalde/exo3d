@@ -5,6 +5,19 @@ class CameraModes {
   planetCamera
   freeCamera
   menu
+  /**
+   * Creates all the cameras.
+   * @param {scene} scene - The current scene.
+   * @param {object} star - The star of the system observed.
+   * @param {object} planet - The planet we want to look at.
+   * @param {canvas} canvas - The current canvas.
+   * @constant {number} hitboxRadius - Hitbox of the camera.
+   * @constant {number} starCamDist - Initial distance of the star-camera to the star.
+   * @constant {number} planetCamDist - Initial distance of the planet-camera to the planet.
+   * @constant {number} FREE_CAM_POS - Initial position of the free camera.
+   * @constant {object} CAMERA_MODES_LABELS - Labels for the menu and its buttons.
+   * @constant {object} cameraGridParameters - Parameters needed for a grid menu creation.
+   */
   constructor(scene, star, planet, canvas) {
     // TODO : trouver un moyen de définir les trois variables hitboxRadius, starCamDist et planetCamDist en fonction des dimensions des corps célestes
     // NOTE : les constantes ci-dessous sont amenées à dépendre d'un autre paramètre et ne sont pas des constante pures, elles ne sont pas en majuscules
@@ -61,7 +74,7 @@ class CameraModes {
 
     const CAMERA_MODES_LABELS = {
       menuLabel: 'Type de caméra :', // Nom de l'interface
-      buttonLabels: ['Système/étoile', 'Planète', 'Libre'], // Noms des boutons
+      buttonLabels: ['Système/étoile', 'Planète', 'Libre'] // Noms des boutons
     }
 
     const cameraGridParameters = {
@@ -89,7 +102,7 @@ class CameraModes {
             this.starCamera.detachControl() // On désactive le contrôle de la caméra système/étoile
             break
         }
-      },
+      }
     }
 
     this.menu = new ButtonMenu(cameraGridParameters)

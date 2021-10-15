@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.0] - 2021-10-13
+
+### Added
+
+- Made a trajectory class
+
+### Changed
+
+- Changed the calculation of the trajectory to make it scientifically accurate
+
 ## [0.8.4] - 2021-10-06
 
 ### Changed

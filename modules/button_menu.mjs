@@ -4,13 +4,19 @@ class ButtonMenu {
   gridTitle
   gridLabels
   actionOnClick
+
+  /**
+   * Creates a button menu with specific actions.
+   * @param {object} menuParameters - Multiple paramaters needed for a button menu.
+   */
+
   constructor({
     gridLabels,
     actionOnClick,
     hAlignment,
     vAlignment,
     gridWidth,
-    gridHeight,
+    gridHeight
   }) {
     this.tSize = (window.innerWidth / window.innerHeight) * 7 // Taille de police arbitraire
     this.menuGrid = new BABYLON.GUI.Grid()
