@@ -67,7 +67,9 @@ class Ring extends SpatialObject {
       radius: spatialObjectParams.diameter / 2,
       sideOrientation: BABYLON.Mesh.DOUBLESIDE
     })
+    this.texture.hasAlpha = true
     this.objectMat.diffuseTexture = this.texture
+    this.objectMat.useAlphaFromDiffuseTexture = true
     this.mesh.material = this.objectMat
     this.mesh.rotation.x = Math.PI / 2 - Math.PI / 9
   }
