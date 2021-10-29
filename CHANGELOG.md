@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added all planets to the solar system
+
+### Changed
+
+- Replaced all textures by lowres jpg files
+
+### Fixed
+
+- Fixed the upside down textures problem
+
 ## [0.11.0] - 2021-10-21
 
 ### Changed

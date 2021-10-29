@@ -19,44 +19,83 @@ class GravitationalSystemManager {
   /**
    * @param {BABYLON.Scene} scene - The current scene.
    * @param {BABYLON.GUI} UI - The global Babylon UI for the application.
-   * @param {canvas} canvas - The canvas used by the engine.
+   * @param {canvas} canvas - The canvas used by the engine
    */
   constructor(scene, UI, canvas) {
-    const a = 8 // Semi major axis, because it is a very important parameter, I choose to give it its original name "a"
-    const e = 0.4 // Excentricty, can be anything between 0 included and 1 excluded
-    const V_ORIGIN_STAR = new BABYLON.Vector3(-2 * a * e, 0, 0) // Position of the star, also it is the left focus of the ellipse
+    const a = 60 // Semi major axis, because it is a very important parameter, I choose to give it its original name "a"
+    const e = 0 // Excentricty, can be anything between 0 included and 1 excluded
+    const V_ORIGIN_SUN = new BABYLON.Vector3(-2 * a * e, 0, 0) // Position of the sun, also it is the left focus of the ellipse
+    const EARTH_RADIUS = 1
 
     // Textures' source : https://www.solarsystemscope.com/textures/
     // BUG : earth texture is upside down for some reason, need to be fixed but it can wait the fake svg textures fix
-    const STAR_TEXTURE = 'resources/2k_sun.svg'
-    const PLANET_TEXTURE = 'resources/2k_earth.svg'
-    const SATELLITE_TEXTURE = 'resources/2k_moon.jpg'
+    const SUN_TEXTURE = 'resources/512_sun.jpg'
+    const MERCURY_TEXTURE = 'resources/512_mercury.jpg'
+    const VENUS_TEXTURE = 'resources/512_venus.Jpg'
+    const EARTH_TEXTURE = 'resources/512_earth.jpg'
+    const MOON_TEXTURE = 'resources/512_moon.jpg'
+    const MARS_TEXTURE = 'resources/512_mars.jpg'
+    const SATURN_TEXTURE = 'resources/512_saturn.jpg'
+    const JUPITER_TEXTURE = 'resources/512_jupiter.jpg'
+    const URANUS_TEXTURE = 'resources/512_uranus.jpg'
+    const NEPTUNE_TEXTURE = 'resources/512_neptune.jpg'
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
 
     this.animManager = new AnimManager()
 
-    const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
-    const starOptions = {
+    const sunColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
+    const sunOptions = {
       name: 'Sun',
-      texture: STAR_TEXTURE,
+      diameter: 30 * EARTH_RADIUS,
+      texture: SUN_TEXTURE,
       distanceToParent: 0,
-      color: starColor,
+      color: sunColor,
       inclinationAngle: 0, // Inclination and temperature aren't important now, but they're ready for the next features
       temperature: 5000,
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
       omega: Math.PI / 8,
       revolutionPeriod: 4,
-      diameter: 2,
-      originalPosition: V_ORIGIN_STAR,
+      originalPosition: V_ORIGIN_SUN,
       showStaticTrajectory: false,
       animatable: this.animManager.animatable
     }
 
     const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown), not in caps because it will depend on other parameters
-    const PLANET_POSITION = new BABYLON.Vector3(a, 0, 0)
-    const planetOptions = {
+
+    const mercuryOptions = {
+      name: 'Mercury',
+      diameter: 0.7 * EARTH_RADIUS,
+      texture: MERCURY_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 0.7 * a, e: 0 }, true),
+      omega: -Math.PI,
+      revolutionPeriod: 1.5,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
+
+    const venusOptions = {
+      name: 'Venus',
+      diameter: 0.8 * EARTH_RADIUS,
+      texture: VENUS_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 0.9 * a, e: 0 }, true),
+      omega: -Math.PI,
+      revolutionPeriod: 2.7,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
+
+    const earthOptions = {
       name: 'Earth',
-      texture: PLANET_TEXTURE,
+      diameter: 1,
+      texture: EARTH_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
@@ -64,15 +103,14 @@ class GravitationalSystemManager {
       trajectory: new EllipticalTrajectory({ a: a, e: e }, true),
       omega: -Math.PI,
       revolutionPeriod: 3.65,
-      diameter: 1,
-      originalPosition: PLANET_POSITION,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
-    const satelliteOptions = {
+    const moonOptions = {
       name: 'Moon',
-      texture: SATELLITE_TEXTURE,
+      diameter: 0.3 * EARTH_RADIUS,
+      texture: MOON_TEXTURE,
       distanceToParent: 2, // Arbitrary position relative to the planet
       color: planetColor, // Satellite does not need a color, only a texture
       inclinationAngle: 0,
@@ -80,37 +118,116 @@ class GravitationalSystemManager {
       trajectory: new EllipticalTrajectory({ a: 2, e: 0 }, true),
       omega: Math.PI,
       revolutionPeriod: 1,
-      diameter: 0.3,
-      originalPosition: undefined, // Same for its original position, as it will be modified just as it becomes a child of the planet
       showStaticTrajectory: false,
       animatable: this.animManager.animatable
     }
 
-    const star = new Star(starOptions, scene)
-    const planet = new Planet(planetOptions, scene)
-    const satellite = new Planet(satelliteOptions, scene) // Satellite is considered a planet because it has the same parameters right now
+    const marsOptions = {
+      name: 'Mars',
+      diameter: 0.9 * EARTH_RADIUS,
+      texture: MARS_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 3 * a, e: 0 }, true),
+      omega: -Math.PI / 18,
+      revolutionPeriod: 7,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
 
-    satellite.mesh.parent = planet.mesh
-    satellite.mesh.position = new BABYLON.Vector3(
-      satellite.distanceToParent,
-      0,
-      0
-    )
+    const saturnOptions = {
+      name: 'Saturn',
+      diameter: 12 * EARTH_RADIUS,
+      texture: SATURN_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 7 * a, e: 0 }, true),
+      omega: -Math.PI,
+      revolutionPeriod: 20,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
 
-    this.cameras = new CameraModes(scene, star, planet, canvas)
+    const jupiterOptions = {
+      name: 'Jupiter',
+      diameter: 15 * EARTH_RADIUS,
+      texture: JUPITER_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 10 * a, e: e }, true),
+      omega: -Math.PI / 18,
+      revolutionPeriod: 30,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
+
+    const uranusOptions = {
+      name: 'Uranus',
+      diameter: 3 * EARTH_RADIUS,
+      texture: URANUS_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 14 * a, e: e }, true),
+      omega: -Math.PI,
+      revolutionPeriod: 40,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
+
+    const neptuneOptions = {
+      name: 'Neptune',
+      diameter: 3.5 * EARTH_RADIUS,
+      texture: NEPTUNE_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: 20 * a, e: e }, true),
+      omega: -Math.PI,
+      revolutionPeriod: 60,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
+
+    const sun = new Star(sunOptions, scene)
+    const mercury = new Planet(mercuryOptions, scene)
+    const venus = new Planet(venusOptions, scene)
+    const earth = new Planet(earthOptions, scene)
+    const moon = new Planet(moonOptions, scene) // Satellite is considered a planet because it has the same parameters right now
+    const mars = new Planet(marsOptions, scene)
+    const saturn = new Planet(saturnOptions, scene)
+    const jupiter = new Planet(jupiterOptions, scene)
+    const uranus = new Planet(uranusOptions, scene)
+    const neptune = new Planet(neptuneOptions, scene)
+
+    moon.mesh.parent = earth.mesh
+    moon.mesh.position = new BABYLON.Vector3(moon.distanceToParent, 0, 0)
+
+    /*Change the focus of the planetCamera by entering anything else than
+    "earth" for the third parameter of the CameraModes constructor*/
+    this.cameras = new CameraModes(scene, sun, earth, canvas)
     UI.addControl(this.animManager.menu.menuGrid)
     UI.addControl(this.cameras.menu.menuGrid)
 
     // Partie lumière/brillance de l'étoile
 
-    this.light = new BABYLON.PointLight('light', V_ORIGIN_STAR)
-    this.light.diffuse = star.color // Couleur projetée sur les objets autour de l'étoile
+    this.light = new BABYLON.PointLight('light', V_ORIGIN_SUN)
+    this.light.diffuse = sun.color // Couleur projetée sur les objets autour de l'étoile
     this.light.specular = new BABYLON.Color3.Black() // Empêche les reflets de type "boule de billard"
-    this.light.range = 300 // Ce paramètre doit être soigneusement retenu, c'est ce qui permettra d'éclairer - ou pas - les objets éloignés de l'étoile
+    this.light.range = 3000 // Ce paramètre doit être soigneusement retenu, c'est ce qui permettra d'éclairer - ou pas - les objets éloignés de l'étoile
+    this.light.intensity = 4
 
     const gl = new BABYLON.GlowLayer('glow', scene)
     gl.intensity = 1.25
-    gl.referenceMeshToUseItsOwnMaterial(star.mesh)
+    gl.referenceMeshToUseItsOwnMaterial(sun.mesh)
 
     const SKYBOX_SIZE = 3 // Arbitrary factor for the size of the skybox (quite large at 3 though)
     this.skybox = new BABYLON.PhotoDome('skybox', SKYBOX_TEXTURE, {}, scene)
