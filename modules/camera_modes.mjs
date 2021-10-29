@@ -1,12 +1,14 @@
 import { ButtonMenu } from '../exo3d.mjs'
-
+/**
+ * Manages all cameras and views for the user.
+ *
+ * @member {BABYLON.ArcRotateCamera} starCamera - A camera focused on the center of the system (the star, mostly).
+ * @member {BABYLON.ArcFollowCamera} planetCamera - A camera focused on the planet.
+ * @member {BABYLON.UniversalCamera} freeCamera - A camera controlled by the user, can move anywhere in the system.
+ * @member {ButtonMenu} menu - The menu for the controls of the cameras.
+ */
 class CameraModes {
-  starCamera
-  planetCamera
-  freeCamera
-  menu
   /**
-   * Creates all the cameras.
    * @param {scene} scene - The current scene.
    * @param {object} star - The star of the system observed.
    * @param {object} planet - The planet we want to look at.

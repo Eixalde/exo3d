@@ -1,40 +1,44 @@
 import { ButtonMenu } from '../exo3d.mjs'
 
+/**
+ * The object that manages every animation - their speed in particular.
+ *
+ * @member {BABYLON.Animatable} animatable - Contains all animations.
+ */
 class AnimManager {
-  currentAnimRatio
-  menu
-  // NOTE : the animatable parameter will be removed when the whole trajectory/animation shift will be effective
-
   /**
-   * Creates the animation manager.
-   * @param {object} animatable - An object that contains all animations.
+   * @constant {Array} ALL_ANIM_RATIOS - The possible speeds for all animations (1 is default, normal speed).
+   * @constant {Array} EMUL_SPEED_LABELS - The labels for the button menu.
+   * @constant {object} menuParameters - The parameters needed for the button menu.
    */
-
-  constructor(animatable) {
-    this.currentAnimRatio = 1
-    const ALL_ANIM_RATIOS = [0, 0.5, 1, 2]
+  constructor() {
+    const ALL_ANIM_RATIOS = [0, 0.5, 1, 2] // 0 : pause, 0.5 : half-speed, 1 : normal, 2 : double speed
 
     const EMUL_SPEED_LABELS = {
-      menuLabel: "Vitesse de l'animation :", // Nom de l'interface
-      buttonLabels: ['Pause', 'Ralenti', 'Normal', 'Accéléré'] // Nom des boutons
+      menuLabel: "Vitesse de l'animation :", // Menu name
+      buttonLabels: ['Pause', 'Ralenti', 'Normal', 'Accéléré'] // Buttons' name
     }
 
-    const gridParameters = {
+    this.animatable = []
+
+    const menuParameters = {
       gridLabels: EMUL_SPEED_LABELS,
       hAlignment: BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT,
       vAlignment: BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP,
       gridWidth: 0.15,
       gridHeight: 0.1,
       actionOnClick: (btnLabel) => {
-        for (const [idx, title] of EMUL_SPEED_LABELS.buttonLabels.entries()) {
-          if (title === btnLabel) {
-            animatable.speedRatio = ALL_ANIM_RATIOS[idx] // animatable.speedRatio will become 'this.currentAnimRatio' after the shift
-          }
-        }
+        const idx = EMUL_SPEED_LABELS.buttonLabels.findIndex(
+          (label) => label === btnLabel
+        )
+        //Puts all animations' speed ratio to the same scale
+        this.animatable.forEach(
+          (anim) => (anim.speedRatio = ALL_ANIM_RATIOS[idx])
+        )
       }
     }
 
-    this.menu = new ButtonMenu(gridParameters)
+    this.menu = new ButtonMenu(menuParameters)
   }
 }
 

@@ -1,13 +1,22 @@
+/**
+ * A menu that allow the user to interact with the scene using buttons.
+ *
+ * @member {number} tSize - The font size for the menu.
+ * @member {BABYLON.GUI.Grid} menuGrid - The grid that contains all the elements of the menu.
+ * @member {Array} gridLabels - The titles for the menu.
+ * @member {function} actionOnClick - The function that has to be run when a button is clicked.
+ */
 class ButtonMenu {
-  tSize
-  menuGrid
-  gridTitle
-  gridLabels
-  actionOnClick
-
   /**
    * Creates a button menu with specific actions.
-   * @param {object} menuParameters - Multiple paramaters needed for a button menu.
+   *
+   * @param {Array} gridLabels - The titles for the menu.
+   * @param {function} actionOnClick - The function that has to be run when a button is clicked.
+   * @param {number} hAlignment - The horizontal alignment for the menu (Babylon constant).
+   * @param {number} vAlignment - The vertical alignment for the menu (Babylon constant).
+   * @param {number} gridWidth - The width of the menu relative to the window (between 0 and 1).
+   * @param {number} gridHeight - The height of the menu relative to the window (between 0 and 1).
+   * @constant {BABYLON.GUI.TextBlock} gridTitle - The description of the menu.
    */
 
   constructor({
@@ -29,10 +38,10 @@ class ButtonMenu {
     this.menuGrid.verticalAlignment = vAlignment
 
     this.menuGrid.fontSize = this.tSize
-    this.gridTitle = new BABYLON.GUI.TextBlock('', this.gridLabels.menuLabel)
-    this.gridTitle.textSize = this.tSize
-    this.gridTitle.color = 'white'
-    this.menuGrid.addControl(this.gridTitle, 0, 0) // Le titre du menu doit être placé en position (0,0), soit le début de la grille
+    const gridTitle = new BABYLON.GUI.TextBlock('', this.gridLabels.menuLabel)
+    gridTitle.textSize = this.tSize
+    gridTitle.color = 'white'
+    this.menuGrid.addControl(gridTitle, 0, 0) // Le titre du menu doit être placé en position (0,0), soit le début de la grille
 
     // Build all buttons
     for (const [idx, title] of this.gridLabels.buttonLabels.entries()) {

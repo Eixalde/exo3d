@@ -1,5 +1,4 @@
 import {
-  Animations,
   CameraModes,
   AnimManager,
   Star,
@@ -7,14 +6,24 @@ import {
   EllipticalTrajectory
 } from '../exo3d.mjs'
 
+/**
+ * The handler for any gravitational system. It instantiates every spatial
+ * object, the cameras, the background and the light.
+ *
+ * @member {BABYLON.PointLight} light - The light source of the planetary system.
+ * @member {BABYLON.PhotoDome} skybox - The skybox of the planetary system.
+ * @member {CameraModes} cameras - The different cameras we use to watch the system.
+ * @member {AnimManager} animManager - The animation manager for all spatial objects.
+ */
 class GravitationalSystemManager {
-  light
-  skybox
+  /**
+   * @param {BABYLON.Scene} scene - The current scene.
+   * @param {BABYLON.GUI} UI - The global Babylon UI for the application.
+   * @param {canvas} canvas - The canvas used by the engine.
+   */
   constructor(scene, UI, canvas) {
-    const PRECISION_STEPS = 300 // Number of points for the static trajectory
     const a = 8 // Semi major axis, because it is a very important parameter, I choose to give it its original name "a"
-    const e = 0 // Excentricty, can be anything between 0 included and 1 excluded
-    const b = Math.sqrt(Math.pow(a, 2) * (1 - Math.pow(e, 2))) // Value of b based on a and e
+    const e = 0.4 // Excentricty, can be anything between 0 included and 1 excluded
     const V_ORIGIN_STAR = new BABYLON.Vector3(-2 * a * e, 0, 0) // Position of the star, also it is the left focus of the ellipse
 
     // Textures' source : https://www.solarsystemscope.com/textures/
@@ -24,37 +33,57 @@ class GravitationalSystemManager {
     const SATELLITE_TEXTURE = 'resources/2k_moon.jpg'
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
 
+    this.animManager = new AnimManager()
+
     const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
     const starOptions = {
-      diameter: 2,
+      name: 'Sun',
       texture: STAR_TEXTURE,
       distanceToParent: 0,
       color: starColor,
-      originalPosition: V_ORIGIN_STAR,
       inclinationAngle: 0, // Inclination and temperature aren't important now, but they're ready for the next features
-      temperature: 5000
+      temperature: 5000,
+      trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
+      omega: Math.PI / 8,
+      revolutionPeriod: 4,
+      diameter: 2,
+      originalPosition: V_ORIGIN_STAR,
+      showStaticTrajectory: false,
+      animatable: this.animManager.animatable
     }
 
     const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown), not in caps because it will depend on other parameters
     const PLANET_POSITION = new BABYLON.Vector3(a, 0, 0)
     const planetOptions = {
-      diameter: 1,
+      name: 'Earth',
       texture: PLANET_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      originalPosition: PLANET_POSITION,
       inclinationAngle: 0,
-      temperature: 0 // May seem cold, but it's not as cold as my office right now
+      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      trajectory: new EllipticalTrajectory({ a: a, e: e }, true),
+      omega: -Math.PI,
+      revolutionPeriod: 3.65,
+      diameter: 1,
+      originalPosition: PLANET_POSITION,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
     }
 
     const satelliteOptions = {
-      diameter: 0.3,
+      name: 'Moon',
       texture: SATELLITE_TEXTURE,
       distanceToParent: 2, // Arbitrary position relative to the planet
-      color: undefined, // Satellite does not need a color, only a texture
-      originalPosition: undefined, // Same for its original position, as it will be modified just as it becomes a child of the planet
+      color: planetColor, // Satellite does not need a color, only a texture
       inclinationAngle: 0,
-      temperature: 0
+      temperature: 0,
+      trajectory: new EllipticalTrajectory({ a: 2, e: 0 }, true),
+      omega: Math.PI,
+      revolutionPeriod: 1,
+      diameter: 0.3,
+      originalPosition: undefined, // Same for its original position, as it will be modified just as it becomes a child of the planet
+      showStaticTrajectory: false,
+      animatable: this.animManager.animatable
     }
 
     const star = new Star(starOptions, scene)
@@ -68,37 +97,16 @@ class GravitationalSystemManager {
       0
     )
 
-    const trajectory = new EllipticalTrajectory({
-      a: a,
-      b: b
-    })
-    const staticTrajectory = trajectory.staticTrajectory(PRECISION_STEPS)
-
-    let trajectoryLine = BABYLON.MeshBuilder.CreateLines('trajectory', {
-      points: staticTrajectory
-    })
-    trajectoryLine.color = new BABYLON.Color3(1, 0, 0)
-
-    const animationParameters = {
-      path: staticTrajectory,
-      planet: planet,
-      satellite: satellite,
-      steps: PRECISION_STEPS
-    }
-
-    const anims = new Animations(scene, animationParameters)
-
-    const animManager = new AnimManager(anims.animatable)
-    const cameras = new CameraModes(scene, star, planet, canvas)
-    UI.addControl(animManager.menu.menuGrid)
-    UI.addControl(cameras.menu.menuGrid)
+    this.cameras = new CameraModes(scene, star, planet, canvas)
+    UI.addControl(this.animManager.menu.menuGrid)
+    UI.addControl(this.cameras.menu.menuGrid)
 
     // Partie lumière/brillance de l'étoile
 
     this.light = new BABYLON.PointLight('light', V_ORIGIN_STAR)
     this.light.diffuse = star.color // Couleur projetée sur les objets autour de l'étoile
     this.light.specular = new BABYLON.Color3.Black() // Empêche les reflets de type "boule de billard"
-    this.light.range = 100 // Ce paramètre doit être soigneusement retenu, c'est ce qui permettra d'éclairer - ou pas - les objets éloignés de l'étoile
+    this.light.range = 300 // Ce paramètre doit être soigneusement retenu, c'est ce qui permettra d'éclairer - ou pas - les objets éloignés de l'étoile
 
     const gl = new BABYLON.GlowLayer('glow', scene)
     gl.intensity = 1.25
