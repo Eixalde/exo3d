@@ -25,6 +25,7 @@
  * because it has no signification otherwise.
  *
  * @member {String} name - The name of the object.
+ * @member {number} diameter - The diameter of the object (no units).
  * @member {number} distanceToParent - The distance to any parent object (no units).
  * @member {String} texture - The link for the texture of the object.
  * @member {BABYLON.Color3} color - The color of the object.
@@ -37,6 +38,7 @@
 class SpatialObject {
   /**
    * @param {String} name - The name of the object.
+   * @param {number} diameter - The diameter of the object (no units).
    * @param {number} distanceToParent - The distance to any parent object (no units).
    * @param {String} texture - The link for the texture of the object.
    * @param {BABYLON.Color3} color - The color of the object.
@@ -45,7 +47,6 @@ class SpatialObject {
    * @param {EllipticalTrajectory} trajectory - The trajectory of the object.
    * @param {number} omega - The speed at which the object rotate on itself (rad/s).
    * @param {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
-   * @param {number} diameter - The diameter of the object (no units).
    * @param {BABYLON.Vector3} originalPosition - The position the object should appear at.
    * @param {boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
    * @param {BABYLON.Animatable} animatable - Contains all animations.
@@ -54,6 +55,7 @@ class SpatialObject {
   constructor(
     {
       name,
+      diameter,
       distanceToParent,
       texture,
       color,
@@ -62,7 +64,6 @@ class SpatialObject {
       trajectory,
       omega,
       revolutionPeriod,
-      diameter,
       originalPosition,
       showStaticTrajectory,
       animatable
@@ -70,6 +71,7 @@ class SpatialObject {
     scene
   ) {
     this.name = name
+    this.diameter = diameter
     this.texture = texture
     this.color = color
     this.objectMat = new BABYLON.StandardMaterial(this.name + 'Mat', scene)
@@ -219,10 +221,10 @@ class Star extends SpatialObject {
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
     this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
-      diameter: spatialObjectParams.diameter,
+      diameter: this.diameter,
       updatable: true
     })
-    this.mesh.position = spatialObjectParams.originalPosition
+    this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
     this.mesh.animations = []
     this.objectMat.diffuseTexture = this.texture // Applies both texture and color, only for the star
     this.objectMat.emissiveColor = this.color
@@ -249,10 +251,10 @@ class Planet extends SpatialObject {
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
     this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
-      diameter: spatialObjectParams.diameter,
+      diameter: this.diameter,
       updatable: true
     })
-    this.mesh.position = spatialObjectParams.originalPosition
+    this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
     this.mesh.animations = []
     if (this.texture) {
       this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the planet, texture by default (if existing)

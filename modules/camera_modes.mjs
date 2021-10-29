@@ -21,12 +21,10 @@ class CameraModes {
    * @constant {object} cameraGridParameters - Parameters needed for a grid menu creation.
    */
   constructor(scene, star, planet, canvas) {
-    // TODO : trouver un moyen de définir les trois variables hitboxRadius, starCamDist et planetCamDist en fonction des dimensions des corps célestes
-    // NOTE : les constantes ci-dessous sont amenées à dépendre d'un autre paramètre et ne sont pas des constante pures, elles ne sont pas en majuscules
-    const hitboxRadius = 2 //Valeur de 2 par défaut car l'étoile a un diamètre de 2 (distance de hitbox = 1 diamètre pour voir l'étoile en entier)
+    const hitboxRadius = star.diameter
 
     // Caméra centrée sur l'étoile/le système
-    const starCamDist = 5 // Même remarque que pour hitboxRadius, ceci devra dépendre de la taille de l'astre
+    const starCamDist = 2 * star.diameter
     this.starCamera = new BABYLON.ArcRotateCamera(
       'starCamera',
       -Math.PI / 2,
@@ -37,7 +35,7 @@ class CameraModes {
     this.starCamera.attachControl(canvas, true)
 
     // Caméra centrée sur la planète
-    const planetCamDist = 3 // Devra dépendre de la taille de la planète
+    const planetCamDist = 3 * planet.diameter
     this.planetCamera = new BABYLON.ArcFollowCamera(
       'planetCamera',
       -Math.PI / 2,
