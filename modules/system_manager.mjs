@@ -21,7 +21,6 @@ class GravitationalSystemManager {
     const PLANET_TEXTURE = 'resources/2k_earth.svg'
     const SATELLITE_TEXTURE = 'resources/2k_moon.jpg'
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
-    const RING_TEXTURE = 'resources/ring.svg'
 
     const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
     const starOptions = {
@@ -56,23 +55,27 @@ class GravitationalSystemManager {
       temperature: 0
     }
 
+    const star = new Star(starOptions, scene)
+    const planet = new Planet(planetOptions, scene)
+    const satellite = new Planet(satelliteOptions, scene) // satellite is considered a planet because it has the same parameters right now
+
+    /* NOTE : consider this part only for merge */
+    const RING_TEXTURE = 'resources/saturn_rings.png'
     const ringOptions = {
       diameter: 3,
       texture: RING_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       originalPosition: new BABYLON.Vector3(0, 0, 0),
-      inclinationAngle: 0,
+      inclinationAngle: Math.PI / 2 - Math.PI / 9,
       temperature: 0
     }
-
-    const star = new Star(starOptions, scene)
-    const planet = new Planet(planetOptions, scene)
-    const satellite = new Planet(satelliteOptions, scene) // satellite is considered a planet because it has the same parameters right now
     const ring = new Ring(ringOptions, scene)
+    ring.mesh.parent = planet.mesh
+    /* end of NOTE */
 
     satellite.mesh.parent = planet.mesh
-    ring.mesh.parent = planet.mesh
+
     satellite.mesh.position = new BABYLON.Vector3(
       satellite.distanceToParent,
       0,
