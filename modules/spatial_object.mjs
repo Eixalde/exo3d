@@ -200,7 +200,7 @@ class SpatialObject {
 
     const actualTraj = new BABYLON.Path3D(evalTraj)
     const actualTrajCurve = actualTraj.getCurve()
-    const line = new BABYLON.CreateLines('li', {
+    const line = new BABYLON.CreateLines(this.name + 'Trajectory', {
       points: actualTrajCurve,
       scene: scene
     })
@@ -230,7 +230,7 @@ class Star extends SpatialObject {
     this.objectMat.emissiveColor = this.color
     this.mesh.material = this.objectMat
     this.buildAnimation(
-      20,
+      100,
       scene,
       spatialObjectParams.showStaticTrajectory,
       spatialObjectParams.animatable
@@ -263,7 +263,7 @@ class Planet extends SpatialObject {
     }
     this.mesh.material = this.objectMat
     this.buildAnimation(
-      20,
+      100,
       scene,
       spatialObjectParams.showStaticTrajectory,
       spatialObjectParams.animatable

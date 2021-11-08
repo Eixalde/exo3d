@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Made a camera for transitioning between other cameras
+- Improved the transition camera to make it work when switching planets
+
+### Changed
+
+- Used a controllable camera to follow the planet
+
+## [0.12.0] - 2021-10-29
+
+### Added
+
 - Added all planets to the solar system
 
 ### Changed

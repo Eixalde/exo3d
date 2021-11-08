@@ -28,10 +28,9 @@ class GravitationalSystemManager {
     const EARTH_RADIUS = 1
 
     // Textures' source : https://www.solarsystemscope.com/textures/
-    // BUG : earth texture is upside down for some reason, need to be fixed but it can wait the fake svg textures fix
     const SUN_TEXTURE = 'resources/512_sun.jpg'
     const MERCURY_TEXTURE = 'resources/512_mercury.jpg'
-    const VENUS_TEXTURE = 'resources/512_venus.Jpg'
+    const VENUS_TEXTURE = 'resources/512_venus.jpg'
     const EARTH_TEXTURE = 'resources/512_earth.jpg'
     const MOON_TEXTURE = 'resources/512_moon.jpg'
     const MARS_TEXTURE = 'resources/512_mars.jpg'
@@ -84,7 +83,7 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      temperature: 0,
       trajectory: new EllipticalTrajectory({ a: 0.9 * a, e: 0 }, true),
       omega: -Math.PI,
       revolutionPeriod: 2.7,
@@ -99,7 +98,7 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      temperature: 0,
       trajectory: new EllipticalTrajectory({ a: a, e: e }, true),
       omega: -Math.PI,
       revolutionPeriod: 3.65,
@@ -129,7 +128,7 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      temperature: 0,
       trajectory: new EllipticalTrajectory({ a: 3 * a, e: 0 }, true),
       omega: -Math.PI / 18,
       revolutionPeriod: 7,
@@ -144,10 +143,10 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
-      trajectory: new EllipticalTrajectory({ a: 7 * a, e: 0 }, true),
+      temperature: 0,
+      trajectory: new EllipticalTrajectory({ a: 10 * a, e: 0 }, true),
       omega: -Math.PI,
-      revolutionPeriod: 20,
+      revolutionPeriod: 30,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
@@ -159,10 +158,10 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
-      trajectory: new EllipticalTrajectory({ a: 10 * a, e: e }, true),
+      temperature: 0,
+      trajectory: new EllipticalTrajectory({ a: 7 * a, e: e }, true),
       omega: -Math.PI / 18,
-      revolutionPeriod: 30,
+      revolutionPeriod: 20,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
@@ -174,7 +173,7 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      temperature: 0,
       trajectory: new EllipticalTrajectory({ a: 14 * a, e: e }, true),
       omega: -Math.PI,
       revolutionPeriod: 40,
@@ -189,7 +188,7 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
+      temperature: 0,
       trajectory: new EllipticalTrajectory({ a: 20 * a, e: e }, true),
       omega: -Math.PI,
       revolutionPeriod: 60,
@@ -208,14 +207,32 @@ class GravitationalSystemManager {
     const uranus = new Planet(uranusOptions, scene)
     const neptune = new Planet(neptuneOptions, scene)
 
+    this.gravitationalSystemPlanets = [
+      mercury,
+      venus,
+      earth,
+      mars,
+      jupiter,
+      saturn,
+      uranus,
+      neptune
+    ]
+
     moon.mesh.parent = earth.mesh
     moon.mesh.position = new BABYLON.Vector3(moon.distanceToParent, 0, 0)
 
-    /*Change the focus of the planetCamera by entering anything else than
-    "earth" for the third parameter of the CameraModes constructor*/
-    this.cameras = new CameraModes(scene, sun, earth, canvas)
+    /* Change the focus of the planetCamera by entering anything else than
+    "earth" for the third parameter of the CameraModes constructor */
+    this.cameras = new CameraModes(
+      scene,
+      sun,
+      this.gravitationalSystemPlanets,
+      canvas,
+      this.animManager.animatable
+    )
     UI.addControl(this.animManager.menu.menuGrid)
-    UI.addControl(this.cameras.menu.menuGrid)
+    UI.addControl(this.cameras.cameraMenu.menuGrid)
+    UI.addControl(this.cameras.planetChoiceMenu.menuGrid)
 
     // Partie lumière/brillance de l'étoile
 
