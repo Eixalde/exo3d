@@ -270,5 +270,29 @@ class Planet extends SpatialObject {
     )
   }
 }
+/* NOTE : consider this part only for merge */
+/**
+ * The planetary disc support (for objects like Saturn rings e.g.)
+ * @extends SpatialObject
+ */
+class Ring extends SpatialObject {
+  /**
+   * @param {object} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
+   * @param {BABYLON.Scene} scene - The current scene.
+   */
+  constructor(spatialObjectParams, scene) {
+    super(spatialObjectParams, scene)
+    this.mesh = BABYLON.CreateDisc('disc', {
+      radius: spatialObjectParams.diameter / 2,
+      sideOrientation: BABYLON.Mesh.DOUBLESIDE
+    })
+    this.texture.hasAlpha = true
+    this.objectMat.diffuseTexture = this.texture
+    this.objectMat.useAlphaFromDiffuseTexture = true // Using the alpha included in the texture (for spaces between rings)
+    this.mesh.material = this.objectMat
+    this.mesh.rotation.x = spatialObjectParams.inclinationAngle
+  }
+}
 
-export { Star, Planet }
+export { Star, Planet, Ring }
+/* end of NOTE */

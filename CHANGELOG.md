@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.13.0] - 2021-11-08
+
 ### Added
 
 - Made a camera for transitioning between other cameras
@@ -40,6 +42,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Removed Bob
+
+## [0.10.0] - 2021-11-08
+
+### Added
+
+- Added planetary disc support with Saturn rings
 
 ## [0.9.0] - 2021-10-13
 

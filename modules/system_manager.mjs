@@ -3,7 +3,8 @@ import {
   AnimManager,
   Star,
   Planet,
-  EllipticalTrajectory
+  EllipticalTrajectory,
+  Ring
 } from '../exo3d.mjs'
 
 /**
@@ -150,6 +151,28 @@ class GravitationalSystemManager {
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
+    /* NOTE : consider this part only for merge */
+    const RING_TEXTURE = 'resources/saturn_rings.png'
+    const ringOptions = {
+      diameter: 3,
+      texture: RING_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      originalPosition: new BABYLON.Vector3(0, 0, 0),
+      inclinationAngle: Math.PI / 2 - Math.PI / 9,
+      temperature: 0
+    }
+    const ring = new Ring(ringOptions, scene)
+    ring.mesh.parent = planet.mesh
+    /* end of NOTE */
+
+    satellite.mesh.parent = planet.mesh
+
+    satellite.mesh.position = new BABYLON.Vector3(
+      satellite.distanceToParent,
+      0,
+      0
+    )
 
     const jupiterOptions = {
       name: 'Jupiter',
