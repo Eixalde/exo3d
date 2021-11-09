@@ -13,7 +13,7 @@ Then you can install NPM:
 sudo apt install npm
 ```
 
-## Outils utilisé pour la qualité de code
+## Tools for the quality of the code
 
 ### Pre-commit to have safe commits
 
@@ -43,18 +43,17 @@ npm install standard --global
 npm install snazzy --global
 ```
 
-### Les dépendance locales
+### Local dependencies
 
-Ceci permet d'installer toutes les dépendances locale diu projet (comme par
-exemple jest le gestionnaire de test):
+This allows to install all local dependencies of the project (e.g. the test
+manager "jest")
 
 ```shell
 npm install
 ```
 
-Il est possible que cela affiche quelques "vulnerabilities" due à des
-dépendances de jest. Ce n'est pas grave car il ne sera pas déployé en
-production.
+There may be "vulnerabilities" involved, due to jest's dependencies. It isn't a
+problem because jest won't be deployed in production.
 
 ## Prettier setup on VSCode
 
@@ -62,11 +61,10 @@ production.
 
 Also use the .prettierrc.json config file to get the right config for your own VSCode.
 
-## Comment lancer les tests
+## How to launch tests
 
-Comme nous utilisons les ESM (ECMAcript modules) on ne peut pas utiliser
-la commande simple `npm test` mais à la place il faut utiliser la commande
-(qui active lsupport de ESM):
+As we are using ESM (ECMAscript modules) we can't use the command `npm test` but
+instead we use the following (enables ESM support) :
 
 ```shell
 node --experimental-vm-modules node_modules/jest/bin/jest.js

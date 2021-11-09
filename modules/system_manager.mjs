@@ -20,7 +20,7 @@ class GravitationalSystemManager {
   /**
    * @param {BABYLON.Scene} scene - The current scene.
    * @param {BABYLON.GUI} UI - The global Babylon UI for the application.
-   * @param {canvas} canvas - The canvas used by the engine
+   * @param {canvas} canvas - The canvas used by the engine.
    */
   constructor(scene, UI, canvas) {
     const a = 60 // Semi major axis, because it is a very important parameter, I choose to give it its original name "a"
@@ -257,13 +257,14 @@ class GravitationalSystemManager {
     UI.addControl(this.cameras.cameraMenu.menuGrid)
     UI.addControl(this.cameras.planetChoiceMenu.menuGrid)
 
-    // Partie lumière/brillance de l'étoile
+    /* The light of the scene, it need to come from the star. It also need a
+    glow effect applied on the star. */
 
     this.light = new BABYLON.PointLight('light', V_ORIGIN_SUN)
-    this.light.diffuse = sun.color // Couleur projetée sur les objets autour de l'étoile
-    this.light.specular = new BABYLON.Color3.Black() // Empêche les reflets de type "boule de billard"
-    this.light.range = 3000 // Ce paramètre doit être soigneusement retenu, c'est ce qui permettra d'éclairer - ou pas - les objets éloignés de l'étoile
-    this.light.intensity = 4
+    this.light.diffuse = sun.color // The color diffused on other objects
+    this.light.specular = new BABYLON.Color3.Black() // Avoids white reflections on objects
+    this.light.range = 3000 // How far the light affects the scene
+    this.light.intensity = 4 // The brightness of the light
 
     const gl = new BABYLON.GlowLayer('glow', scene)
     gl.intensity = 1.25

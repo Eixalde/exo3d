@@ -116,70 +116,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Ajout d'un générateur de menus à boutons
-- Possibilité de changer de caméra pour suivre la planète
-- Ajout d'une caméra libre
+- Added a button menu generator
+- Made the camera eventually follow the planet
+- Added a free camera
 
 ### Changed
 
-- Prise en compte des collisions pour les caméras
+- Considered the collisions for the cameras
 
 ## [0.4.1] - 2021-09-16
 
 ### Fixed
 
-- Remplacement de la source de la texture pour une version locale
+- Replaced the online texture by a local one
 
 ## [0.4.0] - 2021-09-16
 
 ### Added
 
-- Ajout d'une mini-interface pour la vitesse de simulation
-- Implémentation des changements de vitesse via les boutons
+- Added a small interface for emulation speed
+- Made the buttons of the interface work
 
 ### Changed
 
-- Modification du système d'animation
+- Modified the animation system
 
 ## [0.3.0] - 2021-09-15
 
 ### Added
 
-- Ajout d'une texture basique pour l'étoile
-- Déplacement de la source de lumière au centre de l'étoile
-- Ajout de l'effet de brillance pour l'étoile
-- Ajout d'un paramétrage de couleur pour l'étoile
-- Création d'un fichier "objectVisuals" pour l'aspect visuel du projet
+- Added basic texture for the star
+- Moved the light source to the center of the star
+- Added a glow effect to the star
+- Added color settings for the star
+- Created a file "objectVisuals" for the project
 
 ### Changed
 
-- Passage de la texture en niveaux de gris
+- Colored the star texture with shades of grey
 
 ## [0.2.1] - 2021-09-13
 
 ### Changed
 
-- Ajout de la to-do list au changelog
+- Added the to-do list to the changelog
 
 ## [0.2.0] - 2021-09-10
 
 ### Added
 
-- Affichage de la liste des Mesh générées
-- Ajout de boutons pour afficher/masquer les Mesh
-- Ajout du changelog
+- Showed the list of the generated meshes
+- Added buttons to show/hide meshes
+- Added changelog
 
 ## [0.1.0] - 2021-09-09
 
 ### Added
 
-- Création des objets "étoile" et "planète"
-- Ajout d'une trajectoire circulaire visible
-- Ajout de la rotation de la planète autour de l'étoile
-- Création d'un main générique et isolation du fichier "planets_revolving"
+- Created "star" and "planet" objects
+- Added a visible round trajectory
+- Made the planet rotate around the star
+- Created a generic main and isolated the file "planets_revolving"
 
 ## [0.0.1] - 2021-09-08
 
 ### Added
 
-- Ajout d'un vrai readme
+- Added a true README
