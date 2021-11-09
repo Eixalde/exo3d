@@ -1,15 +1,19 @@
 import { GravitationalSystemManager } from './exo3d.mjs'
 
+/* Basic creation of a scene with Babylon. */
 const createScene = function (engine, canvas) {
   const scene = new BABYLON.Scene(engine)
   const generalUI =
     BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('generalUI')
-  const _ = new GravitationalSystemManager(scene, generalUI, canvas) //canvas now has to be passed as a parameter for any module that needs it, unlike before (for "emulSpeed" here)
+  /* Canvas has to be passed as a parameter for any module that needs it (for
+  the cameras here) */
+  const _ = new GravitationalSystemManager(scene, generalUI, canvas)
+
+  /* The Babylon lib gives access to an inspector, that allows a lot of good
+  options for debugging. Activate only for debugging ! */
   scene.debugLayer.show({
-    // L'inspector fourni par babylon.js, permet de manipuler assez largement la scène pendant son exécution
-    embedMode: true,
+    embedMode: true
   })
-  //Pour afficher l'UI debug, il faut insérer "debugUI(scene);", sinon seul l'inspector sera actif
   return scene
 }
 

@@ -27,7 +27,7 @@ class ButtonMenu {
     gridWidth,
     gridHeight
   }) {
-    this.tSize = (window.innerWidth / window.innerHeight) * 7 // Taille de police arbitraire
+    this.tSize = (window.innerWidth / window.innerHeight) * 7 // Arbitrary font size
     this.menuGrid = new BABYLON.GUI.Grid()
     this.gridLabels = gridLabels
     this.menuGrid.width = gridWidth
@@ -41,22 +41,22 @@ class ButtonMenu {
     const gridTitle = new BABYLON.GUI.TextBlock('', this.gridLabels.menuLabel)
     gridTitle.textSize = this.tSize
     gridTitle.color = 'white'
-    this.menuGrid.addControl(gridTitle, 0, 0) // Le titre du menu doit être placé en position (0,0), soit le début de la grille
+    this.menuGrid.addControl(gridTitle, 0, 0) // Title menu must be placed in the grid, in the cell of coordinates (0,0)
 
     // Build all buttons
     for (const [idx, title] of this.gridLabels.buttonLabels.entries()) {
-      // Merci à Pierre-Yves Martin pour m'avoir proposé cette syntaxe
+      // Thanks to Pierre-Yves Martin for this syntax
       this.menuGrid.addRowDefinition(1)
       const gridButton = BABYLON.GUI.Button.CreateSimpleButton('', title)
-      gridButton.height = 0.9 // Taille de boutons arbitraire
+      gridButton.height = 0.9 // Arbitrary button size
       gridButton.width = 0.6
       gridButton.background = 'white'
 
-      // On associe au bouton la fonction renseignée via les paramètres
+      // Linking the button with the function passed in parameters
       gridButton.onPointerClickObservable.add(() => {
-        this.actionOnClick(title) // On passe le label du bouton en paramètre pour que chaque menu reconnaisse l'action associée
+        this.actionOnClick(title) // Giving the title of the button to the function so it can recognize it
       })
-      this.menuGrid.addControl(gridButton, idx + 1, 0) // On doit placer le bouton en position idx+1 car la position 0 est prise par le menu (et idx part de 0)
+      this.menuGrid.addControl(gridButton, idx + 1, 0)
     }
   }
 }
