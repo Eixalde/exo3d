@@ -1,0 +1,78 @@
+:root {
+  --bootstrap-color-primary: #0d6efd;
+  --icon-play-two-url: url('resources/play-two-fill.svg');
+  --icon-play-three-url: url('resources/play-three-fill.svg');
+}
+
+html,
+body {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+#container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 0%;
+}
+
+#container .row {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+}
+
+#renderCanvas,
+.overlay {
+  position: absolute;
+}
+
+#renderCanvas {
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.overlay {
+  z-index: 20;
+}
+
+.controls {
+  position: relative;
+}
+
+.icon-custom {
+  background-color: var(--bootstrap-color-primary);
+  mask-size: cover;
+  -webkit-mask-size: cover;
+  background-position: center center;
+  display: inline-block;
+}
+
+.icon-play-two {
+  mask-image: var(--icon-play-two-url);
+  -webkit-mask-image: var(--icon-play-two-url);
+  width: 42px;
+  height: 32px;
+}
+
+.icon-play-three {
+  mask-image: var(--icon-play-three-url);
+  -webkit-mask-image: var(--icon-play-three-url);
+  width: 52px;
+  height: 32px;
+}
+
+input:checked + label > i.icon-custom {
+  background-color: white;
+}
+
+input:hover + label > i.icon-custom {
+  background-color: white;
+}

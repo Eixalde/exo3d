@@ -11,9 +11,9 @@ const createScene = function (engine, canvas) {
 
   /* The Babylon lib gives access to an inspector, that allows a lot of good
   options for debugging. Activate only for debugging ! */
-  scene.debugLayer.show({
-    embedMode: true
-  })
+  // scene.debugLayer.show({
+  //   embedMode: true
+  // })
   return scene
 }
 

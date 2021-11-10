@@ -5,32 +5,136 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>Exo3D : en développement</title>
 
-        <style>
-            html, body {
-                overflow: hidden;
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
+        <!-- bootstrap stuff -->
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
 
-            #renderCanvas {
-                width: 100%;
-                height: 100%;
-                touch-action: none;
-            }
-        </style>
+        <!-- Babylon.js stuff -->
+        <script src="node_modules/babylonjs/babylon.js" defer></script>
+        <script src="node_modules/babylonjs-materials/babylonjs.materials.min.js" defer></script>
+        <script src="node_modules/babylonjs-loaders/babylonjs.loaders.min.js" defer></script>
+        <script src="node_modules/babylonjs-gui/babylon.gui.min.js" defer></script>
 
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
-        <script src="https://preview.babylonjs.com/babylon.js"></script>
-        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
-        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
-        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+        <!-- Our stuff -->
+        <link rel="stylesheet" href="exo3d.css">
         <script type="module" src="main.mjs"></script>
     </head>
 
     <body>
-        <canvas id="renderCanvas" touch-action="none"></canvas> <!-- touch-action="none" for best results from PEP -->
+        <div id="container" class="container-fluid">
+            <!-- touch-action="none" for best results from PEP -->
+            <canvas id="renderCanvas" touch-action="none"></canvas>
+
+            <div class="row align-items-center">
+                <div id="speed" class="controls overlay col">
+                    Animation speed :
+                    <div class="btn-group" role="group">
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="speed"
+                            id="pause"
+                            autocomplete="off"
+                            aria-label="Pause button"
+                        >
+                        <label class="btn btn-outline-primary" for="pause">
+                            <svg class="bi" width="32" height="32" fill="currentColor">
+                                <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#pause-fill"/>
+                            </svg>
+                        </label>
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="speed"
+                            id="slow"
+                            autocomplete="off"
+                            aria-label="Low speed button"
+                        >
+                        <label class="btn btn-outline-primary" for="slow">
+                            <svg class="bi" width="32" height="32" fill="currentColor">
+                                <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#play-fill"/>
+                            </svg>
+                        </label>
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="speed"
+                            id="normal"
+                            autocomplete="off"
+                            aria-label="Medium speed button"
+                            checked
+                        >
+                        <label class="btn btn-outline-primary" for="normal">
+                            <i class="icon-custom icon-play-two"></i>
+                        </label>
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="speed"
+                            id="fast"
+                            autocomplete="off"
+                            aria-label="High speed button"
+                        >
+                        <label class="btn btn-outline-primary" for="fast">
+                            <i class="icon-custom icon-play-three"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="cameraMode" class="controls overlay col">
+                    View :
+                    <div class="btn-group" role="group">
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="cameraMode"
+                            id="star"
+                            autocomplete="off"
+                            checked
+                            aria-label="Camera centered on the star"
+                        >
+                        <label class="btn btn-outline-primary" for="star">Star</label>
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="cameraMode"
+                            id="planet"
+                            autocomplete="off"
+                            aria-label="Camera centered on a planet"
+                        >
+                        <label class="btn btn-outline-primary" for="planet">Planet</label>
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="cameraMode"
+                            id="free"
+                            autocomplete="off"
+                            aria-label="Camera free to move"
+                        >
+                        <label class="btn btn-outline-primary" for="free">Free</label>
+                    </div>
+                </div>
+
+                <div id="cameraPlanetSwitch" class="controls overlay col invisible">
+                    Planet choice :
+                    <button id='prev' class="btn btn-primary" aria-label="Go to previous planet">
+                        <svg class="bi" width="32" height="32" fill="currentColor">
+                            <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-left"/>
+                        </svg>
+                    </button>
+                    <button id='next' class="btn btn-primary" aria-label="Go to next planet">
+                        <svg class="bi" width="32" height="32" fill="currentColor">
+                            <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-right"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
    </body>
 
 </html>

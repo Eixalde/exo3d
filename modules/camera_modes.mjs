@@ -1,5 +1,3 @@
-import { ButtonMenu } from '../exo3d.mjs'
-
 const DEFAULT_STAR_CAM_ALPHA = -Math.PI / 2
 const DEFAULT_STAR_CAM_BETA = Math.PI / 3
 
@@ -12,11 +10,8 @@ const DEFAULT_PLANET_CAM_BETA = (11 * Math.PI) / 24 // Almost flat angle
  * @member {BABYLON.ArcRotateCamera} starCamera - A camera focused on the center of the system (the star, mostly).
  * @member {BABYLON.ArcRotateCamera} planetCamera - A camera focused on the planet.
  * @member {BABYLON.UniversalCamera} freeCamera - A camera controlled by the user, can move anywhere in the system.
- * @member {ButtonMenu} cameraMenu - The menu for the controls of the cameras.
- * @member {ButtonMenu} planetChoiceMenu - The menu for the choice of the planet the user wants to look at.
  */
 class CameraModes {
-
   /**
    * @param {BABYLON.Scene} scene - The current scene.
    * @param {Star} star - The star of the system observed.
@@ -30,7 +25,7 @@ class CameraModes {
     const STAR_CAM_DIST = 2 * star.diameter
     const PLANET_CAM_DIST = 2 * BASE_PLANET.diameter
 
-    // Caméra centrée sur l'étoile/le système
+    // Star-centered camera
     this.starCamera = new BABYLON.ArcRotateCamera(
       'starCamera',
       DEFAULT_STAR_CAM_ALPHA,
@@ -40,7 +35,7 @@ class CameraModes {
     )
     this.starCamera.attachControl(canvas, true)
 
-    // Caméra centrée sur la planète
+    // Planet-centered camera
     const planetCamDist = 3 * BASE_PLANET.diameter
     this.planetCamera = new BABYLON.ArcRotateCamera(
       'planetCamera',
@@ -50,10 +45,10 @@ class CameraModes {
       BASE_PLANET.mesh.position
     )
 
-    // Caméra libre
+    // Free camera
 
-    // TODO : prévoir un mini tutoriel pour les commandes
-    // Position de départ arbitraire pour la caméra libre
+    // TODO : include a tutorial for the controls of the free camera
+    // Arbitrary starting point of the free camera
     const FREE_CAM_POS = new BABYLON.Vector3(
       0,
       star.diameter,
@@ -80,51 +75,37 @@ class CameraModes {
     star.mesh.checkCollisions = true
     BASE_PLANET.mesh.checkCollisions = true
 
-    const CAMERA_MODES_LABELS = {
-      menuLabel: 'Type de caméra :', // Nom de l'interface
-      buttonLabels: ['Système/étoile', 'Planète', 'Libre'] // Noms des boutons
-    }
-
-    const PLANET_CAMERA_LABELS = {
-      menuLabel: 'Planet selection :',
-      buttonLabels: ['Previous', 'Next']
-    }
-
     const allCameras = [this.starCamera, this.planetCamera, this.freeCamera]
 
-    const menuParameters = {
-      gridLabels: CAMERA_MODES_LABELS,
-      hAlignment: BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT,
-      vAlignment: BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP,
-      gridWidth: 0.15,
-      gridHeight: 0.1,
-      actionOnClick: (btnLabel) => {
-        const idx = CAMERA_MODES_LABELS.buttonLabels.findIndex(
-          (label) => label === btnLabel
-        ) // Checking which button was clicked
-        this.changeCameraMode(allCameras[idx], scene, allCameras, animatable, canvas)
+    const CAMERA_MODES_LABELS = ['star', 'planet', 'free']
+    CAMERA_MODES_LABELS.forEach((camLabel, idx) => {
+      document.querySelector('.btn-group #' + camLabel).onclick = () => {
+        this.changeCameraMode(
+          allCameras[idx],
+          scene,
+          allCameras,
+          animatable,
+          canvas
+        )
       }
-    }
+    })
 
-    this.cameraMenu = new ButtonMenu(menuParameters)
-
-    const planetChoiceMenuParameters = {
-      gridLabels: PLANET_CAMERA_LABELS,
-      hAlignment: BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT,
-      vAlignment: BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER,
-      gridWidth: 0.15,
-      gridHeight: 0.25,
-      actionOnClick: (btnLabel) => {
-        // If we are not in planetCamera mode we do nothing
+    const PLANET_CAMERA_LABELS = ['prev', 'next']
+    PLANET_CAMERA_LABELS.forEach((camLabel) => {
+      document.querySelector('.controls #' + camLabel).onclick = () => {
         if (scene.activeCamera !== this.planetCamera) {
           return
         }
 
-        this.changeCameraToNearbyPlanet(btnLabel, PLANET_CAMERA_LABELS, planets, scene, animatable)
+        this.changeCameraToNearbyPlanet(
+          camLabel,
+          PLANET_CAMERA_LABELS,
+          planets,
+          scene,
+          animatable
+        )
       }
-    }
-
-    this.planetChoiceMenu = new ButtonMenu(planetChoiceMenuParameters)
+    })
   }
 
   changeCameraMode(toCamera, scene, allCameras, animatable, canvas) {
@@ -132,6 +113,9 @@ class CameraModes {
     if (scene.activeCamera === toCamera) {
       return
     }
+    document
+      .querySelector('.controls#cameraPlanetSwitch')
+      .classList.add('invisible')
 
     allCameras.forEach((cam) => cam.detachControl()) // Locking all cameras controls
 
@@ -142,16 +126,25 @@ class CameraModes {
       () => {
         scene.activeCamera = toCamera // Switching the active camera to the selected one
         toCamera.attachControl(canvas, true) // Giving controls for the selected camera only
+        if (scene.activeCamera === this.planetCamera) {
+          document
+            .querySelector('.controls#cameraPlanetSwitch')
+            .classList.remove('invisible')
+        }
       },
       animatable
     )
   }
 
-  changeCameraToNearbyPlanet(btnLabel, planetCamLabels, planets, scene, animatable) {
+  changeCameraToNearbyPlanet(
+    btnLabel,
+    planetCamLabels,
+    planets,
+    scene,
+    animatable
+  ) {
     // Checking which button was clicked
-    const idx = planetCamLabels.buttonLabels.findIndex(
-      (label) => label === btnLabel
-    )
+    const idx = planetCamLabels.findIndex((label) => label === btnLabel)
 
     // Identifying the index of the planet the camera is currently looking at
     const current = planets.findIndex(
@@ -168,7 +161,6 @@ class CameraModes {
       changePlanetIndex = previous
     }
 
-
     /* Here we need to create a second camera, because the transition
     camera needs a starting camera and an ending camera. What we do here
     is cloning the planetCamera, teleportating the planetCamera to the
@@ -177,8 +169,7 @@ class CameraModes {
     scene.activeCamera = fakePlanetCamera
     this.planetCamera.target = planets[changePlanetIndex].mesh.position
     this.planetCamera.radius = 3 * planets[changePlanetIndex].diameter
-    this.planetCamera.lowerRadiusLimit =
-      2 * planets[changePlanetIndex].diameter
+    this.planetCamera.lowerRadiusLimit = 2 * planets[changePlanetIndex].diameter
 
     /* The function launched at the end of the transition between cameras */
     const changePlanetCamera = () => {
