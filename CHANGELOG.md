@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.14.0] - 2021-11-10
+
+### Added
+
+- Added an HTML UI for the controls
+- Implemented bootstrap icons and custom icons
+
+### Removed
+
+- Removed the Babylon UI for the controls
+
+### Dead
+
+- Went to hell in CSS
+
 ## [0.13.0] - 2021-11-08
 
 ### Added

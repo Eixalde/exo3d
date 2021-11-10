@@ -270,7 +270,7 @@ class Planet extends SpatialObject {
     )
   }
 }
-/* NOTE : consider this part only for merge */
+
 /**
  * The planetary disc support (for objects like Saturn rings e.g.)
  * @extends SpatialObject
@@ -295,4 +295,3 @@ class Ring extends SpatialObject {
 }
 
 export { Star, Planet, Ring }
-/* end of NOTE */

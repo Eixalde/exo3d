@@ -151,28 +151,22 @@ class GravitationalSystemManager {
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
-    /* NOTE : consider this part only for merge */
+
     const RING_TEXTURE = 'resources/saturn_rings.png'
     const ringOptions = {
-      diameter: 3,
+      diameter: 2.2 * saturnOptions.diameter,
       texture: RING_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       originalPosition: new BABYLON.Vector3(0, 0, 0),
-      inclinationAngle: Math.PI / 2 - Math.PI / 9,
-      temperature: 0
+      inclinationAngle: Math.PI / 2 - Math.PI / 48,
+      temperature: 0,
+      trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
+      omega: 0,
+      revolutionPeriod: 30,
+      showStaticTrajectory: false,
+      animatable: this.animManager.animatable
     }
-    const ring = new Ring(ringOptions, scene)
-    ring.mesh.parent = planet.mesh
-    /* end of NOTE */
-
-    satellite.mesh.parent = planet.mesh
-
-    satellite.mesh.position = new BABYLON.Vector3(
-      satellite.distanceToParent,
-      0,
-      0
-    )
 
     const jupiterOptions = {
       name: 'Jupiter',
@@ -226,6 +220,7 @@ class GravitationalSystemManager {
     const moon = new Planet(moonOptions, scene) // Satellite is considered a planet because it has the same parameters right now
     const mars = new Planet(marsOptions, scene)
     const saturn = new Planet(saturnOptions, scene)
+    const ring = new Ring(ringOptions, scene)
     const jupiter = new Planet(jupiterOptions, scene)
     const uranus = new Planet(uranusOptions, scene)
     const neptune = new Planet(neptuneOptions, scene)
@@ -244,6 +239,8 @@ class GravitationalSystemManager {
     moon.mesh.parent = earth.mesh
     moon.mesh.position = new BABYLON.Vector3(moon.distanceToParent, 0, 0)
 
+    ring.mesh.parent = saturn.mesh
+
     /* Change the focus of the planetCamera by entering anything else than
     "earth" for the third parameter of the CameraModes constructor */
     this.cameras = new CameraModes(
@@ -253,9 +250,6 @@ class GravitationalSystemManager {
       canvas,
       this.animManager.animatable
     )
-    UI.addControl(this.animManager.menu.menuGrid)
-    UI.addControl(this.cameras.cameraMenu.menuGrid)
-    UI.addControl(this.cameras.planetChoiceMenu.menuGrid)
 
     /* The light of the scene, it need to come from the star. It also need a
     glow effect applied on the star. */
