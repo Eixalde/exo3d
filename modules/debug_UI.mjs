@@ -1,52 +1,122 @@
-// NOTE : quite the same thing as Animations, I didn't touch anything besides making some fields. Also DebugUI is super old, almost nothing here will be used
-// The UI debug rework will make this class usable (and used)
+/**
+ * Debug tool, used mostly to manipulate scales in the system.
+ *
+ * @member {BABYLON.GUI.AdvancedDynamicTexture} UI - The UI of the application.
+ * @member {BABYLON.GUI.StackPanel} controlsStackPanel - Stack of controls for the debug.
+ */
 class DebugUI {
-  descUI
-  buttons
-  constructor(scene) {
-    let advancedTexture =
-      BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI')
-    this.buttons = []
-    let meshIndex = 0,
-      tSize = 20
-    this.descUI = new BABYLON.GUI.TextBlock(
-      '',
-      "Liste des Mesh à l'écran (cliquer pour masquer/afficher) :"
-    )
-    this.descUI.textHorizontalAlignment =
-      BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
-    this.descUI.textVerticalAlignment =
+  /**
+   * @param {BABYLON.GUI.AdvancedDynamicTexture} generalUI - The UI of the application.
+   */
+  constructor(generalUI) {
+    this.UI = generalUI
+    this.controlsStackPanel = new BABYLON.GUI.StackPanel()
+    this.controlsStackPanel.horizontalAlignment =
+      BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT
+    this.controlsStackPanel.verticalAlignment =
       BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-    this.descUI.left = tSize
-    this.descUI.textSize = tSize * 1.5
-    this.descUI.color = 'white'
-    advancedTexture.addControl(this.descUI)
+    this.controlsStackPanel.width = 0.2
+    this.controlsStackPanel.height = 1
 
-    scene.meshes.forEach((e) => {
-      this.buttons[meshIndex] = BABYLON.GUI.Button.CreateSimpleButton(
-        '',
-        e.name
-      )
-      this.buttons[meshIndex].horizontalAlignment =
-        BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
-      this.buttons[meshIndex].verticalAlignment =
-        BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP
-      this.buttons[meshIndex].left = tSize
-      this.buttons[meshIndex].top = (meshIndex + 1) * tSize
-      this.buttons[meshIndex].color = 'black'
-      this.buttons[meshIndex].background = 'white'
-      this.buttons[meshIndex].width = (4 * tSize) / window.innerWidth
-      this.buttons[meshIndex].height = tSize / window.innerHeight
-      this.buttons[meshIndex].onPointerClickObservable.add(function () {
-        if (e.isEnabled()) {
-          e.setEnabled(false)
-        } else {
-          e.setEnabled(true)
-        }
-      })
-      advancedTexture.addControl(this.buttons[meshIndex])
-      meshIndex++
+    this.UI.addControl(this.controlsStackPanel)
+    let machin = 10
+    this.addSliderControls(machin, 'machin', 0, 100, (value) => {
+      return 1
     })
+  }
+
+  /**
+   * Create a small slider menu to control a specified value.
+   *
+   * @param {number} controlledValue - The parameter to modify with the UI.
+   * @param {String} labelValue - The name of that parameter.
+   * @param {number} minScale - The minimum value allowed for the parameter.
+   * @param {number} maxScale - The maximum value allowed for the parameter.
+   * @param {function} transitionFunction - Makes any transition needed for objets depending on the parameter.
+   */
+  addSliderControls(
+    controlledValue,
+    labelValue,
+    minScale,
+    maxScale,
+    transitionFunction
+  ) {
+    /* All values for width, height, rows or columns are on a scale from 0
+    (inexistant) to 1 (covers all the container). 0.5 in particular is half
+    the size. */
+    const GRID_WIDTH = 1
+    const GRID_HEIGHT = 0.2
+    const LABEL_HEIGHT = 0.5
+    const FONTSIZE = 15
+    const SLIDER_WIDTH = 0.85
+    const SLIDER_HEIGHT = 0.3
+    const INPUT_WIDTH = 1
+    const INPUT_HEIGHT = 0.4
+
+    const haGrid = new BABYLON.GUI.Grid()
+    haGrid.width = GRID_WIDTH
+    haGrid.height = GRID_HEIGHT
+    /* Adding row and columns one by one is unfortunately the only way to do
+    with grids in Babylon. */
+    haGrid.addRowDefinition(0.5)
+    haGrid.addRowDefinition(0.5)
+    haGrid.addColumnDefinition(0.5)
+    haGrid.addColumnDefinition(0.5)
+    this.controlsStackPanel.addControl(haGrid)
+
+    const controlLabel = new BABYLON.GUI.TextBlock()
+    controlLabel.height = LABEL_HEIGHT
+    controlLabel.color = 'white'
+    controlLabel.text = `Value of ${labelValue} : ${controlledValue.toFixed(3)}`
+    controlLabel.fontSize = FONTSIZE
+    controlLabel.textWrapping = BABYLON.GUI.TextWrapping.WordWrap
+
+    const controlSlider = new BABYLON.GUI.Slider()
+    controlSlider.minimum = minScale
+    controlSlider.maximum = maxScale
+    controlSlider.value = controlledValue
+    controlSlider.height = SLIDER_HEIGHT
+    controlSlider.width = SLIDER_WIDTH
+    controlSlider.color = 'blue'
+    controlSlider.background = 'grey'
+    controlSlider.horizontalAlignment =
+      BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT
+    controlSlider.verticalAlignment =
+      BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER
+
+    controlSlider.onValueChangedObservable.add(function (value) {
+      controlledValue = value
+      controlLabel.text = `Value of ${labelValue} : ${controlledValue.toFixed(
+        3
+      )}`
+      transitionFunction(controlledValue)
+    })
+
+    const controlInput = new BABYLON.GUI.InputText()
+    controlInput.width = INPUT_WIDTH
+    controlInput.height = INPUT_HEIGHT
+    controlInput.fontSize = FONTSIZE
+    controlInput.color = 'white'
+    controlInput.onTextChangedObservable.add(() => {
+      const checkNmb = Number(controlInput.text)
+      if (!isNaN(checkNmb)) {
+        /* The following line maps the entered value between the extremums */
+        const checkNumber = Math.min(
+          controlSlider.maximum,
+          Math.max(checkNmb, controlSlider.minimum)
+        )
+        controlLabel.text = `Value of ${labelValue} ${checkNumber.toFixed(3)}`
+        controlledValue = checkNumber
+        controlSlider.value = controlledValue
+        transitionFunction(controlledValue)
+      }
+    })
+
+    /* The 2nd and 3rd parameters of addControl for a grid is the position in
+    that grid (by rows and column) */
+    haGrid.addControl(controlInput, 1, 1)
+    haGrid.addControl(controlLabel, 0, 0)
+    haGrid.addControl(controlSlider, 1, 0)
   }
 }
 
