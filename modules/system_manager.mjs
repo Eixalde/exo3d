@@ -4,7 +4,8 @@ import {
   Star,
   Planet,
   EllipticalTrajectory,
-  Ring
+  Ring,
+  DebugUI
 } from '../exo3d.mjs'
 
 /**
@@ -272,6 +273,8 @@ class GravitationalSystemManager {
       SKYBOX_SIZE
     ) // Need to enlarge the skybox so the user doesn't zoom out into the skybox limit too early
     this.skybox.mesh.checkCollisions = true // Ensures that the user can't go out of the universe (forbidden by physicists)
+
+    this.debugUI = new DebugUI(UI)
   }
 }
 
