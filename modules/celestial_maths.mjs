@@ -1,3 +1,64 @@
+// Found the code on https://github.com/sergiomb2/ufraw/blob/1aec313/ufraw_routines.c#L246-L294
+// Also refered to the following stackoverflow thread :
+// https://stackoverflow.com/questions/13975917/calculate-colour-temperature-in-k/13982347#13982347
+
+const pow = Math.pow
+/**
+ * Calculate the RGB coding of a given temperature.
+ *
+ * @param {number} temperature - The temperature of a celestial body (in K).
+ * @returns {object} - Returns the RGB coding of that temperature (scaled from 0 to 1).
+ */
+function convertTemperatureToRGB(temperature) {
+  const XYZ_to_RGB = [
+    [3.24071, -0.969258, 0.0556352],
+    [-1.53726, 1.87599, -0.203996],
+    [-0.498571, 0.0415557, 1.05707]
+  ]
+  const RGB = [0, 0, 0]
+  let xD
+  if (temperature <= 4000) {
+    xD =
+      0.27475e9 / pow(temperature, 3) -
+      0.98598e6 / pow(temperature, 2) +
+      1.17444e3 / temperature +
+      0.145986
+  } else if (temperature <= 7000) {
+    xD =
+      -4.607e9 / pow(temperature, 3) +
+      2.9678e6 / pow(temperature, 2) +
+      0.09911e3 / temperature +
+      0.244063
+  } else {
+    xD =
+      -2.0064e9 / pow(temperature, 3) +
+      1.9018e6 / pow(temperature, 2) +
+      0.24748e3 / temperature +
+      0.23704
+  }
+  const yD = -3 * pow(xD, 2) + 2.87 * xD - 0.275
+
+  const CIE_X = xD / yD
+  const CIE_Y = 1
+  const CIE_Z = (1 - xD - yD) / yD
+
+  RGB.forEach((_, index) => {
+    RGB[index] =
+      CIE_X * XYZ_to_RGB[0][index] +
+      CIE_Y * XYZ_to_RGB[1][index] +
+      CIE_Z * XYZ_to_RGB[2][index]
+  })
+  const rgbMax = Math.max(...RGB)
+
+  RGB.forEach((val, index) => {
+    RGB[index] = val / rgbMax
+  })
+
+  /* The returned values are mapped from 0 to 1, this is perfect for the
+  BABYLON.Color3 we will use, but keep that in mind for the tests. */
+  return { red: RGB[0], green: RGB[1], blue: RGB[2] }
+}
+
 /**
  * Takes two neighbouring objects (their trajectory and size) and compare them.
  * The result is a scaling factor by which each object can be enlarged so they
@@ -53,4 +114,4 @@ function compareSystemOrbits(systemCompareParameters) {
   return Math.min(...ALL_SCALING_RATIOS)
 }
 
-export { compareOrbits, compareSystemOrbits }
+export { convertTemperatureToRGB, compareOrbits, compareSystemOrbits }

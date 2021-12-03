@@ -318,7 +318,7 @@ class GravitationalSystemManager {
     this.light.intensity = 4 // The brightness of the light
 
     const gl = new BABYLON.GlowLayer('glow', scene)
-    gl.intensity = 1.25
+    gl.intensity = 1
     gl.referenceMeshToUseItsOwnMaterial(sun.mesh)
 
     const SKYBOX_SIZE = 37500 // Arbitrary factor for the size of the skybox (quite large at 3 though)

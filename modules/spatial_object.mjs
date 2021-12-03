@@ -1,3 +1,5 @@
+import { convertTemperatureToRGB } from '../exo3d.mjs'
+
 /**
  * About the movement animation : tangents and interpolation. I am using
  * Babylon's animation system with keys. Give it some vectors each linked to a
@@ -75,6 +77,7 @@ class SpatialObject {
     this.diameter = diameter
     this.texture = texture
     this.color = color
+    this.temperature = temperature
     this.objectMat = new BABYLON.StandardMaterial(this.name + 'Mat', scene)
     if (texture) {
       this.texture = new BABYLON.Texture(texture, scene)
@@ -231,6 +234,12 @@ class Star extends SpatialObject {
     this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
     this.mesh.animations = []
     this.objectMat.diffuseTexture = this.texture // Applies both texture and color, only for the star
+    const tempToRGB = convertTemperatureToRGB(this.temperature)
+    this.color = new BABYLON.Color3(
+      tempToRGB.red,
+      tempToRGB.green,
+      tempToRGB.blue
+    )
     this.objectMat.emissiveColor = this.color
     this.mesh.material = this.objectMat
     this.buildAnimation(
