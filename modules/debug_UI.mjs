@@ -7,8 +7,12 @@
 class DebugUI {
   /**
    * @param {BABYLON.GUI.AdvancedDynamicTexture} generalUI - The UI of the application.
+   * @param {function} modificationFunction - The function to call when using the sliders.
    */
-  constructor(generalUI) {
+  constructor(generalUI, modificationFunction) {
+    const LOWER_SLIDER_VALUE = 0.1 // Ad hoc value
+    const UPPER_SLIDER_VALUE = 10000 // Ad hoc value
+
     this.UI = generalUI
     this.controlsStackPanel = new BABYLON.GUI.StackPanel()
     this.controlsStackPanel.horizontalAlignment =
@@ -19,10 +23,14 @@ class DebugUI {
     this.controlsStackPanel.height = 1
 
     this.UI.addControl(this.controlsStackPanel)
-    let machin = 10
-    this.addSliderControls(machin, 'machin', 0, 100, (value) => {
-      return 1
-    })
+    let scalingSpatialObjects = 1
+    this.addSliderControls(
+      scalingSpatialObjects,
+      'scalingSpatialObjects',
+      LOWER_SLIDER_VALUE,
+      UPPER_SLIDER_VALUE,
+      modificationFunction
+    )
   }
 
   /**
@@ -108,7 +116,7 @@ class DebugUI {
         controlLabel.text = `Value of ${labelValue} ${checkNumber.toFixed(3)}`
         controlledValue = checkNumber
         controlSlider.value = controlledValue
-        transitionFunction(controlledValue)
+        transitionFunction(controlledValue.toFixed(1))
       }
     })
 

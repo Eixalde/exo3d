@@ -13,7 +13,7 @@ class AnimManager {
     this.animatable = []
     const EMUL_SPEED_LABELS = ['pause', 'slow', 'normal', 'fast']
     EMUL_SPEED_LABELS.forEach((speedLabel, idx) => {
-      document.querySelector('.btn-group #' + speedLabel).onclick = () => {
+      document.querySelector(`.btn-group #${speedLabel}`).onclick = () => {
         this.animatable.forEach(
           (anim) => (anim.speedRatio = ALL_ANIM_RATIOS[idx])
         )

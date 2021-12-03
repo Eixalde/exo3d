@@ -84,8 +84,43 @@
                     </div>
                 </div>
 
+                <div id="viewMode" class="controls overlay col">
+                    Scaling of the system :
+                    <div class="btn-group" role="group">
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="viewMode"
+                            id="realistic"
+                            autocomplete="off"
+                            checked
+                            aria-label="Realistic view of the system, all scales respected"
+                        >
+                        <label class="btn btn-outline-primary" for="realistic">Realistic</label>
+
+                        <input
+                            type="radio"
+                            class="btn-check"
+                            name="viewMode"
+                            id="didactic"
+                            autocomplete="off"
+                            aria-label="Didactic view of the system, scales exagerated for esthetic purposes"
+                        >
+                        <label class="btn btn-outline-primary" for="didactic">Didactic</label>
+                    </div>
+                </div>
+
+                <div id="scalingDisplay" class="controls overlay col">
+                    <div id="scalingStar" class="controls overlay row-6">
+                        Star scale - <span id="starScale">1:1</span>
+                    </div>
+                    <div id="scalingPlanets" class="controls overlay row-6">
+                        Planets scale - <span id="planetsScale">1:1</span>
+                    </div>
+                </div>
+
                 <div id="cameraMode" class="controls overlay col">
-                    View :
+                    Focus of the camera :
                     <div class="btn-group" role="group">
                         <input
                             type="radio"
@@ -94,9 +129,9 @@
                             id="star"
                             autocomplete="off"
                             checked
-                            aria-label="Camera centered on the star"
+                            aria-label="Camera centered on the system"
                         >
-                        <label class="btn btn-outline-primary" for="star">Star</label>
+                        <label class="btn btn-outline-primary" for="star">System</label>
 
                         <input
                             type="radio"

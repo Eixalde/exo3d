@@ -1,5 +1,5 @@
 const DEFAULT_STAR_CAM_ALPHA = -Math.PI / 2
-const DEFAULT_STAR_CAM_BETA = Math.PI / 3
+const DEFAULT_STAR_CAM_BETA = 0
 
 const DEFAULT_PLANET_CAM_ALPHA = -Math.PI / 2
 const DEFAULT_PLANET_CAM_BETA = (11 * Math.PI) / 24 // Almost flat angle
@@ -18,12 +18,24 @@ class CameraModes {
    * @param {Array} planets - The group of planets we want to look at.
    * @param {canvas} canvas - The current canvas.
    * @param {BABYLON.Animatable} animatable - The array containing all animations of the scene.
+   * @param {number} astroUnit - The value of the astronomical unit (in Babylon units).
    */
-  constructor(scene, star, planets, canvas, animatable) {
-    const HIT_BOX_RADIUS = planets[0].diameter
+  constructor(scene, star, planets, canvas, animatable, astroUnit) {
+    const HIT_BOX_RADIUS = planets[0].getVisualDiameter()
     const BASE_PLANET = planets[0] // The planet pointed by the planetCamera by default
-    const STAR_CAM_DIST = 2 * star.diameter
-    const PLANET_CAM_DIST = 2 * BASE_PLANET.diameter
+    // Placing the camera far from the star to see the entire system (2 times the largest trajectory is enough)
+    const STAR_CAM_DIST = 2 * planets.at(-1).trajectory.a
+    const MIN_SYSTEM_CAM_DIST = 2 * star.getVisualDiameter()
+    const PLANET_CAM_DIST = 2 * BASE_PLANET.getVisualDiameter()
+
+    /* The number of AU the camera can see up to (must be larger than the actual
+    size of the hitbox). I should then use that size but I have zero idea of how
+    to get it effectively, because the size of the hitbox is NOT measured in AU.
+    */
+    const CAMERA_FAR_SIGHT = 5000 * astroUnit
+    /* Represents how much the camera will modify its distance when zooming
+    in/out (e.g. 0.1 = 10% of the distance). */
+    const CAMERA_WHEEL_PERCENTAGE = 0.01
 
     // Star-centered camera
     this.starCamera = new BABYLON.ArcRotateCamera(
@@ -34,9 +46,11 @@ class CameraModes {
       star.mesh.position
     )
     this.starCamera.attachControl(canvas, true)
+    this.starCamera.maxZ = CAMERA_FAR_SIGHT
+    this.starCamera.wheelDeltaPercentage = CAMERA_WHEEL_PERCENTAGE
 
     // Planet-centered camera
-    const planetCamDist = 3 * BASE_PLANET.diameter
+    const planetCamDist = 3 * BASE_PLANET.getVisualDiameter()
     this.planetCamera = new BABYLON.ArcRotateCamera(
       'planetCamera',
       DEFAULT_PLANET_CAM_ALPHA,
@@ -45,14 +59,20 @@ class CameraModes {
       BASE_PLANET.mesh.position
     )
 
+    /* Sets the near plane of the camera (no planet shall ever be smaller than
+    0.01 so that is the appropriate value). */
+    this.planetCamera.minZ = 0.01
+    this.planetCamera.maxZ = CAMERA_FAR_SIGHT
+    this.planetCamera.wheelDeltaPercentage = CAMERA_WHEEL_PERCENTAGE
+
     // Free camera
 
     // TODO : include a tutorial for the controls of the free camera
     // Arbitrary starting point of the free camera
     const FREE_CAM_POS = new BABYLON.Vector3(
       0,
-      star.diameter,
-      -4 * star.diameter
+      star.getVisualDiameter(),
+      -4 * star.getVisualDiameter()
     )
 
     this.freeCamera = new BABYLON.UniversalCamera(
@@ -60,11 +80,20 @@ class CameraModes {
       FREE_CAM_POS,
       scene
     )
-    this.freeCamera.inputs.addMouseWheel() // NOTE : should change the camera movement easing (may be too strong)
+
+    /* Mouse wheel can be used to move but it is really slow. I couldn't
+    configure it to match the system's scale, so consider using only keys (for
+    movement) and mouse drag (for camera orientation). */
+    const FREE_CAMERA_SPEED = astroUnit * 0.1 // Ad hoc value
+    const FREE_CAMERA_ANGULAR = 500 // Ad hoc value
+    this.freeCamera.inputs.addMouseWheel()
+    this.freeCamera.angularSensibility = FREE_CAMERA_ANGULAR
+    this.freeCamera.speed = FREE_CAMERA_SPEED
+    this.freeCamera.maxZ = CAMERA_FAR_SIGHT
 
     /* Collisions and movement restrictions for the cameras */
     scene.collisionsEnabled = true
-    this.starCamera.lowerRadiusLimit = STAR_CAM_DIST // Prevents the camera from going into the mesh
+    this.starCamera.lowerRadiusLimit = MIN_SYSTEM_CAM_DIST // Prevents the camera from going into the mesh
     this.planetCamera.lowerRadiusLimit = PLANET_CAM_DIST // Prevents the camera from going into the mesh
     this.freeCamera.checkCollisions = true
     this.freeCamera.ellipsoid = new BABYLON.Vector3(
@@ -79,7 +108,7 @@ class CameraModes {
 
     const CAMERA_MODES_LABELS = ['star', 'planet', 'free']
     CAMERA_MODES_LABELS.forEach((camLabel, idx) => {
-      document.querySelector('.btn-group #' + camLabel).onclick = () => {
+      document.querySelector(`.btn-group #${camLabel}`).onclick = () => {
         this.changeCameraMode(
           allCameras[idx],
           scene,
@@ -92,7 +121,7 @@ class CameraModes {
 
     const PLANET_CAMERA_LABELS = ['prev', 'next']
     PLANET_CAMERA_LABELS.forEach((camLabel) => {
-      document.querySelector('.controls #' + camLabel).onclick = () => {
+      document.querySelector(`.controls #${camLabel}`).onclick = () => {
         if (scene.activeCamera !== this.planetCamera) {
           return
         }
@@ -168,8 +197,10 @@ class CameraModes {
     const fakePlanetCamera = this.planetCamera.clone('fakePlanetCamera')
     scene.activeCamera = fakePlanetCamera
     this.planetCamera.target = planets[changePlanetIndex].mesh.position
-    this.planetCamera.radius = 3 * planets[changePlanetIndex].diameter
-    this.planetCamera.lowerRadiusLimit = 2 * planets[changePlanetIndex].diameter
+    this.planetCamera.radius =
+      3 * planets[changePlanetIndex].getVisualDiameter()
+    this.planetCamera.lowerRadiusLimit =
+      2 * planets[changePlanetIndex].getVisualDiameter()
 
     /* The function launched at the end of the transition between cameras */
     const changePlanetCamera = () => {
@@ -238,7 +269,7 @@ class CameraModes {
         ) // 1 is the distance to the target, and the free camera is ALWAYS 1 unit away from its target
         fakeFreeCamera.position = this.freeCamera.position
         fakeFreeCamera.rotation = this.freeCamera.rotation
-
+        fakeFreeCamera.maxZ = finalCamera.maxZ
         initialCamera = fakeFreeCamera
       }
 
@@ -275,6 +306,8 @@ class CameraModes {
         10,
         initialTarget
       ) // A transition camera to fake movement from the active camera to the selected one
+
+      transitionCamera.maxZ = finalCamera.maxZ
 
       /* We have to create an object that the transition camera can track
       properly during the transition. This object will move from the target of

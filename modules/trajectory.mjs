@@ -9,6 +9,7 @@ const sqrt = Math.sqrt
  *
  * @member {number} a - The semi-major axis.
  * @member {number} e - The excentricity.
+ * @member {number} b - The semi-minor axis.
  * @member {boolean} canMove - States if the object attached to the trajectory can move or not.
  */
 class EllipticalTrajectory {
@@ -22,7 +23,7 @@ class EllipticalTrajectory {
     this.e = e
     this.canMove = canMove
     if (canMove) {
-      this.b = sqrt(pow(a, 2) * (1 - pow(e, 2)))
+      this.b = sqrt(pow(this.a, 2) * (1 - pow(this.e, 2)))
     }
   }
 
@@ -38,7 +39,8 @@ class EllipticalTrajectory {
     const r = this.a * ((1 - pow(this.e, 2)) / (1 + this.e * cos(nu)))
     return {
       x: r * cos(nu),
-      y: r * sin(nu)
+      y: r * sin(nu),
+      r: r
     }
   }
 

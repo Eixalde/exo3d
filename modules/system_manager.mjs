@@ -1,3 +1,10 @@
+/**
+ * Every "magic number" appearing in the parameters of the planets is actually
+ * calculated from data on the different values of every planet (sideral day,
+ * revolution period, distance to the sun, size...) You can find the detail of
+ * those calculations in [INSERT LINK TO A DOCUMENT WITH THE RIGHT VALUES]
+ */
+
 import {
   CameraModes,
   AnimManager,
@@ -5,8 +12,11 @@ import {
   Planet,
   EllipticalTrajectory,
   Ring,
-  DebugUI
+  DebugUI,
+  ScalingControls
 } from '../exo3d.mjs'
+
+const PI = Math.PI
 
 /**
  * The handler for any gravitational system. It instantiates every spatial
@@ -24,10 +34,18 @@ class GravitationalSystemManager {
    * @param {canvas} canvas - The canvas used by the engine.
    */
   constructor(scene, UI, canvas) {
-    const a = 60 // Semi major axis, because it is a very important parameter, I choose to give it its original name "a"
+    /* For exact scale purposes, ASTRONOMICAL_UNIT is equal to the ratio between
+    1 AU and the diameter of the Earth. This way, the size of the Earth can be
+    set to 1 unit of the Babylon engine. */
+    const ASTRONOMICAL_UNIT = 11727.647 // Semi major axis of the Earth
     const e = 0 // Excentricty, can be anything between 0 included and 1 excluded
-    const V_ORIGIN_SUN = new BABYLON.Vector3(-2 * a * e, 0, 0) // Position of the sun, also it is the left focus of the ellipse
-    const EARTH_RADIUS = 1
+    const V_ORIGIN_SUN = new BABYLON.Vector3(-2 * ASTRONOMICAL_UNIT * e, 0, 0) // Position of the sun, also it is the left focus of the ellipse
+    const EARTH_DIAMETER = 1
+    const EARTH_REVOLUTION_PERIOD = 365.25 // The length of the Earth revolution (in seconds !!!)
+    /* 0.997 / 365.25 is the ratio of a sideral day (in solar days) compared to
+    the Earth Revolution (also in solar days). */
+    const EARTH_SIDERAL_DAY_DURATION =
+      (0.997 / 365.25) * EARTH_REVOLUTION_PERIOD
 
     // Textures' source : https://www.solarsystemscope.com/textures/
     const SUN_TEXTURE = 'resources/512_sun.jpg'
@@ -47,15 +65,15 @@ class GravitationalSystemManager {
     const sunColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
     const sunOptions = {
       name: 'Sun',
-      diameter: 30 * EARTH_RADIUS,
+      diameter: 109.179 * EARTH_DIAMETER, // Approximative real size of the Sun relative to the Earth
       texture: SUN_TEXTURE,
       distanceToParent: 0,
       color: sunColor,
-      inclinationAngle: 0, // Inclination and temperature aren't important now, but they're ready for the next features
-      temperature: 5000,
+      inclinationAngle: 0,
+      temperature: 5000, // Kelvin degrees
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
-      omega: Math.PI / 8,
-      revolutionPeriod: 4,
+      rotationPeriod: 27 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 27 * EARTH_SIDERAL_DAY_DURATION,
       originalPosition: V_ORIGIN_SUN,
       showStaticTrajectory: false,
       animatable: this.animManager.animatable
@@ -65,151 +83,178 @@ class GravitationalSystemManager {
 
     const mercuryOptions = {
       name: 'Mercury',
-      diameter: 0.7 * EARTH_RADIUS,
+      diameter: 0.383 * EARTH_DIAMETER, // Approximative real size of Mercury relative to the Earth
       texture: MERCURY_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0, // May seem cold, but it's not as cold as my office right now
-      trajectory: new EllipticalTrajectory({ a: 0.7 * a, e: 0 }, true),
-      omega: -Math.PI,
-      revolutionPeriod: 1.5,
+      trajectory: new EllipticalTrajectory(
+        { a: 0.387 * ASTRONOMICAL_UNIT, e: 0.206 },
+        true
+      ),
+      rotationPeriod: 58.7 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 0.241 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
     const venusOptions = {
       name: 'Venus',
-      diameter: 0.8 * EARTH_RADIUS,
+      diameter: 0.95 * EARTH_DIAMETER, // Approximative real size of Venus relative to the Earth
       texture: VENUS_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 0.9 * a, e: 0 }, true),
-      omega: -Math.PI,
-      revolutionPeriod: 2.7,
+      trajectory: new EllipticalTrajectory(
+        { a: 0.723 * ASTRONOMICAL_UNIT, e: 0.00678 },
+        true
+      ),
+      rotationPeriod: 243 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 0.615 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
     const earthOptions = {
       name: 'Earth',
-      diameter: 1,
+      diameter: EARTH_DIAMETER,
       texture: EARTH_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: a, e: e }, true),
-      omega: -Math.PI,
-      revolutionPeriod: 3.65,
+      trajectory: new EllipticalTrajectory(
+        { a: ASTRONOMICAL_UNIT, e: 0.0167 },
+        true
+      ),
+      rotationPeriod: EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
     const moonOptions = {
       name: 'Moon',
-      diameter: 0.3 * EARTH_RADIUS,
+      diameter: 0.273 * EARTH_DIAMETER,
       texture: MOON_TEXTURE,
-      distanceToParent: 2, // Arbitrary position relative to the planet
-      color: planetColor, // Satellite does not need a color, only a texture
+      distanceToParent: 0.00257 * ASTRONOMICAL_UNIT, // Position relative to the Earth
+      color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 2, e: 0 }, true),
-      omega: Math.PI,
-      revolutionPeriod: 1,
+      trajectory: new EllipticalTrajectory(
+        { a: 0.00257 * ASTRONOMICAL_UNIT, e: 0.0549 },
+        true
+      ),
+      rotationPeriod: 1,
+      revolutionPeriod: 0.0748 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: false,
       animatable: this.animManager.animatable
     }
 
     const marsOptions = {
       name: 'Mars',
-      diameter: 0.9 * EARTH_RADIUS,
+      diameter: 0.533 * EARTH_DIAMETER, // Approximative real size of Mars relative to the Earth
       texture: MARS_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 3 * a, e: 0 }, true),
-      omega: -Math.PI / 18,
-      revolutionPeriod: 7,
+      trajectory: new EllipticalTrajectory(
+        { a: 1.523 * ASTRONOMICAL_UNIT, e: 0.0939 },
+        true
+      ),
+      rotationPeriod: 1.029 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 1.881 * EARTH_REVOLUTION_PERIOD,
+      showStaticTrajectory: true,
+      animatable: this.animManager.animatable
+    }
+
+    const jupiterOptions = {
+      name: 'Jupiter',
+      diameter: 10.973 * EARTH_DIAMETER,
+      texture: JUPITER_TEXTURE,
+      distanceToParent: 0,
+      color: planetColor,
+      inclinationAngle: 0,
+      temperature: 0,
+      trajectory: new EllipticalTrajectory(
+        { a: 5.203 * ASTRONOMICAL_UNIT, e: 0.0483 },
+        true
+      ),
+      rotationPeriod: 0.498 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 11.86 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
     const saturnOptions = {
       name: 'Saturn',
-      diameter: 12 * EARTH_RADIUS,
+      diameter: 9.014 * EARTH_DIAMETER,
       texture: SATURN_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 10 * a, e: 0 }, true),
-      omega: -Math.PI,
-      revolutionPeriod: 30,
+      trajectory: new EllipticalTrajectory(
+        { a: 9.537 * ASTRONOMICAL_UNIT, e: 0.0539 },
+        true
+      ),
+      rotationPeriod: 0.445 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 29.44 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
     const RING_TEXTURE = 'resources/saturn_rings.png'
     const ringOptions = {
-      diameter: 2.2 * saturnOptions.diameter,
+      diameter: 2.5 * saturnOptions.diameter,
       texture: RING_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       originalPosition: new BABYLON.Vector3(0, 0, 0),
-      inclinationAngle: Math.PI / 2 - Math.PI / 48,
+      inclinationAngle: PI / 2 - PI / 48,
       temperature: 0,
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
-      omega: 0,
+      rotationPeriod: 100,
       revolutionPeriod: 30,
       showStaticTrajectory: false,
       animatable: this.animManager.animatable
     }
 
-    const jupiterOptions = {
-      name: 'Jupiter',
-      diameter: 15 * EARTH_RADIUS,
-      texture: JUPITER_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      inclinationAngle: 0,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 7 * a, e: e }, true),
-      omega: -Math.PI / 18,
-      revolutionPeriod: 20,
-      showStaticTrajectory: true,
-      animatable: this.animManager.animatable
-    }
-
     const uranusOptions = {
       name: 'Uranus',
-      diameter: 3 * EARTH_RADIUS,
+      diameter: 3.981 * EARTH_DIAMETER,
       texture: URANUS_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 14 * a, e: e }, true),
-      omega: -Math.PI,
-      revolutionPeriod: 40,
+      trajectory: new EllipticalTrajectory(
+        { a: 19.189 * ASTRONOMICAL_UNIT, e: 0.0472 },
+        true
+      ),
+      rotationPeriod: 0.585 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 84.05 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
 
     const neptuneOptions = {
       name: 'Neptune',
-      diameter: 3.5 * EARTH_RADIUS,
+      diameter: 3.865 * EARTH_DIAMETER,
       texture: NEPTUNE_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
       inclinationAngle: 0,
       temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 20 * a, e: e }, true),
-      omega: -Math.PI,
-      revolutionPeriod: 60,
+      trajectory: new EllipticalTrajectory(
+        { a: 30.07 * ASTRONOMICAL_UNIT, e: 0.00859 },
+        true
+      ),
+      rotationPeriod: 0.673 * EARTH_SIDERAL_DAY_DURATION,
+      revolutionPeriod: 164.86 * EARTH_REVOLUTION_PERIOD,
       showStaticTrajectory: true,
       animatable: this.animManager.animatable
     }
@@ -239,6 +284,7 @@ class GravitationalSystemManager {
 
     moon.mesh.parent = earth.mesh
     moon.mesh.position = new BABYLON.Vector3(moon.distanceToParent, 0, 0)
+    earth.satellites.push(moon)
 
     ring.mesh.parent = saturn.mesh
 
@@ -249,7 +295,17 @@ class GravitationalSystemManager {
       sun,
       this.gravitationalSystemPlanets,
       canvas,
-      this.animManager.animatable
+      this.animManager.animatable,
+      ASTRONOMICAL_UNIT
+    )
+
+    this.scalingControls = new ScalingControls(
+      {
+        planets: this.gravitationalSystemPlanets,
+        star: sun,
+        cameras: [this.cameras.planetCamera, this.cameras.starCamera]
+      },
+      scene
     )
 
     /* The light of the scene, it need to come from the star. It also need a
@@ -258,14 +314,14 @@ class GravitationalSystemManager {
     this.light = new BABYLON.PointLight('light', V_ORIGIN_SUN)
     this.light.diffuse = sun.color // The color diffused on other objects
     this.light.specular = new BABYLON.Color3.Black() // Avoids white reflections on objects
-    this.light.range = 3000 // How far the light affects the scene
+    this.light.range = 5000 * ASTRONOMICAL_UNIT // How far the light affects the scene
     this.light.intensity = 4 // The brightness of the light
 
     const gl = new BABYLON.GlowLayer('glow', scene)
     gl.intensity = 1.25
     gl.referenceMeshToUseItsOwnMaterial(sun.mesh)
 
-    const SKYBOX_SIZE = 3 // Arbitrary factor for the size of the skybox (quite large at 3 though)
+    const SKYBOX_SIZE = 37500 // Arbitrary factor for the size of the skybox (quite large at 3 though)
     this.skybox = new BABYLON.PhotoDome('skybox', SKYBOX_TEXTURE, {}, scene)
     this.skybox.scaling = new BABYLON.Vector3(
       SKYBOX_SIZE,
@@ -274,7 +330,23 @@ class GravitationalSystemManager {
     ) // Need to enlarge the skybox so the user doesn't zoom out into the skybox limit too early
     this.skybox.mesh.checkCollisions = true // Ensures that the user can't go out of the universe (forbidden by physicists)
 
-    this.debugUI = new DebugUI(UI)
+    const ALL_SPATIAL_OBJECTS = [
+      sun,
+      mercury,
+      venus,
+      earth,
+      mars,
+      jupiter,
+      saturn,
+      uranus,
+      neptune
+    ]
+
+    // this.debugUI = new DebugUI(UI, (value) => {
+    //   ALL_SPATIAL_OBJECTS.forEach((spObj) => {
+    //     spObj.mesh.scaling = new BABYLON.Vector3(value, value, value)
+    //   })
+    // })
   }
 }
 
