@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.17.0] - 2021-12-02
+
+### Added
+
+- Made the color of the stars change according to their temperature
+
 ## [0.16.0] - 2021-11-30
 
 ### Added
