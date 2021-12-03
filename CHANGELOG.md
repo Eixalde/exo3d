@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.16.0] - 2021-11-30
+
+### Added
+
+- Calculated appropriate didactic scales for all objects
+- Implemented a realistic/didactic view button
+- Made smooth transitions when scaling objects
+
+### Changed
+
+- Used the right distance, size, and duration scales for all objects
+- Made misc changes (camera, satellites) adapted to the new scales
+
 ## [0.15.0] - 2021-11-15
 
 ### Added

@@ -30,9 +30,9 @@
  * @member {String} texture - The link for the texture of the object.
  * @member {BABYLON.Color3} color - The color of the object.
  * @member {number} inclinationAngle - The inclination of the object relative to its star (rad).
- * @member {number} temperature - The temperature of the object.
+ * @member {number} temperature - The temperature of the object (K).
  * @member {EllipticalTrajectory} trajectory - The trajectory of the object.
- * @member {number} omega - The speed at which the object rotate on itself (rad/s).
+ * @member {number} rotationPeriod - The time needed for the object to revolve around itself (seconds).
  * @member {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
  */
 class SpatialObject {
@@ -45,7 +45,7 @@ class SpatialObject {
    * @param {number} inclinationAngle - The inclination of the object relative to its star (rad).
    * @param {number} temperature - The temperature of the object.
    * @param {EllipticalTrajectory} trajectory - The trajectory of the object.
-   * @param {number} omega - The speed at which the object rotate on itself (rad/s).
+   * @param {number} rotationPeriod - The time needed for the object to revolve around itself (seconds).
    * @param {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
    * @param {BABYLON.Vector3} originalPosition - The position the object should appear at.
    * @param {boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
@@ -61,8 +61,9 @@ class SpatialObject {
       color,
       inclinationAngle,
       temperature,
+      rotationPeriod,
       trajectory,
-      omega,
+      orbitalRevolutionPeriod,
       revolutionPeriod,
       originalPosition,
       showStaticTrajectory,
@@ -80,8 +81,7 @@ class SpatialObject {
     }
     this.distanceToParent = distanceToParent
     this.trajectory = trajectory
-    this.omega = omega
-    this.rotationPeriod = Math.abs((2 * Math.PI) / this.omega)
+    this.rotationPeriod = rotationPeriod
     this.revolutionPeriod = revolutionPeriod
     this.nu = 0
   }
@@ -176,7 +176,7 @@ class SpatialObject {
       scene.beginAnimation(
         this.mesh,
         0,
-        this.revolutionPeriod * Math.pow(FRAMERATE, 2) * this.rotationPeriod,
+        this.revolutionPeriod * FRAMERATE,
         true
       )
     )
@@ -205,6 +205,10 @@ class SpatialObject {
       scene: scene
     })
     line.color = new BABYLON.Color3(1, 0, 0)
+  }
+
+  getVisualDiameter() {
+    return this.diameter * this.mesh.scaling.x
   }
 }
 
@@ -240,6 +244,7 @@ class Star extends SpatialObject {
 
 /**
  * The class used for planets and satellites.
+ * @member {Array} satellites - Planet-exclusive member, dedicated to the list of its satellites (if any).
  *
  * @extends SpatialObject
  */
@@ -256,6 +261,7 @@ class Planet extends SpatialObject {
     })
     this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
     this.mesh.animations = []
+    this.satellites = []
     if (this.texture) {
       this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the planet, texture by default (if existing)
     } else {
