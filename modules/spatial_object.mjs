@@ -1,4 +1,5 @@
 import { convertTemperatureToRGB } from '../exo3d.mjs'
+import { AnimManager } from './anim_manager.mjs'
 
 /**
  * About the movement animation : tangents and interpolation. I am using
@@ -23,6 +24,136 @@ import { convertTemperatureToRGB } from '../exo3d.mjs'
  */
 
 /**
+ * Builds a system with a star, several planets and - if existing - their rings
+ * and satellites.
+ */
+class SystemBuilder {
+  #scene
+  #starOptions
+  #planetsOptions
+  #ringOptions
+  #satelliteOptions
+
+  /**
+   * @param {BABYLON.Scene} scene - The current scene.
+   * @returns {SystemBuilder}
+   */
+  setScene(scene) {
+    this.#scene = scene
+    return this
+  }
+  /**
+   * @param {Object} starOptions - Parameters needed for the creation of a star.
+   * @returns {SystemBuilder}
+   */
+  setStarOptions(starOptions) {
+    this.#starOptions = starOptions
+    return this
+  }
+
+  /**
+   * @param {Array} planetsOptions - The array of the parameters need for several planets.
+   * @returns {SystemBuilder}
+   */
+  setPlanetsOptions(planetsOptions, simulationTime) {
+    this.#planetsOptions = planetsOptions
+
+    /* Every period given in days is adapted relative to the first planet (which
+    has the lowest period of revolution). We then multiply it by the
+    simulationTime variable, which is the wanted duration of the revolution/spin
+    (in seconds) for that first planet. Every other planet will then have its
+    revolve/spin period scaled around that simulation time. */
+    const FIRST_PLANET_REVOLUTION_PERIOD =
+      this.#planetsOptions[0].revolutionPeriod
+    this.#planetsOptions.forEach((planetOptions) => {
+      planetOptions.revolutionPeriod =
+        (simulationTime * planetOptions.revolutionPeriod) /
+        FIRST_PLANET_REVOLUTION_PERIOD
+
+      planetOptions.spin =
+        (simulationTime * planetOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
+    })
+    return this
+  }
+
+  /**
+   * @param {Object} ringOptions - Parameters needed for the creation of a ring.
+   * @returns {SystemBuilder}
+   */
+  setRingOptions(ringOptions) {
+    this.#ringOptions = ringOptions
+    return this
+  }
+
+  /**
+   * @param {Object} satelliteOptions - Parameters needed for the creation of a satellite.
+   * @returns {SystemBuilder}
+   */
+  setSatelliteOptions(satelliteOptions) {
+    this.#satelliteOptions = satelliteOptions
+    return this
+  }
+
+  /**
+   * @param {AnimManager.animatable} animatable - Contains every animation of every object.
+   * @returns {SystemBuilder}
+   */
+  setAnimatable(animatable) {
+    this.#starOptions.animatable = animatable
+    this.#planetsOptions.forEach(
+      (planetOptions) => (planetOptions.animatable = animatable)
+    )
+    this.#ringOptions.animatable = animatable
+    this.#satelliteOptions.animatable = animatable
+    return this
+  }
+
+  /**
+   * @param {Object} planetOptions - Parameters needed for the creation of a planet.
+   * @returns {SystemBuilder}
+   */
+  setSatelliteOfPlanet(planetOptions) {
+    this.#satelliteOptions.parentName = planetOptions.name
+    return this
+  }
+
+  /**
+   * @param {Object} planetOptions - Parameters needed for the creation of a planet.
+   * @returns {SystemBuilder}
+   */
+  setRingOfPlanet(planetOptions) {
+    this.#ringOptions.parentName = planetOptions.name
+    return this
+  }
+
+  /* NOTE : this method does not consider the fact that there can be more (or
+  less) than one satellite and one ring. I will fix this in a future issue. */
+  build() {
+    const star = new Star(this.#starOptions, this.#scene)
+    const planets = new Array(this.#planetsOptions.length)
+    const ring = new Ring(this.#ringOptions, this.#scene)
+    const satellite = new Planet(this.#satelliteOptions, this.#scene)
+
+    this.#planetsOptions.forEach((planetOptions, idx) => {
+      planets[idx] = new Planet(planetOptions, this.#scene)
+      if (planetOptions.name === this.#satelliteOptions.parentName) {
+        satellite.mesh.parent = planets[idx].mesh
+        satellite.mesh.position = new BABYLON.Vector3(
+          satellite.distanceToParent,
+          0,
+          0
+        )
+        planets[idx].satellites.push(satellite)
+      }
+      if (planetOptions.name === this.#ringOptions.parentName) {
+        ring.mesh.parent = planets[idx].mesh
+      }
+    })
+    return { star: star, planets: planets }
+  }
+}
+
+/**
  * The base class for any spatial object. It shall not be instantiated as such,
  * because it has no signification otherwise.
  *
@@ -34,7 +165,7 @@ import { convertTemperatureToRGB } from '../exo3d.mjs'
  * @member {number} inclinationAngle - The inclination of the object relative to its star (rad).
  * @member {number} temperature - The temperature of the object (K).
  * @member {EllipticalTrajectory} trajectory - The trajectory of the object.
- * @member {number} rotationPeriod - The time needed for the object to revolve around itself (seconds).
+ * @member {number} spin - The time needed for the object to revolve around itself (seconds).
  * @member {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
  */
 class SpatialObject {
@@ -47,7 +178,7 @@ class SpatialObject {
    * @param {number} inclinationAngle - The inclination of the object relative to its star (rad).
    * @param {number} temperature - The temperature of the object.
    * @param {EllipticalTrajectory} trajectory - The trajectory of the object.
-   * @param {number} rotationPeriod - The time needed for the object to revolve around itself (seconds).
+   * @param {number} spin - The time needed for the object to revolve around itself (seconds).
    * @param {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
    * @param {BABYLON.Vector3} originalPosition - The position the object should appear at.
    * @param {boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
@@ -63,7 +194,7 @@ class SpatialObject {
       color,
       inclinationAngle,
       temperature,
-      rotationPeriod,
+      spin,
       trajectory,
       orbitalRevolutionPeriod,
       revolutionPeriod,
@@ -79,12 +210,13 @@ class SpatialObject {
     this.color = color
     this.temperature = temperature
     this.objectMat = new BABYLON.StandardMaterial(this.name + 'Mat', scene)
+    this.objectMat.useLogarithmicDepth = true
     if (texture) {
       this.texture = new BABYLON.Texture(texture, scene)
     }
     this.distanceToParent = distanceToParent
     this.trajectory = trajectory
-    this.rotationPeriod = rotationPeriod
+    this.spin = spin
     this.revolutionPeriod = revolutionPeriod
     this.nu = 0
   }
@@ -153,6 +285,11 @@ class SpatialObject {
       this.mesh.animations.push(moveAnimation)
     }
 
+    /* The motion direction factor allows to know if the planet has a prograde
+    or a retrograde movement. If the spin value is negative, then the
+    rotation is retrograde and the factor is equal to 1. Otherwise if it is
+    prograde, the factor is equal to -1. */
+    const motionDirectionFactor = -1 * (Math.abs(this.spin) / this.spin)
     const rotateAnimation = new BABYLON.Animation(
       this.name + 'AnimRotate',
       'rotation.y',
@@ -165,8 +302,8 @@ class SpatialObject {
 
     for (const i of animRotateKeys.keys()) {
       animRotateKeys[i] = {
-        frame: i * (this.rotationPeriod / steps) * FRAMERATE,
-        value: (i * 2 * Math.PI) / steps
+        frame: i * (Math.abs(this.spin) / steps) * FRAMERATE,
+        value: (i * motionDirectionFactor * 2 * Math.PI) / steps
       }
     }
 
@@ -309,4 +446,4 @@ class Ring extends SpatialObject {
   }
 }
 
-export { Star, Planet, Ring }
+export { Star, Planet, Ring, SystemBuilder }

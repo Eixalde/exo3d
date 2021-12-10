@@ -1,175 +1,210 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>Exo3D : en développement</title>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Exo3D : en développement</title>
 
-        <!-- bootstrap stuff -->
-        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-        <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
+    <!-- Bootstrap stuff -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js" defer></script>
 
-        <!-- Babylon.js stuff -->
-        <script src="node_modules/babylonjs/babylon.js" defer></script>
-        <script src="node_modules/babylonjs-materials/babylonjs.materials.min.js" defer></script>
-        <script src="node_modules/babylonjs-loaders/babylonjs.loaders.min.js" defer></script>
-        <script src="node_modules/babylonjs-gui/babylon.gui.min.js" defer></script>
+    <!-- Babylon.js stuff -->
+    <script src="node_modules/babylonjs/babylon.js" defer></script>
+    <script src="node_modules/babylonjs-materials/babylonjs.materials.min.js" defer></script>
+    <script src="node_modules/babylonjs-loaders/babylonjs.loaders.min.js" defer></script>
+    <script src="node_modules/babylonjs-gui/babylon.gui.min.js" defer></script>
 
-        <!-- Our stuff -->
-        <link rel="stylesheet" href="exo3d.css">
-        <script type="module" src="main.mjs"></script>
-    </head>
+    <!-- Our stuff -->
+    <link rel="stylesheet" href="exo3d.css">
+    <script type="module" src="main.mjs"></script>
+  </head>
 
-    <body>
-        <div id="container" class="container-fluid">
-            <!-- touch-action="none" for best results from PEP -->
-            <canvas id="renderCanvas" touch-action="none"></canvas>
+  <body>
+    <div id="container" class="container-fluid">
+      <!-- touch-action="none" for best results from PEP -->
+      <canvas id="renderCanvas" touch-action="none"></canvas>
+      <div class="row g-0 align-items-end">
 
-            <div class="row align-items-center">
-                <div id="speed" class="controls overlay col">
-                    Animation speed :
-                    <div class="btn-group" role="group">
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="speed"
-                            id="pause"
-                            autocomplete="off"
-                            aria-label="Pause button"
-                        >
-                        <label class="btn btn-outline-primary" for="pause">
-                            <svg class="bi" width="32" height="32" fill="currentColor">
-                                <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#pause-fill"/>
-                            </svg>
-                        </label>
+        <!-- Empty collapsable container (planet choice)-->
+        <div id="collapsePlanetChoice" class="collapse controls overlay card bg-dark card-body"></div>
 
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="speed"
-                            id="slow"
-                            autocomplete="off"
-                            aria-label="Low speed button"
-                        >
-                        <label class="btn btn-outline-primary" for="slow">
-                            <svg class="bi" width="32" height="32" fill="currentColor">
-                                <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#play-fill"/>
-                            </svg>
-                        </label>
+        <!-- Animation speed controls -->
+        <div id = "speed" class="controls overlay col-5">
+          <div class="card-group">
+            <div class="container-fluid row g-0">
+              <!-- Global speed controls -->
+              <div class="card bg-dark col-4">
+                <h6 class="card-header">Animation speed</h6>
+                <div class="card-body">
+                  <div class="btn-group" role="group">
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="speed"
+                      id="pause"
+                      autocomplete="off"
+                      aria-label="Pause button"
+                    >
+                    <!-- Existing bootstrap icon -->
+                    <label class="btn btn-outline-primary" for="pause">
+                      <svg class="bi exo-icon" fill="currentColor">
+                        <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#pause-fill"/>
+                      </svg>
+                    </label>
 
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="speed"
-                            id="normal"
-                            autocomplete="off"
-                            aria-label="Medium speed button"
-                            checked
-                        >
-                        <label class="btn btn-outline-primary" for="normal">
-                            <i class="icon-custom icon-play-two"></i>
-                        </label>
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="speed"
+                      id="slow"
+                      autocomplete="off"
+                      aria-label="Low speed button"
+                    >
+                    <!-- Existing bootstrap icon -->
+                    <label class="btn btn-outline-primary" for="slow">
+                      <svg class="bi exo-icon" fill="currentColor">
+                        <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#play-fill"/>
+                      </svg>
+                    </label>
 
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="speed"
-                            id="fast"
-                            autocomplete="off"
-                            aria-label="High speed button"
-                        >
-                        <label class="btn btn-outline-primary" for="fast">
-                            <i class="icon-custom icon-play-three"></i>
-                        </label>
-                    </div>
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="speed"
+                      id="normal"
+                      autocomplete="off"
+                      aria-label="Medium speed button"
+                      checked
+                    >
+                    <!-- Custom icon -->
+                    <label class="btn btn-outline-primary" for="normal">
+                      <i class="exo-icon icon-custom icon-play-two"></i>
+                    </label>
+
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="speed"
+                      id="fast"
+                      autocomplete="off"
+                      aria-label="High speed button"
+                    >
+                    <!-- Custom icon -->
+                    <label class="btn btn-outline-primary" for="fast">
+                      <i class="exo-icon icon-custom icon-play-three"></i>
+                    </label>
+                  </div>
                 </div>
-
-                <div id="viewMode" class="controls overlay col">
-                    Scaling of the system :
-                    <div class="btn-group" role="group">
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="viewMode"
-                            id="realistic"
-                            autocomplete="off"
-                            checked
-                            aria-label="Realistic view of the system, all scales respected"
-                        >
-                        <label class="btn btn-outline-primary" for="realistic">Realistic</label>
-
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="viewMode"
-                            id="didactic"
-                            autocomplete="off"
-                            aria-label="Didactic view of the system, scales exagerated for esthetic purposes"
-                        >
-                        <label class="btn btn-outline-primary" for="didactic">Didactic</label>
-                    </div>
+              </div>
+              <!-- Relative speed controls -->
+              <div class="card bg-dark col-8">
+                <div class="card-body">
+                  <div class="controls overlay">
+                    Speed by planet
+                    <input type="range" class="form-range planet-speed" min="0" step="1" list="speed-tickmarks">
+                    <datalist id="speed-tickmarks">
+                    </datalist>
+                  </div>
                 </div>
-
-                <div id="scalingDisplay" class="controls overlay col">
-                    <div id="scalingStar" class="controls overlay row-6">
-                        Star scale - <span id="starScale">1:1</span>
-                    </div>
-                    <div id="scalingPlanets" class="controls overlay row-6">
-                        Planets scale - <span id="planetsScale">1:1</span>
-                    </div>
-                </div>
-
-                <div id="cameraMode" class="controls overlay col">
-                    Focus of the camera :
-                    <div class="btn-group" role="group">
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="cameraMode"
-                            id="star"
-                            autocomplete="off"
-                            checked
-                            aria-label="Camera centered on the system"
-                        >
-                        <label class="btn btn-outline-primary" for="star">System</label>
-
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="cameraMode"
-                            id="planet"
-                            autocomplete="off"
-                            aria-label="Camera centered on a planet"
-                        >
-                        <label class="btn btn-outline-primary" for="planet">Planet</label>
-
-                        <input
-                            type="radio"
-                            class="btn-check"
-                            name="cameraMode"
-                            id="free"
-                            autocomplete="off"
-                            aria-label="Camera free to move"
-                        >
-                        <label class="btn btn-outline-primary" for="free">Free</label>
-                    </div>
-                </div>
-
-                <div id="cameraPlanetSwitch" class="controls overlay col invisible">
-                    Planet choice :
-                    <button id='prev' class="btn btn-primary" aria-label="Go to previous planet">
-                        <svg class="bi" width="32" height="32" fill="currentColor">
-                            <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-left"/>
-                        </svg>
-                    </button>
-                    <button id='next' class="btn btn-primary" aria-label="Go to next planet">
-                        <svg class="bi" width="32" height="32" fill="currentColor">
-                            <use xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#arrow-right"/>
-                        </svg>
-                    </button>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
-   </body>
 
+        <!-- Scaling change controls -->
+        <div id="viewMode" class="controls overlay col-3">
+          <div class="card-group">
+            <div class="container-fluid row g-0">
+              <div class="card bg-dark col-7">
+                <h6 class="card-header">Scaling of the system</h6>
+                <div class="card-body">
+                  <div class="btn-group" role="group">
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="viewMode"
+                      id="realistic"
+                      autocomplete="off"
+                      checked
+                      aria-label="Realistic view of the system, all scales respected"
+                    >
+                    <label class="btn btn-outline-primary" for="realistic">Realistic</label>
+
+                    <input
+                      type="radio"
+                      class="btn-check"
+                      name="viewMode"
+                      id="didactic"
+                      autocomplete="off"
+                      aria-label="Didactic view of the system, scales exagerated for esthetic purposes"
+                    >
+                    <label class="btn btn-outline-primary" for="didactic">Didactic</label>
+                  </div>
+                </div>
+              </div>
+              <div class="card bg-dark col-5">
+                <div class="card-body">
+                  <div id="scalingStar" class="controls overlay">
+                    Star scale - <span id="starScale">1:1</span>
+                  </div>
+                  <div id="scalingPlanets" class="controls overlay">
+                    Planets scale - <span id="planetsScale">1:1</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Camera change controls -->
+        <div id="cameraMode" class="controls overlay col-4">
+          <div class="card-group">
+            <div class="card bg-dark">
+              <h6 class="card-header">Focus of the camera</h6>
+              <div class="card-body">
+                <div class="btn-group" role="group">
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="cameraMode"
+                    id="star"
+                    autocomplete="off"
+                    checked
+                    aria-label="Camera centered on the system"
+                  >
+                  <label class="btn btn-outline-primary" for="star">System</label>
+
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="cameraMode"
+                    id="planet"
+                    autocomplete="off"
+                    aria-label="Camera centered on a planet"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapsePlanetChoice"
+                    aria-expanded="false"
+                    aria-controls="collapsePlanetChoice"
+                    data-bs-auto-close="true"
+                  >
+                  <label class="btn btn-outline-primary" for="planet">Planet</label>
+
+                  <input
+                    type="radio"
+                    class="btn-check"
+                    name="cameraMode"
+                    id="free"
+                    autocomplete="off"
+                    aria-label="Camera free to move"
+                  >
+                  <label class="btn btn-outline-primary" for="free">Free</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

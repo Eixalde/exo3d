@@ -25,8 +25,8 @@ class CameraModes {
     const BASE_PLANET = planets[0] // The planet pointed by the planetCamera by default
     // Placing the camera far from the star to see the entire system (2 times the largest trajectory is enough)
     const STAR_CAM_DIST = 2 * planets.at(-1).trajectory.a
-    const MIN_SYSTEM_CAM_DIST = 2 * star.getVisualDiameter()
-    const PLANET_CAM_DIST = 2 * BASE_PLANET.getVisualDiameter()
+    const MIN_SYSTEM_CAM_DIST = 2 * star.getVisualDiameter() // Ad hoc value for the minimum distance of the camera to the system
+    const MIN_PLANET_CAM_DIST = 2 * BASE_PLANET.getVisualDiameter() // Ad hoc value for the minimum distance of the camera to the planet
 
     /* The number of AU the camera can see up to (must be larger than the actual
     size of the hitbox). I should then use that size but I have zero idea of how
@@ -50,12 +50,12 @@ class CameraModes {
     this.starCamera.wheelDeltaPercentage = CAMERA_WHEEL_PERCENTAGE
 
     // Planet-centered camera
-    const planetCamDist = 3 * BASE_PLANET.getVisualDiameter()
+    const PLANET_CAM_DIST = 3 * BASE_PLANET.getVisualDiameter() // Ad hoc value for the placement of the camera
     this.planetCamera = new BABYLON.ArcRotateCamera(
       'planetCamera',
       DEFAULT_PLANET_CAM_ALPHA,
       DEFAULT_PLANET_CAM_BETA,
-      planetCamDist,
+      PLANET_CAM_DIST,
       BASE_PLANET.mesh.position
     )
 
@@ -94,7 +94,7 @@ class CameraModes {
     /* Collisions and movement restrictions for the cameras */
     scene.collisionsEnabled = true
     this.starCamera.lowerRadiusLimit = MIN_SYSTEM_CAM_DIST // Prevents the camera from going into the mesh
-    this.planetCamera.lowerRadiusLimit = PLANET_CAM_DIST // Prevents the camera from going into the mesh
+    this.planetCamera.lowerRadiusLimit = MIN_PLANET_CAM_DIST // Prevents the camera from going into the mesh
     this.freeCamera.checkCollisions = true
     this.freeCamera.ellipsoid = new BABYLON.Vector3(
       HIT_BOX_RADIUS,
@@ -109,6 +109,11 @@ class CameraModes {
     const CAMERA_MODES_LABELS = ['star', 'planet', 'free']
     CAMERA_MODES_LABELS.forEach((camLabel, idx) => {
       document.querySelector(`.btn-group #${camLabel}`).onclick = () => {
+        if (camLabel !== CAMERA_MODES_LABELS[1]) {
+          const collapseNode = document.querySelector('.collapse')
+          const collapseElement = bootstrap.Collapse.getInstance(collapseNode)
+          collapseElement.hide()
+        }
         this.changeCameraMode(
           allCameras[idx],
           scene,
@@ -119,7 +124,10 @@ class CameraModes {
       }
     })
 
-    const PLANET_CAMERA_LABELS = ['prev', 'next']
+    const PLANET_CAMERA_LABELS = new Array(planets.length)
+    planets.forEach((planet, idx) => {
+      PLANET_CAMERA_LABELS[idx] = planet.name
+    })
     PLANET_CAMERA_LABELS.forEach((camLabel) => {
       document.querySelector(`.controls #${camLabel}`).onclick = () => {
         if (scene.activeCamera !== this.planetCamera) {
@@ -142,9 +150,6 @@ class CameraModes {
     if (scene.activeCamera === toCamera) {
       return
     }
-    document
-      .querySelector('.controls#cameraPlanetSwitch')
-      .classList.add('invisible')
 
     allCameras.forEach((cam) => cam.detachControl()) // Locking all cameras controls
 
@@ -155,11 +160,6 @@ class CameraModes {
       () => {
         scene.activeCamera = toCamera // Switching the active camera to the selected one
         toCamera.attachControl(canvas, true) // Giving controls for the selected camera only
-        if (scene.activeCamera === this.planetCamera) {
-          document
-            .querySelector('.controls#cameraPlanetSwitch')
-            .classList.remove('invisible')
-        }
       },
       animatable
     )
@@ -180,27 +180,19 @@ class CameraModes {
       (planet) => planet.mesh.position === this.planetCamera.getTarget()
     )
 
-    const previous = current ? current - 1 : planets.length - 1
-    const next = current !== planets.length - 1 ? current + 1 : 0
-
-    let changePlanetIndex
-    if (idx) {
-      changePlanetIndex = next
-    } else {
-      changePlanetIndex = previous
-    }
-
     /* Here we need to create a second camera, because the transition
     camera needs a starting camera and an ending camera. What we do here
     is cloning the planetCamera, teleportating the planetCamera to the
     planet we want to look at next, and then applying the transition. */
     const fakePlanetCamera = this.planetCamera.clone('fakePlanetCamera')
+    const SPAWN_RADIUS_FACTOR = 3 // Ad hoc value for the placement of the cameras (in diameters of object)
+    const LOWER_RADIUS_FACTOR = 2 // Ad hoc value for the minimum distance of the camera to the object (in diameters of object)
     scene.activeCamera = fakePlanetCamera
-    this.planetCamera.target = planets[changePlanetIndex].mesh.position
+    this.planetCamera.target = planets[idx].mesh.position
     this.planetCamera.radius =
-      3 * planets[changePlanetIndex].getVisualDiameter()
+      SPAWN_RADIUS_FACTOR * planets[idx].getVisualDiameter()
     this.planetCamera.lowerRadiusLimit =
-      2 * planets[changePlanetIndex].getVisualDiameter()
+      LOWER_RADIUS_FACTOR * planets[idx].getVisualDiameter()
 
     /* The function launched at the end of the transition between cameras */
     const changePlanetCamera = () => {
