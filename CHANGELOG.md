@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.18.0] - 2021-12-10
+
+### Added
+
+- Added relative speed controls
+
+### Changed
+
+- Used Bootstrap cards to regroup UI controls
+- Made the planet camera controls able to select any planet
+- Refactored the creation of a system with a builder
+
 ## [0.17.0] - 2021-12-02
 
 ### Added

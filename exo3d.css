@@ -27,6 +27,13 @@ body {
   bottom: 0;
 }
 
+#container .col {
+  width: 100%;
+  height: 20%;
+  position: absolute;
+  bottom: 0;
+}
+
 #renderCanvas,
 .overlay {
   position: absolute;
@@ -47,6 +54,19 @@ body {
   position: relative;
 }
 
+.bi.exo-icon {
+  aspect-ratio: 1 / 1; /* stylelint-disable-line property-no-unknown */
+}
+
+.exo-icon {
+  text-align: center;
+  height: 1.5em;
+}
+
+.btn {
+  display: inline-grid;
+}
+
 .icon-custom {
   background-color: var(--bootstrap-color-primary);
   mask-size: cover;
@@ -58,15 +78,13 @@ body {
 .icon-play-two {
   mask-image: var(--icon-play-two-url);
   -webkit-mask-image: var(--icon-play-two-url);
-  width: 42px;
-  height: 32px;
+  aspect-ratio: 21 / 16; /* stylelint-disable-line property-no-unknown */
 }
 
 .icon-play-three {
   mask-image: var(--icon-play-three-url);
   -webkit-mask-image: var(--icon-play-three-url);
-  width: 52px;
-  height: 32px;
+  aspect-ratio: 13 / 8; /* stylelint-disable-line property-no-unknown */
 }
 
 input:checked + label > i.icon-custom {
@@ -75,4 +93,12 @@ input:checked + label > i.icon-custom {
 
 input:hover + label > i.icon-custom {
   background-color: white;
+}
+
+datalist {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  width: 100%;
+  line-height: 1;
 }
