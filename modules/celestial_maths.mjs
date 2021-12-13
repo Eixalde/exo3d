@@ -3,11 +3,12 @@
 // https://stackoverflow.com/questions/13975917/calculate-colour-temperature-in-k/13982347#13982347
 
 const pow = Math.pow
+const floor = Math.floor
 /**
  * Calculate the RGB coding of a given temperature.
  *
  * @param {number} temperature - The temperature of a celestial body (in K).
- * @returns {object} - Returns the RGB coding of that temperature (scaled from 0 to 1).
+ * @returns {Object} - Returns the RGB coding of that temperature (scaled from 0 to 1).
  */
 function convertTemperatureToRGB(temperature) {
   const XYZ_to_RGB = [
@@ -114,4 +115,24 @@ function compareSystemOrbits(systemCompareParameters) {
   return Math.min(...ALL_SCALING_RATIOS)
 }
 
-export { convertTemperatureToRGB, compareOrbits, compareSystemOrbits }
+/**
+ * Convert a duration given in days into years, months and days.
+ *
+ * @param {number} daysTotal - Amount of days to convert.
+ * @returns {years: number, months: number, days: number} - Structure with the different parts of the duration.
+ */
+function daysToDuration(daysTotal) {
+  const YEAR_IN_DAYS = 365.25
+  const MONTH_IN_DAYS = YEAR_IN_DAYS / 12
+  const years = floor(daysTotal / YEAR_IN_DAYS)
+  const months = floor((daysTotal % YEAR_IN_DAYS) / MONTH_IN_DAYS)
+  const days = floor((daysTotal % YEAR_IN_DAYS) % MONTH_IN_DAYS)
+  return { years: years, months: months, days: days }
+}
+
+export {
+  convertTemperatureToRGB,
+  compareOrbits,
+  compareSystemOrbits,
+  daysToDuration
+}

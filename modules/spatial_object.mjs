@@ -52,31 +52,6 @@ class SystemBuilder {
   }
 
   /**
-   * @param {Array} planetsOptions - The array of the parameters need for several planets.
-   * @returns {SystemBuilder}
-   */
-  setPlanetsOptions(planetsOptions, simulationTime) {
-    this.#planetsOptions = planetsOptions
-
-    /* Every period given in days is adapted relative to the first planet (which
-    has the lowest period of revolution). We then multiply it by the
-    simulationTime variable, which is the wanted duration of the revolution/spin
-    (in seconds) for that first planet. Every other planet will then have its
-    revolve/spin period scaled around that simulation time. */
-    const FIRST_PLANET_REVOLUTION_PERIOD =
-      this.#planetsOptions[0].revolutionPeriod
-    this.#planetsOptions.forEach((planetOptions) => {
-      planetOptions.revolutionPeriod =
-        (simulationTime * planetOptions.revolutionPeriod) /
-        FIRST_PLANET_REVOLUTION_PERIOD
-
-      planetOptions.spin =
-        (simulationTime * planetOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
-    })
-    return this
-  }
-
-  /**
    * @param {Object} ringOptions - Parameters needed for the creation of a ring.
    * @returns {SystemBuilder}
    */
@@ -91,6 +66,39 @@ class SystemBuilder {
    */
   setSatelliteOptions(satelliteOptions) {
     this.#satelliteOptions = satelliteOptions
+    return this
+  }
+
+  /**
+   * @param {Array} planetsOptions - The array of the parameters need for several planets.
+   * @returns {SystemBuilder}
+   */
+  setPlanetsOptions(planetsOptions, simulationTime) {
+    this.#planetsOptions = planetsOptions
+
+    /* Every period given in days is adapted relative to the first planet (which
+    has the lowest period of revolution). We then multiply it by the
+    simulationTime variable, which is the wanted duration of the revolution/spin
+    (in seconds) for that first planet. Every other planet will then have its
+    revolve/spin period scaled around that simulation time. */
+    const FIRST_PLANET_REVOLUTION_PERIOD =
+      this.#planetsOptions[0].revolutionPeriod
+
+    this.#starOptions.normalizedSpin =
+      (simulationTime * this.#starOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
+
+    this.#satelliteOptions.normalizedRevolutionPeriod =
+      (simulationTime * this.#satelliteOptions.revolutionPeriod) /
+      FIRST_PLANET_REVOLUTION_PERIOD
+
+    this.#planetsOptions.forEach((planetOptions) => {
+      planetOptions.normalizedRevolutionPeriod =
+        (simulationTime * planetOptions.revolutionPeriod) /
+        FIRST_PLANET_REVOLUTION_PERIOD
+
+      planetOptions.normalizedSpin =
+        (simulationTime * planetOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
+    })
     return this
   }
 
@@ -165,8 +173,8 @@ class SystemBuilder {
  * @member {number} inclinationAngle - The inclination of the object relative to its star (rad).
  * @member {number} temperature - The temperature of the object (K).
  * @member {EllipticalTrajectory} trajectory - The trajectory of the object.
- * @member {number} spin - The time needed for the object to revolve around itself (seconds).
- * @member {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
+ * @member {number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
+ * @member {number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
  */
 class SpatialObject {
   /**
@@ -178,8 +186,8 @@ class SpatialObject {
    * @param {number} inclinationAngle - The inclination of the object relative to its star (rad).
    * @param {number} temperature - The temperature of the object.
    * @param {EllipticalTrajectory} trajectory - The trajectory of the object.
-   * @param {number} spin - The time needed for the object to revolve around itself (seconds).
-   * @param {number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
+   * @param {number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
+   * @param {number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
    * @param {BABYLON.Vector3} originalPosition - The position the object should appear at.
    * @param {boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
    * @param {BABYLON.Animatable} animatable - Contains all animations.
@@ -194,10 +202,9 @@ class SpatialObject {
       color,
       inclinationAngle,
       temperature,
-      spin,
+      normalizedSpin,
       trajectory,
-      orbitalRevolutionPeriod,
-      revolutionPeriod,
+      normalizedRevolutionPeriod,
       originalPosition,
       showStaticTrajectory,
       animatable
@@ -216,8 +223,8 @@ class SpatialObject {
     }
     this.distanceToParent = distanceToParent
     this.trajectory = trajectory
-    this.spin = spin
-    this.revolutionPeriod = revolutionPeriod
+    this.normalizedSpin = normalizedSpin
+    this.normalizedRevolutionPeriod = normalizedRevolutionPeriod
     this.nu = 0
   }
 
@@ -249,7 +256,7 @@ class SpatialObject {
       const staticTrajectory = this.trajectory.staticTrajectory(steps, false)
       const animMoveKeys = new Array(staticTrajectory.length)
 
-      const deltaT = (this.revolutionPeriod / steps) * FRAMERATE
+      const deltaT = (this.normalizedRevolutionPeriod / steps) * FRAMERATE
       const outTangents = new Array(animMoveKeys.length)
       for (const i of animMoveKeys.keys()) {
         const current = i
@@ -269,7 +276,8 @@ class SpatialObject {
 
       for (const current of animMoveKeys.keys()) {
         animMoveKeys[current] = {
-          frame: current * (this.revolutionPeriod / steps) * FRAMERATE,
+          frame:
+            current * (this.normalizedRevolutionPeriod / steps) * FRAMERATE,
           outTangent: outTangents[current],
           inTangent: outTangents[current],
           value: staticTrajectory[current]
@@ -289,7 +297,8 @@ class SpatialObject {
     or a retrograde movement. If the spin value is negative, then the
     rotation is retrograde and the factor is equal to 1. Otherwise if it is
     prograde, the factor is equal to -1. */
-    const motionDirectionFactor = -1 * (Math.abs(this.spin) / this.spin)
+    const motionDirectionFactor =
+      -1 * (Math.abs(this.normalizedSpin) / this.normalizedSpin)
     const rotateAnimation = new BABYLON.Animation(
       this.name + 'AnimRotate',
       'rotation.y',
@@ -302,7 +311,7 @@ class SpatialObject {
 
     for (const i of animRotateKeys.keys()) {
       animRotateKeys[i] = {
-        frame: i * (Math.abs(this.spin) / steps) * FRAMERATE,
+        frame: i * (Math.abs(this.normalizedSpin) / steps) * FRAMERATE,
         value: (i * motionDirectionFactor * 2 * Math.PI) / steps
       }
     }
@@ -316,7 +325,7 @@ class SpatialObject {
       scene.beginAnimation(
         this.mesh,
         0,
-        this.revolutionPeriod * FRAMERATE,
+        this.normalizedRevolutionPeriod * FRAMERATE,
         true
       )
     )
@@ -330,7 +339,7 @@ class SpatialObject {
    * @param {BABYLON.Scene} scene - The Current scene.
    */
   animationShow(animation, FRAMERATE, scene) {
-    const nbFrame = this.revolutionPeriod * FRAMERATE
+    const nbFrame = this.normalizedRevolutionPeriod * FRAMERATE
     const evalTraj = new Array(1000)
 
     for (let i = 0; i < evalTraj.length; i++) {

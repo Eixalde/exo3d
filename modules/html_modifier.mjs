@@ -6,6 +6,8 @@
  * parameters they receive.
  */
 
+import { daysToDuration } from '../exo3d.mjs'
+
 /**
  * Creates radio buttons for every planet. Those buttons are controlled in
  * cameraModes to change the focus of the camera to look at a specific planet.
@@ -86,4 +88,67 @@ function modifyPlanetSpeedSlider(planets) {
   })
 }
 
-export { addPlanetRadioButtons, modifyPlanetSpeedSlider }
+/**
+ * @member {number} daysCount - number of simulation days since the begining of the similation
+ * @member {AnimManager} animManager - The animation manager of the application.
+ * @member {number} simulationTime - The base time for a given planet to revolve in the simulation (in sec).
+ * @member {number} firstPlanetRevPeriod - The period of the first planet of the system (in days).
+ */
+class NumberOfDaysUpdater {
+  #daysCount
+  #animManager
+  #simulationTime
+  #firstPlanetRevPeriod
+
+  /**
+   * @param {AnimManager} animManager - The animation manager of the application.
+   * @param {number} simulationTime - The base time for a given planet to revolve in the simulation (in sec).
+   * @param {number} firstPlanetRevPeriod - The period of the first planet of the system (in days).
+   */
+  constructor(animManager, simulationTime, firstPlanetRevPeriod) {
+    this.#daysCount = 0
+    this.#animManager = animManager
+    this.#simulationTime = simulationTime
+    this.#firstPlanetRevPeriod = firstPlanetRevPeriod
+    this.update()
+  }
+
+  /**
+   * Constantly updates the number of days simulated through the application and
+   * shows it in the dedicated HTML part. It prints months beyond 30 days, and
+   * years beyond 12 months (the conversion is made with daysToDuration, see
+   * 'celestial_maths').
+   */
+  update() {
+    const SECOND_IN_MS = 1000
+    const TIMEOUT_DURATION = 100 // in ms
+    setTimeout(() => {
+      /* The current speed ratio affects how fast the time passes, thus it is
+      important to get back the correct day amount. */
+      const currentSpeedRatio =
+        this.#animManager.globalSpeedRatio *
+        this.#animManager.relativeSpeedRatio
+
+      /* WHITEMAGIC : This formula converts back the seconds in the simulation
+      into what they represent in real days. See the detailled documentation for
+      further explanation. */
+      this.#daysCount +=
+        (currentSpeedRatio * this.#firstPlanetRevPeriod) /
+        ((this.#simulationTime * SECOND_IN_MS) / TIMEOUT_DURATION)
+
+      /* Converts the day count into a duration of the format 'years, months and
+      days'. */
+      const duration = daysToDuration(this.#daysCount)
+
+      /* Updates the HTML part. */
+      document.querySelector(
+        `#simulation-time`
+      ).innerHTML = `Time since the beginning of the animation : ${duration.years} years, ${duration.months} months and ${duration.days} days.`
+
+      /* Calling the function again to make it timeout recursively. */
+      this.update()
+    }, TIMEOUT_DURATION)
+  }
+}
+
+export { addPlanetRadioButtons, modifyPlanetSpeedSlider, NumberOfDaysUpdater }
