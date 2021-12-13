@@ -16,6 +16,7 @@ import {
   ScalingControls,
   addPlanetRadioButtons,
   modifyPlanetSpeedSlider,
+  NumberOfDaysUpdater,
   SystemBuilder
 } from '../exo3d.mjs'
 
@@ -73,7 +74,7 @@ class GravitationalSystemManager {
       temperature: 5000, // Kelvin degrees
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
       spin: SUN_SPIN,
-      revolutionPeriod: SUN_SPIN, // Sun does not revolve but it has to specify a value here (could be anything strictly positive)
+      normalizedRevolutionPeriod: SUN_SPIN, // Sun does not revolve but it has to specify a value here (could be anything strictly positive)
       originalPosition: V_ORIGIN_SUN,
       showStaticTrajectory: false
     }
@@ -268,9 +269,9 @@ class GravitationalSystemManager {
     const systemBuilder = new SystemBuilder()
       .setScene(scene)
       .setStarOptions(sunOptions)
-      .setPlanetsOptions(allPlanetsOptions, SIMULATION_TIME)
       .setRingOptions(ringOptions)
       .setSatelliteOptions(moonOptions)
+      .setPlanetsOptions(allPlanetsOptions, SIMULATION_TIME)
       .setSatelliteOfPlanet(earthOptions)
       .setRingOfPlanet(saturnOptions)
 
@@ -285,6 +286,11 @@ class GravitationalSystemManager {
     /* HTML modifier methods to implement planets' based controls. */
     addPlanetRadioButtons(this.gravitationalSystem.planets)
     modifyPlanetSpeedSlider(this.gravitationalSystem.planets)
+    new NumberOfDaysUpdater(
+      this.animManager,
+      SIMULATION_TIME,
+      mercuryOptions.revolutionPeriod
+    )
 
     this.cameras = new CameraModes(
       scene,

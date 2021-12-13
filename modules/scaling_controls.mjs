@@ -58,6 +58,18 @@ class ScalingControls {
     /* Triggering scaling functions with the buttons */
 
     const SCALING_CONTROLS_LABELS = ['realistic', 'didactic']
+    const SCALING_INFO_HTML_VALUES = [
+      {
+        infoLabel: `All sizes and distances are currently on a realistic scale.
+        This is almost how you would see them in reality.`,
+        iconLink: `node_modules/bootstrap-icons/bootstrap-icons.svg#info-circle-fill`
+      },
+      {
+        infoLabel: `Distances are scaled correctly but sizes are explicitely bigger.
+        Planets do still respect their ratios between each other, although not with the star.`,
+        iconLink: `node_modules/bootstrap-icons/bootstrap-icons.svg#exclamation-triangle-fill`
+      }
+    ]
     SCALING_CONTROLS_LABELS.forEach((scalingLabel, idx) => {
       document.querySelector(`.btn-group #${scalingLabel}`).onclick = () => {
         /* Hiding satellites when entering didactic scaling. */
@@ -119,6 +131,12 @@ class ScalingControls {
         document.querySelector(
           `#planetsScale`
         ).innerHTML = `${CHANGE_PLANET_FACTOR.toFixed(0)}:1`
+
+        document.querySelector(`#scales-info-paragraph`).innerHTML =
+          SCALING_INFO_HTML_VALUES[idx].infoLabel
+        document
+          .querySelector(`#scales-info-icon`)
+          .setAttribute(`xlink:href`, SCALING_INFO_HTML_VALUES[idx].iconLink)
 
         /* Zooms in/out with the cameras if the scaling changes. This avoids
         being inside the object you are looking at (or very far from it). The
