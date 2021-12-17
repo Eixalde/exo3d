@@ -70,7 +70,8 @@ class GravitationalSystemManager {
       texture: SUN_TEXTURE,
       distanceToParent: 0,
       color: sunColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: 0,
+      selfInclinationAngle: 0,
       temperature: 5000, // Kelvin degrees
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
       spin: SUN_SPIN,
@@ -87,7 +88,8 @@ class GravitationalSystemManager {
       texture: MERCURY_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (7 * PI) / 180,
+      selfInclinationAngle: (0.035 * PI) / 180,
       temperature: 0, // May seem cold, but it's not as cold as my office right now
       trajectory: new EllipticalTrajectory(
         { a: 0.387 * ASTRONOMICAL_UNIT, e: 0.206 },
@@ -104,7 +106,8 @@ class GravitationalSystemManager {
       texture: VENUS_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (3.395 * PI) / 180,
+      selfInclinationAngle: (177.36 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 0.723 * ASTRONOMICAL_UNIT, e: 0.00678 },
@@ -121,7 +124,8 @@ class GravitationalSystemManager {
       texture: EARTH_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: 0,
+      selfInclinationAngle: (23.437 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: ASTRONOMICAL_UNIT, e: 0.0167 },
@@ -138,7 +142,8 @@ class GravitationalSystemManager {
       texture: MOON_TEXTURE,
       distanceToParent: 0.00257 * ASTRONOMICAL_UNIT, // Position relative to the Earth
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: 0,
+      selfInclinationAngle: 0,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 0.00257 * ASTRONOMICAL_UNIT, e: 0.0549 },
@@ -155,7 +160,8 @@ class GravitationalSystemManager {
       texture: MARS_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (1.85 * PI) / 180,
+      selfInclinationAngle: (25.19 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 1.523 * ASTRONOMICAL_UNIT, e: 0.0939 },
@@ -172,7 +178,8 @@ class GravitationalSystemManager {
       texture: JUPITER_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (1.304 * PI) / 180,
+      selfInclinationAngle: (3.12 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 5.203 * ASTRONOMICAL_UNIT, e: 0.0483 },
@@ -189,7 +196,8 @@ class GravitationalSystemManager {
       texture: SATURN_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (2.486 * PI) / 180,
+      selfInclinationAngle: (26.73 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 9.537 * ASTRONOMICAL_UNIT, e: 0.0539 },
@@ -207,7 +215,8 @@ class GravitationalSystemManager {
       distanceToParent: 0,
       color: planetColor,
       originalPosition: new BABYLON.Vector3(0, 0, 0),
-      inclinationAngle: PI / 2 - PI / 48,
+      eclipticInclinationAngle: PI / 2, // Must stay at PI/2, otherwise the rings would be vertically aligned and not horizontally
+      selfInclinationAngle: 0,
       temperature: 0,
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
       spin: 100, //Ad hoc value
@@ -221,7 +230,8 @@ class GravitationalSystemManager {
       texture: URANUS_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (0.773 * PI) / 180,
+      selfInclinationAngle: (97.8 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 19.189 * ASTRONOMICAL_UNIT, e: 0.0472 },
@@ -238,7 +248,8 @@ class GravitationalSystemManager {
       texture: NEPTUNE_TEXTURE,
       distanceToParent: 0,
       color: planetColor,
-      inclinationAngle: 0,
+      eclipticInclinationAngle: (1.77 * PI) / 180,
+      selfInclinationAngle: (28.32 * PI) / 180,
       temperature: 0,
       trajectory: new EllipticalTrajectory(
         { a: 30.07 * ASTRONOMICAL_UNIT, e: 0.00859 },
@@ -271,7 +282,9 @@ class GravitationalSystemManager {
       .setStarOptions(sunOptions)
       .setRingOptions(ringOptions)
       .setSatelliteOptions(moonOptions)
-      .setPlanetsOptions(allPlanetsOptions, SIMULATION_TIME)
+      .setPlanetsOptions(allPlanetsOptions)
+      .setNormalizedPeriods(SIMULATION_TIME)
+      .setSystemCenter(V_ORIGIN_SUN)
       .setSatelliteOfPlanet(earthOptions)
       .setRingOfPlanet(saturnOptions)
 
@@ -297,7 +310,6 @@ class GravitationalSystemManager {
       this.gravitationalSystem.star,
       this.gravitationalSystem.planets,
       canvas,
-      this.animManager.animatable,
       ASTRONOMICAL_UNIT
     )
 

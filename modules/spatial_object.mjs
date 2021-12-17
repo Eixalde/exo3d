@@ -73,9 +73,16 @@ class SystemBuilder {
    * @param {Array} planetsOptions - The array of the parameters need for several planets.
    * @returns {SystemBuilder}
    */
-  setPlanetsOptions(planetsOptions, simulationTime) {
+  setPlanetsOptions(planetsOptions) {
     this.#planetsOptions = planetsOptions
+    return this
+  }
 
+  /**
+   * @param {Number} simulationTime - The time needed for a given planet to revolve.
+   * @returns {SystemBuilder}
+   */
+  setNormalizedPeriods(simulationTime) {
     /* Every period given in days is adapted relative to the first planet (which
     has the lowest period of revolution). We then multiply it by the
     simulationTime variable, which is the wanted duration of the revolution/spin
@@ -98,6 +105,13 @@ class SystemBuilder {
 
       planetOptions.normalizedSpin =
         (simulationTime * planetOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
+    })
+    return this
+  }
+
+  setSystemCenter(systemCenter) {
+    this.#planetsOptions.forEach((planetOptions) => {
+      planetOptions.systemCenter = systemCenter
     })
     return this
   }
@@ -166,65 +180,60 @@ class SystemBuilder {
  * because it has no signification otherwise.
  *
  * @member {String} name - The name of the object.
- * @member {number} diameter - The diameter of the object (no units).
- * @member {number} distanceToParent - The distance to any parent object (no units).
+ * @member {Number} diameter - The diameter of the object (no units).
+ * @member {Number} distanceToParent - The distance to any parent object (no units).
  * @member {String} texture - The link for the texture of the object.
  * @member {BABYLON.Color3} color - The color of the object.
- * @member {number} inclinationAngle - The inclination of the object relative to its star (rad).
- * @member {number} temperature - The temperature of the object (K).
+ * @member {BABYLON.Mesh} mesh - The mesh representing the object.
+ * @member {Number} eclipticInclinationAngle - The inclination of the object relative to its star (rad).
+ * @member {Number} selfInclinationAngle - The inclination of the object on itself (rad).
+ * @member {BABYLON.Vector3} systemCenter -  The point of reference for the center of the system (for inclination purposes).
+ * @member {BABYLON.Sphere} revolutionAxisParent - The object that allow inclination on the ecliptic plane.
+ * @member {BABYLON.Sphere} spinAxisParent - The object that allow inclination on the planet itself.
+ * @member {Number} temperature - The temperature of the object (K).
  * @member {EllipticalTrajectory} trajectory - The trajectory of the object.
- * @member {number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
- * @member {number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
+ * @member {Number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
+ * @member {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
  */
 class SpatialObject {
   /**
-   * @param {String} name - The name of the object.
-   * @param {number} diameter - The diameter of the object (no units).
-   * @param {number} distanceToParent - The distance to any parent object (no units).
-   * @param {String} texture - The link for the texture of the object.
-   * @param {BABYLON.Color3} color - The color of the object.
-   * @param {number} inclinationAngle - The inclination of the object relative to its star (rad).
-   * @param {number} temperature - The temperature of the object.
-   * @param {EllipticalTrajectory} trajectory - The trajectory of the object.
-   * @param {number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
-   * @param {number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
-   * @param {BABYLON.Vector3} originalPosition - The position the object should appear at.
-   * @param {boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
-   * @param {BABYLON.Animatable} animatable - Contains all animations.
+   * @param {Object} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
+   *   @param {String} spatialObjectParams.name - The name of the object.
+   *   @param {Number} spatialObjectParams.diameter - The diameter of the object (no units).
+   *   @param {Number} spatialObjectParams.distanceToParent - The distance to any parent object (no units).
+   *   @param {String} spatialObjectParams.texture - The link for the texture of the object.
+   *   @param {BABYLON.Color3} spatialObjectParams.color - The color of the object.
+   *   @param {Number} spatialObjectParams.eclipticInclinationAngle - The inclination of the object relative to its star (rad).
+   *   @param {Number} spatialObjectParams.selfInclinationAngle - The inclination of the object on itself (rad).
+   *   @param {BABYLON.Vector3} spatialObjectParams.systemCenter - The point of reference for the center of the system (for inclination purposes).
+   *   @param {Number} spatialObjectParams.temperature - The temperature of the object.
+   *   @param {EllipticalTrajectory} spatialObjectParams.trajectory - The trajectory of the object.
+   *   @param {Number} spatialObjectParams.normalizedSpin - The time needed for the object to revolve around itself (seconds).
+   *   @param {Number} spatialObjectParams.normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
+   *   @param {BABYLON.Vector3} spatialObjectParams.originalPosition - The position the object should appear at.
+   *   @param {Boolean} spatialObjectParams.showStaticTrajectory - Defines if the static trajectory appears or not.
+   *   @param {BABYLON.Animatable} spatialObjectParams.animatable - Contains all animations.
    * @param {BABYLON.Scene} scene - The current scene.
    */
-  constructor(
-    {
-      name,
-      diameter,
-      distanceToParent,
-      texture,
-      color,
-      inclinationAngle,
-      temperature,
-      normalizedSpin,
-      trajectory,
-      normalizedRevolutionPeriod,
-      originalPosition,
-      showStaticTrajectory,
-      animatable
-    },
-    scene
-  ) {
-    this.name = name
-    this.diameter = diameter
-    this.texture = texture
-    this.color = color
-    this.temperature = temperature
+  constructor(spatialObjectParams, scene) {
+    this.name = spatialObjectParams.name
+    this.diameter = spatialObjectParams.diameter
+    this.texture = spatialObjectParams.texture
+    this.color = spatialObjectParams.color
+    this.temperature = spatialObjectParams.temperature
     this.objectMat = new BABYLON.StandardMaterial(this.name + 'Mat', scene)
     this.objectMat.useLogarithmicDepth = true
-    if (texture) {
-      this.texture = new BABYLON.Texture(texture, scene)
+    if (spatialObjectParams.texture) {
+      this.texture = new BABYLON.Texture(spatialObjectParams.texture, scene)
     }
-    this.distanceToParent = distanceToParent
-    this.trajectory = trajectory
-    this.normalizedSpin = normalizedSpin
-    this.normalizedRevolutionPeriod = normalizedRevolutionPeriod
+    this.eclipticInclinationAngle = spatialObjectParams.eclipticInclinationAngle
+    this.selfInclinationAngle = spatialObjectParams.selfInclinationAngle
+    this.systemCenter = spatialObjectParams.systemCenter
+    this.distanceToParent = spatialObjectParams.distanceToParent
+    this.trajectory = spatialObjectParams.trajectory
+    this.normalizedSpin = spatialObjectParams.normalizedSpin
+    this.normalizedRevolutionPeriod =
+      spatialObjectParams.normalizedRevolutionPeriod
     this.nu = 0
   }
 
@@ -253,7 +262,11 @@ class SpatialObject {
       trajectory but many changes in the animation system made it obsolete.
       Despite its name, it is the animationShow method that does this specific
       feature right now, but it needs to be corrected in the future */
-      const staticTrajectory = this.trajectory.staticTrajectory(steps, false)
+      const staticTrajectory = this.trajectory.staticTrajectory(
+        steps,
+        false,
+        this.revolutionAxisParent
+      )
       const animMoveKeys = new Array(staticTrajectory.length)
 
       const deltaT = (this.normalizedRevolutionPeriod / steps) * FRAMERATE
@@ -290,7 +303,23 @@ class SpatialObject {
         this.animationShow(moveAnimation, FRAMERATE, scene)
       }
 
-      this.mesh.animations.push(moveAnimation)
+      /* If there is any need of tilting the object on it axis, we use an
+      intermediate attribute called spinAxisParent. It will use the
+      movement animation in place of the spatialObject itself (because the
+      spinAxisParent is defined as a parent of spObj). */
+      if (this.spinAxisParent) {
+        this.spinAxisParent.animations.push(moveAnimation)
+        animatable.push(
+          scene.beginAnimation(
+            this.spinAxisParent,
+            0,
+            this.normalizedRevolutionPeriod * FRAMERATE,
+            true
+          )
+        )
+      } else {
+        this.mesh.animations.push(moveAnimation)
+      }
     }
 
     /* The motion direction factor allows to know if the planet has a prograde
@@ -354,6 +383,42 @@ class SpatialObject {
       scene: scene
     })
     line.color = new BABYLON.Color3(1, 0, 0)
+
+    /* Allows the static trajectory to tilt alongside the real trajectory of the
+    planet (see setEclipticInclination). */
+    line.parent = this.revolutionAxisParent
+  }
+
+  /**
+   * Places the object in such a way that it has the correct inclination to the
+   * ecliptic plane. In particular, this creates a 'revolutionAxisParent' attribute that
+   * will take the role of tilting the whole plane containing the center of the
+   * system and the spatial object.
+   */
+  setEclipticInclination() {
+    if (this.spinAxisParent) {
+      /* The revolutionAxisParent is an invisible object related to its
+      SpatialObject only. By defining that object as the parent of the SpObj -
+      to be exact, it is its grandparent, because we have to use that
+      spinAxisParent as an other intermediate - any transformation
+      applied to the revAxis will affect any child it has, as if their plane of
+      reference was that revAxis. For example, if we rotate the revAxis on its
+      X-axis by pi/2, the SpObj related will have its position and trajectory
+      turned to a vertical orientation instead of an horizontal one. This is how
+      we can calculate the trajectories so easily : we consider they are
+      strictly in the (X,0,Z) plane because that doesn't matter as long as the
+      revAxis tilts everything. */
+      this.revolutionAxisParent = BABYLON.MeshBuilder.CreateSphere(
+        `${this.name}revolutionAxisParent`,
+        {
+          diameter: 0.01,
+          updatable: true
+        }
+      )
+      this.revolutionAxisParent.isVisible = false
+      this.spinAxisParent.parent = this.revolutionAxisParent
+      this.revolutionAxisParent.rotation.x = this.eclipticInclinationAngle
+    }
   }
 
   getVisualDiameter() {
@@ -414,8 +479,28 @@ class Planet extends SpatialObject {
       diameter: this.diameter,
       updatable: true
     })
-    this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
     this.mesh.animations = []
+
+    /* To make the planet rotate correctly on its Y-axis, we need to use an
+    intermediate object to tilt the planet in the first place. See the detailled
+    documentation for more explanation on that. In any case, the
+    spinAxisParent mesh replaces the planet for the movement animation,
+    because it is the planet's parent and we have to make them superpose
+    permanently to keep the correct self-inclination. Making the planet move on
+    top of its parent already moving would cause wrong and higly disturbed
+    trajectories anyway.*/
+    this.spinAxisParent = new BABYLON.CreateSphere(
+      `fakeSelfInclination${this.name}`,
+      { diameter: 0.01, updatable: true }
+    )
+    this.spinAxisParent.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
+    this.spinAxisParent.animations = []
+    this.spinAxisParent.rotation.x = this.selfInclinationAngle
+    this.spinAxisParent.isVisible = false
+    this.mesh.parent = this.spinAxisParent
+
+    this.setEclipticInclination()
+
     this.satellites = []
     if (this.texture) {
       this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the planet, texture by default (if existing)
@@ -451,7 +536,7 @@ class Ring extends SpatialObject {
     this.objectMat.diffuseTexture = this.texture
     this.objectMat.useAlphaFromDiffuseTexture = true // Using the alpha included in the texture (for spaces between rings)
     this.mesh.material = this.objectMat
-    this.mesh.rotation.x = spatialObjectParams.inclinationAngle
+    this.mesh.rotation.x = spatialObjectParams.eclipticInclinationAngle
   }
 }
 

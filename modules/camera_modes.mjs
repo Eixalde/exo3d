@@ -1,8 +1,4 @@
-const DEFAULT_STAR_CAM_ALPHA = -Math.PI / 2
-const DEFAULT_STAR_CAM_BETA = 0
-
-const DEFAULT_PLANET_CAM_ALPHA = -Math.PI / 2
-const DEFAULT_PLANET_CAM_BETA = (11 * Math.PI) / 24 // Almost flat angle
+const PI = Math.PI
 
 /**
  * Manages all cameras and views for the user.
@@ -17,16 +13,22 @@ class CameraModes {
    * @param {Star} star - The star of the system observed.
    * @param {Array} planets - The group of planets we want to look at.
    * @param {canvas} canvas - The current canvas.
-   * @param {BABYLON.Animatable} animatable - The array containing all animations of the scene.
    * @param {number} astroUnit - The value of the astronomical unit (in Babylon units).
    */
-  constructor(scene, star, planets, canvas, animatable, astroUnit) {
+  constructor(scene, star, planets, canvas, astroUnit) {
     const HIT_BOX_RADIUS = planets[0].getVisualDiameter()
     const BASE_PLANET = planets[0] // The planet pointed by the planetCamera by default
     // Placing the camera far from the star to see the entire system (2 times the largest trajectory is enough)
     const STAR_CAM_DIST = 2 * planets.at(-1).trajectory.a
     const MIN_SYSTEM_CAM_DIST = 2 * star.getVisualDiameter() // Ad hoc value for the minimum distance of the camera to the system
     const MIN_PLANET_CAM_DIST = 2 * BASE_PLANET.getVisualDiameter() // Ad hoc value for the minimum distance of the camera to the planet
+
+    const DEFAULT_STAR_CAM_ALPHA = -PI / 2
+    const DEFAULT_STAR_CAM_BETA = 0
+
+    const DEFAULT_PLANET_CAM_ALPHA = -PI / 2
+    const DEFAULT_PLANET_CAM_BETA =
+      PI / 2 + BASE_PLANET.eclipticInclinationAngle // Makes the planetCamera parallel to the ecliptic
 
     /* The number of AU the camera can see up to (must be larger than the actual
     size of the hitbox). I should then use that size but I have zero idea of how
@@ -51,13 +53,22 @@ class CameraModes {
 
     // Planet-centered camera
     const PLANET_CAM_DIST = 3 * BASE_PLANET.getVisualDiameter() // Ad hoc value for the placement of the camera
+
+    /* Since the implementation of the spinAxisParent attribute (which holds the
+    movement animation), the planetCamera must points to that object. */
     this.planetCamera = new BABYLON.ArcRotateCamera(
       'planetCamera',
       DEFAULT_PLANET_CAM_ALPHA,
       DEFAULT_PLANET_CAM_BETA,
       PLANET_CAM_DIST,
-      BASE_PLANET.mesh.position
+      BASE_PLANET.spinAxisParent.position
     )
+    this.planetCamera.parent = BASE_PLANET.revolutionAxisParent
+    /* Large angles for the Beta value of planetCamera allows a better placement
+    of itself when larger angles are involved (dependant of the planets'
+    inclination, in particular). */
+    this.planetCamera.lowerBetaLimit = -2 * PI
+    this.planetCamera.upperBetaLimit = 2 * PI
 
     /* Sets the near plane of the camera (no planet shall ever be smaller than
     0.01 so that is the appropriate value). */
@@ -110,17 +121,13 @@ class CameraModes {
     CAMERA_MODES_LABELS.forEach((camLabel, idx) => {
       document.querySelector(`.btn-group #${camLabel}`).onclick = () => {
         if (camLabel !== CAMERA_MODES_LABELS[1]) {
+          /* Hides the planet selection menu if any other camera is selected. */
           const collapseNode = document.querySelector('.collapse')
-          const collapseElement = bootstrap.Collapse.getInstance(collapseNode)
+          const collapseElement =
+            bootstrap.Collapse.getOrCreateInstance(collapseNode)
           collapseElement.hide()
         }
-        this.changeCameraMode(
-          allCameras[idx],
-          scene,
-          allCameras,
-          animatable,
-          canvas
-        )
+        this.changeCameraMode(allCameras[idx], scene, allCameras, canvas)
       }
     })
 
@@ -134,298 +141,66 @@ class CameraModes {
           return
         }
 
-        this.changeCameraToNearbyPlanet(
-          camLabel,
-          PLANET_CAMERA_LABELS,
-          planets,
-          scene,
-          animatable
-        )
+        this.changeCameraToNearbyPlanet(camLabel, PLANET_CAMERA_LABELS, planets)
       }
     })
   }
 
-  changeCameraMode(toCamera, scene, allCameras, animatable, canvas) {
+  /**
+   * Switches the view between the system, any planet of a free view.
+   *
+   * @param {BABYLON.Camera} toCamera - The camera we want to switch to.
+   * @param {BABYLON.Scene} scene - The current scene.
+   * @param {Array} allCameras - All the cameras in the scene.
+   * @param {HTMLElement} canvas - The canvas of the page.
+   */
+  changeCameraMode(toCamera, scene, allCameras, canvas) {
     // We do something only if the selected camera isn't the already active one
     if (scene.activeCamera === toCamera) {
       return
     }
 
-    allCameras.forEach((cam) => cam.detachControl()) // Locking all cameras controls
-
-    this.addSmoothCameraTransition(
-      scene,
-      scene.activeCamera,
-      toCamera,
-      () => {
-        scene.activeCamera = toCamera // Switching the active camera to the selected one
-        toCamera.attachControl(canvas, true) // Giving controls for the selected camera only
-      },
-      animatable
-    )
-  }
-
-  changeCameraToNearbyPlanet(
-    btnLabel,
-    planetCamLabels,
-    planets,
-    scene,
-    animatable
-  ) {
-    // Checking which button was clicked
-    const idx = planetCamLabels.findIndex((label) => label === btnLabel)
-
-    // Identifying the index of the planet the camera is currently looking at
-    const current = planets.findIndex(
-      (planet) => planet.mesh.position === this.planetCamera.getTarget()
-    )
-
-    /* Here we need to create a second camera, because the transition
-    camera needs a starting camera and an ending camera. What we do here
-    is cloning the planetCamera, teleportating the planetCamera to the
-    planet we want to look at next, and then applying the transition. */
-    const fakePlanetCamera = this.planetCamera.clone('fakePlanetCamera')
-    const SPAWN_RADIUS_FACTOR = 3 // Ad hoc value for the placement of the cameras (in diameters of object)
-    const LOWER_RADIUS_FACTOR = 2 // Ad hoc value for the minimum distance of the camera to the object (in diameters of object)
-    scene.activeCamera = fakePlanetCamera
-    this.planetCamera.target = planets[idx].mesh.position
-    this.planetCamera.radius =
-      SPAWN_RADIUS_FACTOR * planets[idx].getVisualDiameter()
-    this.planetCamera.lowerRadiusLimit =
-      LOWER_RADIUS_FACTOR * planets[idx].getVisualDiameter()
-
-    /* The function launched at the end of the transition between cameras */
-    const changePlanetCamera = () => {
-      scene.activeCamera = this.planetCamera // Switching back the active camera to planetCamera
-      fakePlanetCamera.dispose() // Destroying the fake camera
+    if (toCamera === this.freeCamera) {
+      toCamera.position = scene.activeCamera.position
+      toCamera.target = scene.activeCamera.target
     }
 
-    this.addSmoothCameraTransition(
-      scene,
-      scene.activeCamera,
-      this.planetCamera,
-      changePlanetCamera,
-      animatable
-    )
+    allCameras.forEach((cam) => cam.detachControl()) // Locking all cameras controls
+    scene.activeCamera = toCamera // Switching the active camera to the selected one
+    toCamera.attachControl(canvas, true) // Giving controls for the selected camera only
   }
 
   /**
-   * Creates a smooth transition when changing the camera of the scene. The
-   * animatable is necessary so the animations can slow down during the
-   * transition only. This prevents violent movements when trying to track
-   * fast-moving objects.
+   * Changes the focus of the planet camera, switching to any planet selected by
+   * the user.
    *
-   * @param {BABYLON.Scene} scene - The current scene.
-   * @param {BABYLON.Camera} initialCamera - The current active camera.
-   * @param {BABYLON.Camera} finalCamera - The camera we want to go to.
-   * @param {function} onTransitionEnd - Specific actions to do when the transition is over.
-   * @param {BABYLON.Animatable} animatable - The array containing all animations of the scene.
+   * @param {String} btnLabel - The name of the button.
+   * @param {Array} planetCamLabels - The name of all buttons related to planet camera.
+   * @param {Array} planets - All the planets of the system.
    */
-  addSmoothCameraTransition(
-    scene,
-    initialCamera,
-    finalCamera,
-    onTransitionEnd,
-    animatable
-  ) {
-    /* Transition is needed for every case besides switching to the free camera.
-    In this specific case, we just overlay the starting camera and the free
-    camera (see the else statement). */
-    if (finalCamera !== this.freeCamera) {
-      const FRAMERATE = 60
-      const ANIM_LENGTH = FRAMERATE * 2
-      const saveSpeedRatio = animatable[0].speedRatio // Saving the current speed ratio of the first animation (the same for all of them)
-      if (saveSpeedRatio !== 0) {
-        animatable.forEach((anim) => (anim.speedRatio = 0.25)) // If the animations aren't paused, we slow them down to 25% speed
-        /* NOTE : 25% speed is fine at the moment I am experimenting, though it
-        may be interesting to slow it even more when dealing with REALLY fast
-        objects. */
-      }
+  changeCameraToNearbyPlanet(btnLabel, planetCamLabels, planets) {
+    // Checking which button was clicked
+    const idx = planetCamLabels.findIndex((label) => label === btnLabel)
+    const nextPlanet = planets[idx]
+    const SPAWN_RADIUS_FACTOR = 3 // Ad hoc value for the placement of the cameras (in diameters of object)
+    const LOWER_RADIUS_FACTOR = 2 // Ad hoc value for the minimum distance of the camera to the object (in diameters of object)
 
-      /* Another particular case is when the starting camera is the free camera.
-      This is because all cameras but this one use polar coordinates to place
-      themselves and transition between them. The free camera uses cartesian
-      coordinates instead, and while it is possible to convert values between
-      those two, the generalized system of transition is based on a
-      polar-coordinates camera. The solution is to create a "fake free camera"
-      that overlays with the real one, but is actually compatible with the
-      polar-coordinates system. This fake free camera then replaces the real one
-      as the reference for the starting camera. */
-      if (initialCamera === this.freeCamera) {
-        const fakeFreeCamera = new BABYLON.ArcRotateCamera(
-          'fakeFreeCamera',
-          0,
-          0,
-          1,
-          this.freeCamera.getTarget()
-        ) // 1 is the distance to the target, and the free camera is ALWAYS 1 unit away from its target
-        fakeFreeCamera.position = this.freeCamera.position
-        fakeFreeCamera.rotation = this.freeCamera.rotation
-        fakeFreeCamera.maxZ = finalCamera.maxZ
-        initialCamera = fakeFreeCamera
-      }
+    /* Takes the planet as the new focus, also transfers the camera in the same
+    plane as the planet by attaching it to its revolutionAxisParent (see
+    SpatialObject for plane-related explanations). Since the implementation of
+    the spinAxisParent attribute (which holds the movement animation), the
+    planetCamera must points to that object instead. */
+    this.planetCamera.target = nextPlanet.spinAxisParent.position
+    this.planetCamera.parent = nextPlanet.revolutionAxisParent
+    this.planetCamera.radius =
+      SPAWN_RADIUS_FACTOR * nextPlanet.getVisualDiameter()
+    this.planetCamera.lowerRadiusLimit =
+      LOWER_RADIUS_FACTOR * nextPlanet.getVisualDiameter()
 
-      const initialTarget = initialCamera.getTarget()
-      const finalTarget = finalCamera.getTarget()
-
-      /* WHITEMAGIC : This calculation allows the transition to mostly look at
-      the object it is coming at during the transition.
-      TODO : make a diagram to explain this angle. */
-      finalCamera.alpha =
-        BABYLON.Vector3.GetAngleBetweenVectors(
-          finalTarget.subtract(initialTarget),
-          new BABYLON.Vector3(1, 0, 0),
-          new BABYLON.Vector3(0, 1, 0)
-        ) - Math.PI
-
-      finalCamera.alpha %= 2 * Math.PI // Avoids angles over 360 degrees, it makes the camera spin sometimes
-
-      finalCamera.beta = (11 * Math.PI) / 24 // Fairly horizontal view for the ending camera
-
-      /* This is why we need polar coordinates only */
-      const initialAlpha = initialCamera.alpha
-      const initialBeta = initialCamera.beta
-      const initialRadius = initialCamera.radius
-
-      const finalAlpha = finalCamera.alpha
-      const finalBeta = finalCamera.beta
-      const finalRadius = finalCamera.radius
-
-      const transitionCamera = new BABYLON.ArcRotateCamera(
-        'transitionCamera',
-        0,
-        0,
-        10,
-        initialTarget
-      ) // A transition camera to fake movement from the active camera to the selected one
-
-      transitionCamera.maxZ = finalCamera.maxZ
-
-      /* We have to create an object that the transition camera can track
-      properly during the transition. This object will move from the target of
-      the starting camera to the one of the ending camera. By tracking it,
-      the transition camera will also move at the same speed.*/
-      const transitionTarget = BABYLON.CreateBox('transitionTarget', scene)
-      transitionTarget.isVisible = false
-      transitionTarget.position = initialTarget
-
-      transitionCamera.lockedTarget = transitionTarget
-
-      /* The two cameras don't always have the same distance to their target, so
-      a transition is needed for the radius as well. */
-      const transitionRadiusAnimation = new BABYLON.Animation(
-        'transitionRadiusAnimation',
-        'radius',
-        FRAMERATE,
-        BABYLON.Animation.ANIMATIONTYPE_FLOAT
-      )
-      transitionRadiusAnimation.setKeys([
-        {
-          frame: 0,
-          value: initialRadius
-        },
-        {
-          frame: ANIM_LENGTH,
-          value: finalRadius
-        }
-      ])
-
-      /* The transition of the target */
-      const transitionPositionAnimation = new BABYLON.Animation(
-        'transitionPositionAnimation',
-        'position',
-        FRAMERATE,
-        BABYLON.Animation.ANIMATIONTYPE_VECTOR3
-      )
-      transitionPositionAnimation.setKeys([
-        {
-          frame: 0,
-          value: initialTarget
-        },
-        {
-          frame: ANIM_LENGTH,
-          value: finalTarget
-        }
-      ])
-
-      /* The transition of the alpha value of the camera */
-      const transitionAlphaAnimation = new BABYLON.Animation(
-        'transitionAlphaAnimation',
-        'alpha',
-        FRAMERATE,
-        BABYLON.Animation.ANIMATIONTYPE_FLOAT
-      )
-      transitionAlphaAnimation.setKeys([
-        {
-          frame: 0,
-          value: initialAlpha
-        },
-        {
-          frame: ANIM_LENGTH,
-          value: finalAlpha
-        }
-      ])
-      /* Easing the animation allows to points earlier towards the ending target */
-      const alphaEaseFunction = new BABYLON.CubicEase()
-      alphaEaseFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT)
-      transitionAlphaAnimation.setEasingFunction(alphaEaseFunction)
-
-      /* The transition to the beta value needs an intermediate key, that places
-      the camera on the X/Z plane.
-      TODO : a diagram that explains this */
-      const transitionBetaAnimation = new BABYLON.Animation(
-        'transitionBetaAnimation',
-        'beta',
-        FRAMERATE,
-        BABYLON.Animation.ANIMATIONTYPE_FLOAT
-      )
-      transitionBetaAnimation.setKeys([
-        {
-          frame: 0,
-          value: initialBeta
-        },
-        {
-          frame: (3 * ANIM_LENGTH) / 4,
-          value: Math.PI / 2
-        },
-        {
-          frame: ANIM_LENGTH,
-          value: finalBeta
-        }
-      ])
-      /* Easing the animation allows to points earlier towards the ending target */
-      const betaEaseFunction = new BABYLON.CubicEase()
-      betaEaseFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEOUT)
-      transitionBetaAnimation.setEasingFunction(betaEaseFunction)
-
-      transitionCamera.animations = [
-        transitionRadiusAnimation,
-        transitionAlphaAnimation,
-        transitionBetaAnimation
-      ]
-      transitionTarget.animations = [transitionPositionAnimation]
-      scene.activeCamera = transitionCamera // Using the transition camera as the user view during the transition
-      scene.beginAnimation(transitionTarget, 0, ANIM_LENGTH, false)
-      const transitionAnimatable = scene.beginAnimation(
-        transitionCamera,
-        0,
-        ANIM_LENGTH,
-        false
-      )
-      transitionAnimatable.onAnimationEnd = () => {
-        onTransitionEnd()
-        transitionCamera.dispose() // Destroying the transition camera once its job is done
-        transitionTarget.dispose() // Destroying the transition target as well
-        animatable.forEach((anim) => (anim.speedRatio = saveSpeedRatio)) // Putting all animations to their original speed
-      }
-    } else {
-      /* Placing the free camera at the exact same position and rotation gives
-      the impression that the spectator has been detached from the object they
-      were looking at. */
-      finalCamera.position = initialCamera.position
-      finalCamera.target = initialCamera.target
-      onTransitionEnd()
-    }
+    /* Following lines place the camera in a way that makes it parallel to the
+    ecliptic. This allows to see the inclination of the planet. */
+    this.planetCamera.alpha = -PI / 2
+    this.planetCamera.beta = PI / 2 + nextPlanet.eclipticInclinationAngle
   }
 }
 
