@@ -1,5 +1,26 @@
 {
+  "name": "exo3d",
+  "version": "0.20.2",
+  "description": "Didactical and somwhat realistic 3d representation of exoplanet systems. Designed to interact with the exoplanet.eu website.",
+  "homepage": "https://gitlab.obspm.fr/exoplanet/exo3d",
+  "keywords": ["exoplanet", "simulation", "3d"],
   "type": "module",
+  "author": {
+  	"name": "Thomas Bedrine for LESIA <tbedrine@gmail.com>"
+  },
+  "contributors": [
+    "Pierre-Yves Martin for LESIA <pierre-yves.martin@obspm.fr>",
+    "Quentin Kral for LESIA <quentin.kral@obspm.fr>",
+    "Françoise Roques for LESIA <francoise.roques@obspm.fr>"
+  ],
+  "license": "EUPL-1.2",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.obspm.fr/exoplanet/exo3d.git"
+  },
+  "bugs": {
+    "url": "https://gitlab.obspm.fr/exoplanet/exo3d/-/issues"
+  },
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
@@ -8,7 +29,8 @@
     "transform": {}
   },
   "devDependencies": {
-    "jest": "^27.2.4"
+    "jest": "^27.2.4",
+    "npm-package-json-lint": "^5.4.2"
   },
   "dependencies": {
     "babylonjs": "^5.0.0-alpha.60",
@@ -21,5 +43,55 @@
   },
   "stylelint": {
     "extends": "stylelint-config-standard"
+  },
+  "npmpackagejsonlint": {
+    "rules": {
+      "require-author": "error",
+      "require-description": "error",
+      "require-engines": "off",
+      "require-license": "error",
+      "require-name": "error",
+      "require-repository": "error",
+      "require-version": "error",
+      "require-bugs": "error",
+      "require-homepage": "error",
+      "require-keywords": "error",
+      "bin-type": "error",
+      "config-type": "error",
+      "description-type": "error",
+      "devDependencies-type": "error",
+      "directories-type": "error",
+      "engines-type": "error",
+      "files-type": "error",
+      "homepage-type": "error",
+      "keywords-type": "error",
+      "license-type": "error",
+      "main-type": "error",
+      "man-type": "error",
+      "name-type": "error",
+      "preferGlobal-type": "error",
+      "private-type": "error",
+      "repository-type": "error",
+      "scripts-type": "error",
+      "version-type": "error",
+      "valid-values-author": "off",
+      "valid-values-private": ["error", [
+        false
+      ]],
+      "no-restricted-dependencies": ["error", [
+        "gulping-npm-package-json-lint"
+      ]],
+      "no-restricted-pre-release-dependencies": ["error", [
+        "gulping-npm-package-json-lint"
+      ]],
+      "no-restricted-devDependencies": ["error", [
+        "gulping-npm-package-json-lint"
+      ]],
+      "no-restricted-pre-release-devDependencies": ["error", [
+        "gulping-npm-package-json-lint"
+      ]],
+      "name-format": "error",
+      "version-format": "error"
+    }
   }
 }
