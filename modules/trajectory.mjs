@@ -50,7 +50,7 @@ class EllipticalTrajectory {
    * @param {number} steps - Number of points to use.
    * @param {boolean} showTrajectory - Determines if the trajectory is printed or not.
    * @constant {Array} stTraj - The static trajectory.
-   * @return {object} The 3D-points contained in the static trajectory.
+   * @return {Array} The 3D-points contained in the static trajectory.
    */
   staticTrajectory(steps, showTrajectory) {
     const stTraj = new Array(steps + 1)
@@ -61,13 +61,6 @@ class EllipticalTrajectory {
         0,
         this.posInNu((2 * i * Math.PI) / steps).y
       )
-    }
-
-    if (showTrajectory) {
-      let trajectoryLine = BABYLON.MeshBuilder.CreateLines('trajectory', {
-        points: stTraj
-      })
-      trajectoryLine.color = new BABYLON.Color3(1, 0, 0)
     }
 
     return stTraj

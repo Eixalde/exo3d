@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.0] - 2021-12-16
+
+### Added
+
+- Implemented ecliptic inclination for planets
+- Implemented self-inclination for planets
+
+### Changed
+
+- Modified the movement animations' object of reference
+
+### Removed
+
+- Deleted the transition animation between cameras
+
 ## [0.19.0] - 2021-12-13
 
 ### Added
