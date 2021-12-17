@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.2] - 2021-12-17
+
+### Added
+
+- Added EUPL 1.2 licence to the project
+
 ## [0.20.0] - 2021-12-16
 
 ### Added
