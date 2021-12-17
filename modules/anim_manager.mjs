@@ -1,41 +1,65 @@
 /**
- * About the speed management : there used to be only the global speed ratio to
- * control the animations, but this implies that any animation can only be at 2x
- * speed maximum. For planets that have really high revolutions periods compared
- * to the nearest planets, you would see them move extremely slowly. Thus we
- * made a relative speed ratio, that allows to change the speed to larger
- * scales. In particular, the relative speed ratio takes a specific planet and
- * accelerates its movement to make it revolve in a definite amount of time
- * (mostly 5 seconds, see the constant BASE_REVOLUTION_PERIOD in the
- * system_manager). Then, every other planet will have to follow that new
+ * @module AnimManager
+ * @description About the speed management : there used to be only the global
+ * speed ratio to control the animations, but this implies that any animation
+ * can only be at 2x speed maximum. For planets that have really high
+ * revolutions periods compared to the nearest planets, you would see them move
+ * extremely slowly. Thus we made a relative speed ratio, that allows to change
+ * the speed to larger scales. In particular, the relative speed ratio takes a
+ * specific planet and accelerates its movement to make it revolve in a definite
+ * amount of time (mostly 5 seconds, see the constant BASE_REVOLUTION_PERIOD in
+ * the system_manager). Then, every other planet will have to follow that new
  * reference, i.e. if the Earth revolves in 5 secondes, Mars would take around 9
  * seconds to revolve.
  */
 
 /**
+ * @typedef {Object} PlanetOptions - Initial parameters for a planet (not to confuse with SpatialObjectParams in 'SpatialObject').
+ * @property {String} name - The name of the object.
+ * @property {Number} diameter - The diameter of the object (no units).
+ * @property {Number} distanceToParent - The distance to any parent object (no units).
+ * @property {String} texture - The link for the texture of the object.
+ * @property {BABYLON.Color3} color - The color of the object.
+ * @property {Number} eclipticInclinationAngle - The inclination of the object relative to its star (rad).
+ * @property {Number} selfInclinationAngle - The inclination of the object on itself (rad).
+ * @property {Number} temperature - The temperature of the object.
+ * @property {EllipticalTrajectory} trajectory - The trajectory of the object.
+ * @property {Number} spin - The time needed for the object to revolve around itself (seconds).
+ * @property {Number} revolutionPeriod - The time needed for the object to revolve around its star (seconds).
+ * @property {BABYLON.Vector3} originalPosition - The position the object should appear at.
+ * @property {Boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
+ */
+
+/**
+ * @typedef {Object} ButtonParams
+ * @property {String} name - Name of the button.
+ * @property {Number} value - Value associated to the button.
+ */
+
+/**
  * The object that manages every animation - their speed in particular.
- *
- * @member {number} globalSpeedRatio - The speed ratio independant of any object.
- * @member {number} relativeSpeedRatio - The speed ratio relative to a specific planet.
- * @member {BABYLON.Animatable} animatable - Contains all animations.
+ * @property {Number} globalSpeedRatio - The speed ratio independant of any object.
+ * @property {Number} relativeSpeedRatio - The speed ratio relative to a specific planet.
+ * @property {BABYLON.Animatable} animatable - Contains all animations.
  */
 class AnimManager {
   /**
-   * @param {Array} planetsOptions - The parameters of the planets in the system.
-   * @constant {Object} GENERAL_SPEED_PARAMS - General speed values and labels.
-   * @constant {Array} RELATIVE_SPEED_PARAMS - Relative speed values (no labels needed).
+   * @param {PlanetOptions[]} planetsOptions - The parameters of the planets in the system.
    */
   constructor(planetsOptions) {
     this.globalSpeedRatio = 1
     this.relativeSpeedRatio = 1
     this.animatable = []
 
+    /* General speed values and labels. */
     const GENERAL_SPEED_PARAMS = [
-      { name: 'pause', ratio: 0 },
-      { name: 'slow', ratio: 0.5 },
-      { name: 'normal', ratio: 1 },
-      { name: 'fast', ratio: 2 }
+      { name: 'pause', value: 0 },
+      { name: 'slow', value: 0.5 },
+      { name: 'normal', value: 1 },
+      { name: 'fast', value: 2 }
     ]
+
+    /* Relative speed values (no labels needed). */
     const RELATIVE_SPEED_PARAMS = new Array(planetsOptions.length)
 
     /* Calculates the ratio between the periods of all planets, relative to the
@@ -50,9 +74,9 @@ class AnimManager {
         /* Global and relative speed ratios are interdependant, they need to
         know each other's value when they change individually. This is why they
         are updated, which wasn't the case when only the global existed. */
-        this.globalSpeedRatio = speed.ratio
+        this.globalSpeedRatio = speed.value
         this.animatable.forEach(
-          (anim) => (anim.speedRatio = speed.ratio * this.relativeSpeedRatio)
+          (anim) => (anim.speedRatio = speed.value * this.relativeSpeedRatio)
         )
       }
     })

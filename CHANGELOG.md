@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.20.1] - 2021-12-17
+
+### Added
+
+- Implemented jsdoc2md for generated documentation in markdown
+
+### Changed
+
+- Rewrote the documentation of the code
+
 ## [0.20.0] - 2021-12-16
 
 ### Added

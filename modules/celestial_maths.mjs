@@ -1,14 +1,19 @@
-// Found the code on https://github.com/sergiomb2/ufraw/blob/1aec313/ufraw_routines.c#L246-L294
-// Also refered to the following stackoverflow thread :
-// https://stackoverflow.com/questions/13975917/calculate-colour-temperature-in-k/13982347#13982347
+import { SpatialObjectParams } from './spatial_object.mjs'
+
+/**
+ * @module CelestialMaths
+ * @description About the function 'convertTemperature to RGB' : we found the
+ * code on [GitHub](https://github.com/sergiomb2/ufraw/blob/1aec313/ufraw_routines.c#L246-L294).
+ *
+ * We also refered to the following stackoverflow thread : [Calculate colour temperature in K](https://stackoverflow.com/questions/13975917/calculate-colour-temperature-in-k/13982347#13982347).
+ */
 
 const pow = Math.pow
 const floor = Math.floor
 /**
  * Calculate the RGB coding of a given temperature.
- *
- * @param {number} temperature - The temperature of a celestial body (in K).
- * @returns {Object} - Returns the RGB coding of that temperature (scaled from 0 to 1).
+ * @param {Number} temperature - The temperature of a celestial body (in K).
+ * @returns {{red: Number, green: Number, blue: Number}} Returns the RGB coding of that temperature (scaled from 0 to 1).
  */
 function convertTemperatureToRGB(temperature) {
   const XYZ_to_RGB = [
@@ -64,12 +69,11 @@ function convertTemperatureToRGB(temperature) {
  * Takes two neighbouring objects (their trajectory and size) and compare them.
  * The result is a scaling factor by which each object can be enlarged so they
  * touch each other.
- *
  * @param {Trajectory} currentObjTraj - The trajectory of the first object we want to make bigger.
  * @param {Trajectory} neighbourObjTraj - The trajectory of the neighbour of the first object.
- * @param {number} currentObjDiameter - The diameter of the object.
- * @param {number} neighbourObjDiameter - The diameter of the neighbour.
- * @returns {number} - The scaling factor for the two objects.
+ * @param {Number} currentObjDiameter - The diameter of the object.
+ * @param {Number} neighbourObjDiameter - The diameter of the neighbour.
+ * @returns {Number} The scaling factor for the two objects.
  */
 function compareOrbits({
   currentObjTraj,
@@ -101,11 +105,10 @@ function compareOrbits({
 
 /**
  * Applies the compareOrbits function to an entire system (star excluded). The
- * result is a factor adapted for the smallest scaling ratio in the system, this
+ * result is a factor adapted focanvasr the smallest scaling ratio in the system, this
  * way only two planets may touch each other and there is no overlap.
- *
- * @param {Array} systemCompareParameters - An array of multiple objects containing the parameters for the compareOrbits function.
- * @returns {number} - The smallest scaling ratio to apply to an entire system.
+ * @param {SpatialObjectParams[]} systemCompareParameters - An array of multiple objects containing the parameters for the compareOrbits function.
+ * @returns {Number} The smallest scaling ratio to apply to an entire system.
  */
 function compareSystemOrbits(systemCompareParameters) {
   const ALL_SCALING_RATIOS = new Array(systemCompareParameters.length)
@@ -117,9 +120,8 @@ function compareSystemOrbits(systemCompareParameters) {
 
 /**
  * Convert a duration given in days into years, months and days.
- *
- * @param {number} daysTotal - Amount of days to convert.
- * @returns {years: number, months: number, days: number} - Structure with the different parts of the duration.
+ * @param {Number} daysTotal - Amount of days to convert.
+ * @returns {{years: Number, months: Number, days: Number}} Structure with the different parts of the duration.
  */
 function daysToDuration(daysTotal) {
   const YEAR_IN_DAYS = 365.25

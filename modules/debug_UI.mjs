@@ -1,13 +1,16 @@
 /**
+ * @module DebugUI
+ */
+
+/**
  * Debug tool, used mostly to manipulate scales in the system.
- *
- * @member {BABYLON.GUI.AdvancedDynamicTexture} UI - The UI of the application.
- * @member {BABYLON.GUI.StackPanel} controlsStackPanel - Stack of controls for the debug.
+ * @property {BABYLON.GUI.AdvancedDynamicTexture} UI - The UI of the application.
+ * @property {BABYLON.GUI.StackPanel} controlsStackPanel - Stack of controls for the debug.
  */
 class DebugUI {
   /**
    * @param {BABYLON.GUI.AdvancedDynamicTexture} generalUI - The UI of the application.
-   * @param {function} modificationFunction - The function to call when using the sliders.
+   * @param {Function} modificationFunction - The function to call when using the sliders.
    */
   constructor(generalUI, modificationFunction) {
     const LOWER_SLIDER_VALUE = 0.1 // Ad hoc value
@@ -35,12 +38,11 @@ class DebugUI {
 
   /**
    * Create a small slider menu to control a specified value.
-   *
-   * @param {number} controlledValue - The parameter to modify with the UI.
+   * @param {Number} controlledValue - The parameter to modify with the UI.
    * @param {String} labelValue - The name of that parameter.
-   * @param {number} minScale - The minimum value allowed for the parameter.
-   * @param {number} maxScale - The maximum value allowed for the parameter.
-   * @param {function} transitionFunction - Makes any transition needed for objets depending on the parameter.
+   * @param {Number} minScale - The minimum value allowed for the parameter.
+   * @param {Number} maxScale - The maximum value allowed for the parameter.
+   * @param {Function} transitionFunction - Makes any transition needed for objets depending on the parameter.
    */
   addSliderControls(
     controlledValue,

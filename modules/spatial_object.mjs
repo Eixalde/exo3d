@@ -2,25 +2,46 @@ import { convertTemperatureToRGB } from '../exo3d.mjs'
 import { AnimManager } from './anim_manager.mjs'
 
 /**
- * About the movement animation : tangents and interpolation. I am using
- * Babylon's animation system with keys. Give it some vectors each linked to a
- * frame (it doesn't have to be an integer though) and it will return a smooth
- * animation between all those vectors. By default, the transition is made
- * linearly, so with eight points in the space, you make an 8-sided polygon
- * path. But we want elliptical trajectories, so either we increase the number
- * of points really high, or we make Babylon transitions a bit more curved. The
- * first option will suffer through any 10000/1 ratio trajectory (meaning there
- * are two trajectories in the same system and one is 10k times larger), so we
- * have to take the second option. Babylon has pre-made functions to interpolate
- * movement between two vectors, given proper parameters and setup. If you
- * provide the tangent of the vector alongside itself and its frame, Babylon
- * automatically uses a Hermite method to curve the transition. So we had to get
- * the tangents in the first place. We calculated them with the Runge-Kutta
- * method, considering the formula for the vector i :
+ * @module SpatialObject
+ * @description About the movement animation : tangents and
+ * interpolation. I am using Babylon's animation system with keys. Give it some
+ * vectors each linked to a frame (it doesn't have to be an integer though) and
+ * it will return a smooth animation between all those vectors. By default, the
+ * transition is made linearly, so with eight points in the space, you make an
+ * 8-sided polygon path. But we want elliptical trajectories, so either we
+ * increase the number of points really high, or we make Babylon transitions a
+ * bit more curved. The first option will suffer through any 10000/1 ratio
+ * trajectory (meaning there are two trajectories in the same system and one is
+ * 10k times larger), so we have to take the second option. Babylon has pre-made
+ * functions to interpolate movement between two vectors, given proper
+ * parameters and setup. If you provide the tangent of the vector alongside
+ * itself and its frame, Babylon automatically uses a Hermite method to curve
+ * the transition. So we had to get the tangents in the first place. We
+ * calculated them with the Runge-Kutta method, considering the formula for the
+ * vector i :
  *
  * (i+1th vector - i-1th vector) / 2*deltaT
  *
  * (deltaT being the time between two keys of animation).
+ */
+
+/**
+ * @typedef {Object} SpatialObjectParams - Parameters needed for the creation of a SpatialObject.
+ * @property {String} name - The name of the object.
+ * @property {Number} diameter - The diameter of the object (no units).
+ * @property {Number} distanceToParent - The distance to any parent object (no units).
+ * @property {String} texture - The link for the texture of the object.
+ * @property {BABYLON.Color3} color - The color of the object.
+ * @property {Number} eclipticInclinationAngle - The inclination of the object relative to its star (rad).
+ * @property {Number} selfInclinationAngle - The inclination of the object on itself (rad).
+ * @property {BABYLON.Vector3} systemCenter - The point of reference for the center of the system (for inclination purposes).
+ * @property {Number} temperature - The temperature of the object.
+ * @property {EllipticalTrajectory} trajectory - The trajectory of the object.
+ * @property {Number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
+ * @property {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
+ * @property {BABYLON.Vector3} originalPosition - The position the object should appear at.
+ * @property {Boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
+ * @property {BABYLON.Animatable} animatable - Contains all animations.
  */
 
 /**
@@ -178,41 +199,25 @@ class SystemBuilder {
 /**
  * The base class for any spatial object. It shall not be instantiated as such,
  * because it has no signification otherwise.
- *
- * @member {String} name - The name of the object.
- * @member {Number} diameter - The diameter of the object (no units).
- * @member {Number} distanceToParent - The distance to any parent object (no units).
- * @member {String} texture - The link for the texture of the object.
- * @member {BABYLON.Color3} color - The color of the object.
- * @member {BABYLON.Mesh} mesh - The mesh representing the object.
- * @member {Number} eclipticInclinationAngle - The inclination of the object relative to its star (rad).
- * @member {Number} selfInclinationAngle - The inclination of the object on itself (rad).
- * @member {BABYLON.Vector3} systemCenter -  The point of reference for the center of the system (for inclination purposes).
- * @member {BABYLON.Sphere} revolutionAxisParent - The object that allow inclination on the ecliptic plane.
- * @member {BABYLON.Sphere} spinAxisParent - The object that allow inclination on the planet itself.
- * @member {Number} temperature - The temperature of the object (K).
- * @member {EllipticalTrajectory} trajectory - The trajectory of the object.
- * @member {Number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
- * @member {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
+ * @property {String} name - The name of the object.
+ * @property {Number} diameter - The diameter of the object (no units).
+ * @property {Number} distanceToParent - The distance to any parent object (no units).
+ * @property {String} texture - The link for the texture of the object.
+ * @property {BABYLON.Color3} color - The color of the object.
+ * @property {BABYLON.Mesh} mesh - The mesh representing the object.
+ * @property {Number} eclipticInclinationAngle - The inclination of the object relative to its star (rad).
+ * @property {Number} selfInclinationAngle - The inclination of the object on itself (rad).
+ * @property {BABYLON.Vector3} systemCenter -  The point of reference for the center of the system (for inclination purposes).
+ * @property {BABYLON.Sphere} revolutionAxisParent - The object that allow inclination on the ecliptic plane.
+ * @property {BABYLON.Sphere} spinAxisParent - The object that allow inclination on the planet itself.
+ * @property {Number} temperature - The temperature of the object (K).
+ * @property {EllipticalTrajectory} trajectory - The trajectory of the object.
+ * @property {Number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
+ * @property {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
  */
 class SpatialObject {
   /**
-   * @param {Object} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
-   *   @param {String} spatialObjectParams.name - The name of the object.
-   *   @param {Number} spatialObjectParams.diameter - The diameter of the object (no units).
-   *   @param {Number} spatialObjectParams.distanceToParent - The distance to any parent object (no units).
-   *   @param {String} spatialObjectParams.texture - The link for the texture of the object.
-   *   @param {BABYLON.Color3} spatialObjectParams.color - The color of the object.
-   *   @param {Number} spatialObjectParams.eclipticInclinationAngle - The inclination of the object relative to its star (rad).
-   *   @param {Number} spatialObjectParams.selfInclinationAngle - The inclination of the object on itself (rad).
-   *   @param {BABYLON.Vector3} spatialObjectParams.systemCenter - The point of reference for the center of the system (for inclination purposes).
-   *   @param {Number} spatialObjectParams.temperature - The temperature of the object.
-   *   @param {EllipticalTrajectory} spatialObjectParams.trajectory - The trajectory of the object.
-   *   @param {Number} spatialObjectParams.normalizedSpin - The time needed for the object to revolve around itself (seconds).
-   *   @param {Number} spatialObjectParams.normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
-   *   @param {BABYLON.Vector3} spatialObjectParams.originalPosition - The position the object should appear at.
-   *   @param {Boolean} spatialObjectParams.showStaticTrajectory - Defines if the static trajectory appears or not.
-   *   @param {BABYLON.Animatable} spatialObjectParams.animatable - Contains all animations.
+   * @param {SpatialObjectParams} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
    * @param {BABYLON.Scene} scene - The current scene.
    */
   constructor(spatialObjectParams, scene) {
@@ -240,13 +245,12 @@ class SpatialObject {
   /**
    * Creates the 'rotate on itself' animation, and the movement animation if the
    * object does move.
-   *
-   * @param {number} steps - The number of steps required for the animation.
+   * @param {Number} steps - The number of steps required for the animation.
    * @param {BABYLON.Scene} scene - The current scene.
-   * @param {boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
-   * @constant {number} FRAMERATE - The framerate wanted (30 or 60 if possible).
+   * @param {Boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
    */
   buildAnimation(steps, scene, showStaticTrajectory, animatable) {
+    // The framerate wanted (30 or 60 if possible).
     const FRAMERATE = 30
     //Checks if the object is supposed to move, eventually creates its movement animation
     if (this.trajectory.canMove) {
@@ -262,11 +266,7 @@ class SpatialObject {
       trajectory but many changes in the animation system made it obsolete.
       Despite its name, it is the animationShow method that does this specific
       feature right now, but it needs to be corrected in the future */
-      const staticTrajectory = this.trajectory.staticTrajectory(
-        steps,
-        false,
-        this.revolutionAxisParent
-      )
+      const staticTrajectory = this.trajectory.staticTrajectory(steps)
       const animMoveKeys = new Array(staticTrajectory.length)
 
       const deltaT = (this.normalizedRevolutionPeriod / steps) * FRAMERATE
@@ -362,9 +362,8 @@ class SpatialObject {
 
   /**
    * Used to debug animations by showing multiple details, especially interpolation between keys.
-   *
    * @param {BABYLON.Animation} animation - The animation of which we want to see the trajectory.
-   * @param {number} FRAMERATE - The framerate of the animation.
+   * @param {Number} FRAMERATE - The framerate of the animation.
    * @param {BABYLON.Scene} scene - The Current scene.
    */
   animationShow(animation, FRAMERATE, scene) {
@@ -421,6 +420,11 @@ class SpatialObject {
     }
   }
 
+  /**
+   * Computes and returns the current diameter of the object, including any
+   * scaling.
+   * @returns {Number}
+   */
   getVisualDiameter() {
     return this.diameter * this.mesh.scaling.x
   }
@@ -433,8 +437,8 @@ class SpatialObject {
  */
 class Star extends SpatialObject {
   /**
-   * @param {object} spatialObjectParams - The multiple paramaters needed for any spatial object.
-   * @param {scene} scene - The current scene.
+   * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
+   * @param {BABYLON.Scene} scene - The current scene.
    */
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
@@ -464,14 +468,13 @@ class Star extends SpatialObject {
 
 /**
  * The class used for planets and satellites.
- * @member {Array} satellites - Planet-exclusive member, dedicated to the list of its satellites (if any).
- *
+ * @property {Array} satellites - Planet-exclusive member, dedicated to the list of its satellites (if any).
  * @extends SpatialObject
  */
 class Planet extends SpatialObject {
   /**
-   * @param {object} spatialObjectParams - The multiple paramaters needed for any spatial object.
-   * @param {scene} scene - The current scene.
+   * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
+   * @param {BABYLON.Scene} scene - The current scene.
    */
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
@@ -523,7 +526,7 @@ class Planet extends SpatialObject {
  */
 class Ring extends SpatialObject {
   /**
-   * @param {object} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
+   * @param {SpatialObjectParams} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
    * @param {BABYLON.Scene} scene - The current scene.
    */
   constructor(spatialObjectParams, scene) {

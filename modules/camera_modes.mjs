@@ -1,19 +1,22 @@
+/**
+ * @module CameraModes
+ */
+
 const PI = Math.PI
 
 /**
  * Manages all cameras and views for the user.
- *
- * @member {BABYLON.ArcRotateCamera} starCamera - A camera focused on the center of the system (the star, mostly).
- * @member {BABYLON.ArcRotateCamera} planetCamera - A camera focused on the planet.
- * @member {BABYLON.UniversalCamera} freeCamera - A camera controlled by the user, can move anywhere in the system.
+ * @property {BABYLON.ArcRotateCamera} starCamera - A camera focused on the center of the system (the star, mostly).
+ * @property {BABYLON.ArcRotateCamera} planetCamera - A camera focused on the planet.
+ * @property {BABYLON.UniversalCamera} freeCamera - A camera controlled by the user, can move anywhere in the system.
  */
 class CameraModes {
   /**
    * @param {BABYLON.Scene} scene - The current scene.
    * @param {Star} star - The star of the system observed.
-   * @param {Array} planets - The group of planets we want to look at.
-   * @param {canvas} canvas - The current canvas.
-   * @param {number} astroUnit - The value of the astronomical unit (in Babylon units).
+   * @param {Planet[]} planets - The group of planets we want to look at.
+   * @param {HTMLElement} canvas - The current canvas.
+   * @param {Number} astroUnit - The value of the astronomical unit (in Babylon units).
    */
   constructor(scene, star, planets, canvas, astroUnit) {
     const HIT_BOX_RADIUS = planets[0].getVisualDiameter()
@@ -148,10 +151,9 @@ class CameraModes {
 
   /**
    * Switches the view between the system, any planet of a free view.
-   *
    * @param {BABYLON.Camera} toCamera - The camera we want to switch to.
    * @param {BABYLON.Scene} scene - The current scene.
-   * @param {Array} allCameras - All the cameras in the scene.
+   * @param {BABYLON.Camera[]} allCameras - All the cameras in the scene.
    * @param {HTMLElement} canvas - The canvas of the page.
    */
   changeCameraMode(toCamera, scene, allCameras, canvas) {
@@ -173,10 +175,9 @@ class CameraModes {
   /**
    * Changes the focus of the planet camera, switching to any planet selected by
    * the user.
-   *
    * @param {String} btnLabel - The name of the button.
-   * @param {Array} planetCamLabels - The name of all buttons related to planet camera.
-   * @param {Array} planets - All the planets of the system.
+   * @param {String[]} planetCamLabels - The name of all buttons related to planet camera.
+   * @param {Planet[]} planets - All the planets of the system.
    */
   changeCameraToNearbyPlanet(btnLabel, planetCamLabels, planets) {
     // Checking which button was clicked

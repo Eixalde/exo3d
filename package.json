@@ -8,7 +8,9 @@
     "transform": {}
   },
   "devDependencies": {
-    "jest": "^27.2.4"
+    "jest": "^27.2.4",
+    "jsdoc-to-markdown": "^7.1.0",
+    "markdownlint-cli": "^0.30.0"
   },
   "dependencies": {
     "babylonjs": "^5.0.0-alpha.60",

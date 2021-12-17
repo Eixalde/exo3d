@@ -14,6 +14,7 @@ body {
   color: white;
 }
 
+/* Container must fill the page */
 #container {
   width: 100%;
   height: 100%;
@@ -21,12 +22,15 @@ body {
   padding: 0%;
 }
 
+/* Rows are placed at the bottom */
 #container .row {
   width: 100%;
   position: absolute;
   bottom: 0;
 }
 
+/* Columns are placed at the bottom and can't take more than 20% of the page in
+height */
 #container .col {
   width: 100%;
   height: 20%;
@@ -39,6 +43,7 @@ body {
   position: absolute;
 }
 
+/* The render canvas must be placed below the overlay (the UI) */
 #renderCanvas {
   z-index: 10;
   width: 100%;
@@ -46,6 +51,7 @@ body {
   touch-action: none;
 }
 
+/* Overlay above the canvas */
 .overlay {
   z-index: 20;
 }
@@ -63,6 +69,7 @@ body {
   height: 1.5em;
 }
 
+/* BLACKMAGIC: aligns custom and non-custom icons on the same line of buttons */
 .btn {
   display: inline-grid;
 }
@@ -75,12 +82,14 @@ body {
   display: inline-block;
 }
 
+/* Aspect-ratio based on the dimensions of the svg pic (42px * 32px) */
 .icon-play-two {
   mask-image: var(--icon-play-two-url);
   -webkit-mask-image: var(--icon-play-two-url);
   aspect-ratio: 21 / 16; /* stylelint-disable-line property-no-unknown */
 }
 
+/* Aspect-ratio based on the dimensions of the svg pic (52px * 32px) */
 .icon-play-three {
   mask-image: var(--icon-play-three-url);
   -webkit-mask-image: var(--icon-play-three-url);

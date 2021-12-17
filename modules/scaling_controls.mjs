@@ -1,4 +1,7 @@
-import { compareOrbits, compareSystemOrbits } from '../exo3d.mjs'
+import { compareOrbits, compareSystemOrbits, Planet } from '../exo3d.mjs'
+/**
+ * @module ScalingControls
+ */
 
 /**
  * Provides an asymetric scaling for all objects in the system, making the
@@ -6,14 +9,13 @@ import { compareOrbits, compareSystemOrbits } from '../exo3d.mjs'
  * scaling to the star. This allows to see effectively all planets from a large
  * perspective. Most of this class consists of the transition for all scaled
  * objects, so they can grow/shrink gradually.
- *
- * @member {Array} systemCompareParameters - The set of parameters needed for every comparison between planets.
+ * @property {SpatialObjectParams[]} systemCompareParameters - The set of parameters needed for every comparison between planets.
  */
 class ScalingControls {
   /**
-   * @param {Array} planets - The set of all planets in the system.
+   * @param {Planet[]} planets - The set of all planets in the system.
    * @param {Star} star - The star of the system.
-   * @param {Array} cameras - Some of the cameras used in the scene.
+   * @param {BABYLON.Camera[]} cameras - Some of the cameras used in the scene.
    * @param {BABYLON.Scene} scene - The current scene.
    */
   constructor({ planets, star, cameras }, scene) {
