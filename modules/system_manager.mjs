@@ -1,17 +1,15 @@
 /**
- * Every "magic number" appearing in the parameters of the planets is actually
+ * @module SystemManager
+ * @description Every "magic number" appearing in the parameters of the planets is actually
  * calculated from data on the different values of every planet (sideral day,
  * revolution period, distance to the sun, size...) You can find the detail of
- * those calculations in [INSERT LINK TO A DOCUMENT WITH THE RIGHT VALUES]
+ * those calculations in the [detailled documentation]().
  */
 
 import {
   CameraModes,
   AnimManager,
-  Star,
-  Planet,
   EllipticalTrajectory,
-  Ring,
   DebugUI,
   ScalingControls,
   addPlanetRadioButtons,
@@ -25,18 +23,19 @@ const PI = Math.PI
 /**
  * The handler for any gravitational system. It instantiates every spatial
  * object, the cameras, the background and the light.
- *
- * @member {BABYLON.PointLight} light - The light source of the planetary system.
- * @member {BABYLON.PhotoDome} skybox - The skybox of the planetary system.
- * @member {CameraModes} cameras - The different cameras we use to watch the system.
- * @member {AnimManager} animManager - The animation manager for all spatial objects.
- * @member {Object} gravitationalSystem - Contains the star and the planets of the system.
+ * @property {BABYLON.PointLight} light - The light source of the planetary system.
+ * @property {BABYLON.PhotoDome} skybox - The skybox of the planetary system.
+ * @property {CameraModes} cameras - The different cameras we use to watch the system.
+ * @property {AnimManager} animManager - The animation manager for all spatial objects.
+ * @property {Object} gravitationalSystem - Contains the star and the planets of the system.
+ *  @property {Star} gravitationalSystem.star - The star of the system.
+ *  @property {Planet[]} gravitationalSystem.planets - The list of planets of the system.
  */
 class GravitationalSystemManager {
   /**
    * @param {BABYLON.Scene} scene - The current scene.
    * @param {BABYLON.GUI} UI - The global Babylon UI for the application.
-   * @param {canvas} canvas - The canvas used by the engine.
+   * @param {HTMLElement} canvas - The canvas used by the engine.
    */
   constructor(scene, UI, canvas) {
     /* For exact scale purposes, ASTRONOMICAL_UNIT is equal to the ratio between

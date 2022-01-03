@@ -1,18 +1,18 @@
 /**
- * This module contains every function used to add of modify HTML elements that
- * are dependant of variable parameters (such as the number and the name of
- * planets in the system). None of this functions control anything on the
- * features they support, they only provide fixed elements based on the
+ * @module HTMLModifier
+ * @description This module contains every function used to add of modify HTML
+ * elements that are dependant of variable parameters (such as the number and
+ * the name of planets in the system). None of this functions control anything
+ * on the features they support, they only provide fixed elements based on the
  * parameters they receive.
  */
 
-import { daysToDuration } from '../exo3d.mjs'
+import { daysToDuration, Planet } from '../exo3d.mjs'
 
 /**
  * Creates radio buttons for every planet. Those buttons are controlled in
  * cameraModes to change the focus of the camera to look at a specific planet.
- *
- * @param {Array} planets - All the planets in the system.
+ * @param {Planet[]} planets - All the planets in the system.
  */
 function addPlanetRadioButtons(planets) {
   /* By default, those buttons must be inaccessible unless the planet view is
@@ -58,8 +58,7 @@ function addPlanetRadioButtons(planets) {
  * Modifies the slider for the control of relative speed. It adds tickmarks up
  * to the number of planets in the system and number them in order. The actual
  * interactions with that relative speed is done in animManager.
- *
- * @param {Array} planets - All the planets in the system.
+ * @param {Planet[]} planets - All the planets in the system.
  */
 function modifyPlanetSpeedSlider(planets) {
   const speedSlider = document.querySelector('.planet-speed')
@@ -89,10 +88,11 @@ function modifyPlanetSpeedSlider(planets) {
 }
 
 /**
- * @member {number} daysCount - number of simulation days since the begining of the similation
- * @member {AnimManager} animManager - The animation manager of the application.
- * @member {number} simulationTime - The base time for a given planet to revolve in the simulation (in sec).
- * @member {number} firstPlanetRevPeriod - The period of the first planet of the system (in days).
+ * Handles the update of the day count in the simulation.
+ * @property {Number} daysCount - Number of simulation days since the begining of the similation.
+ * @property {AnimManager} animManager - The animation manager of the application.
+ * @property {Number} simulationTime - The base time for a given planet to revolve in the simulation (in sec).
+ * @property {Number} firstPlanetRevPeriod - The period of the first planet of the system (in days).
  */
 class NumberOfDaysUpdater {
   #daysCount
@@ -102,8 +102,8 @@ class NumberOfDaysUpdater {
 
   /**
    * @param {AnimManager} animManager - The animation manager of the application.
-   * @param {number} simulationTime - The base time for a given planet to revolve in the simulation (in sec).
-   * @param {number} firstPlanetRevPeriod - The period of the first planet of the system (in days).
+   * @param {Number} simulationTime - The base time for a given planet to revolve in the simulation (in sec).
+   * @param {Number} firstPlanetRevPeriod - The period of the first planet of the system (in days).
    */
   constructor(animManager, simulationTime, firstPlanetRevPeriod) {
     this.#daysCount = 0
@@ -114,7 +114,7 @@ class NumberOfDaysUpdater {
   }
 
   /**
-   * Constantly updates the number of days simulated through the application and
+   * Constantly updates the Number of days simulated through the application and
    * shows it in the dedicated HTML part. It prints months beyond 30 days, and
    * years beyond 12 months (the conversion is made with daysToDuration, see
    * 'celestial_maths').
