@@ -105,7 +105,7 @@ function compareOrbits({
 
 /**
  * Applies the compareOrbits function to an entire system (star excluded). The
- * result is a factor adapted focanvasr the smallest scaling ratio in the system, this
+ * result is a factor adapted for the smallest scaling ratio in the system, this
  * way only two planets may touch each other and there is no overlap.
  * @param {SpatialObjectParams[]} systemCompareParameters - An array of multiple objects containing the parameters for the compareOrbits function.
  * @returns {Number} The smallest scaling ratio to apply to an entire system.
