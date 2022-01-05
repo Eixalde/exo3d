@@ -36,8 +36,7 @@ vector i :
         * [.setRingOfPlanet(planetOptions)](#module_SpatialObject..SystemBuilder+setRingOfPlanet) ⇒ <code>SystemBuilder</code>
     * [~SpatialObject](#module_SpatialObject..SpatialObject)
         * [new SpatialObject(spatialObjectParams, scene)](#new_module_SpatialObject..SpatialObject_new)
-        * [.buildAnimation(steps, scene, showStaticTrajectory)](#module_SpatialObject..SpatialObject+buildAnimation)
-        * [.animationShow(animation, FRAMERATE, scene)](#module_SpatialObject..SpatialObject+animationShow)
+        * [.buildAnimation(steps, scene, showStatTraj)](#module_SpatialObject..SpatialObject+buildAnimation)
         * [.setEclipticInclination()](#module_SpatialObject..SpatialObject+setEclipticInclination)
         * [.getVisualDiameter()](#module_SpatialObject..SpatialObject+getVisualDiameter) ⇒ <code>Number</code>
     * [~Star](#module_SpatialObject..Star) ⇐ <code>SpatialObject</code>
@@ -207,12 +206,12 @@ because it has no signification otherwise.
 | trajectory | <code>EllipticalTrajectory</code> | The trajectory of the object. |
 | normalizedSpin | <code>Number</code> | The time needed for the object to revolve around itself (seconds). |
 | normalizedRevolutionPeriod | <code>Number</code> | The time needed for the object to revolve around its star (seconds). |
+| animatableIndex | <code>Number</code> | The position of the animations in the animatable array. |
 
 
 * [~SpatialObject](#module_SpatialObject..SpatialObject)
     * [new SpatialObject(spatialObjectParams, scene)](#new_module_SpatialObject..SpatialObject_new)
-    * [.buildAnimation(steps, scene, showStaticTrajectory)](#module_SpatialObject..SpatialObject+buildAnimation)
-    * [.animationShow(animation, FRAMERATE, scene)](#module_SpatialObject..SpatialObject+animationShow)
+    * [.buildAnimation(steps, scene, showStatTraj)](#module_SpatialObject..SpatialObject+buildAnimation)
     * [.setEclipticInclination()](#module_SpatialObject..SpatialObject+setEclipticInclination)
     * [.getVisualDiameter()](#module_SpatialObject..SpatialObject+getVisualDiameter) ⇒ <code>Number</code>
 
@@ -233,7 +232,7 @@ because it has no signification otherwise.
 
 <a name="module_SpatialObject..SpatialObject+buildAnimation"></a>
 
-#### spatialObject.buildAnimation(steps, scene, showStaticTrajectory)
+#### spatialObject.buildAnimation(steps, scene, showStatTraj)
 Creates the 'rotate on itself' animation, and the movement animation if the
 object does move.
 
@@ -243,23 +242,7 @@ object does move.
 | --- | --- | --- |
 | steps | <code>Number</code> | The number of steps required for the animation. |
 | scene | <code>BABYLON.Scene</code> | The current scene. |
-| showStaticTrajectory | <code>Boolean</code> | Defines if the static trajectory appears or not. |
-
-
-* * *
-
-<a name="module_SpatialObject..SpatialObject+animationShow"></a>
-
-#### spatialObject.animationShow(animation, FRAMERATE, scene)
-Used to debug animations by showing multiple details, especially interpolation between keys.
-
-**Kind**: instance method of [<code>SpatialObject</code>](#module_SpatialObject..SpatialObject)
-
-| Param | Type | Description |
-| --- | --- | --- |
-| animation | <code>BABYLON.Animation</code> | The animation of which we want to see the trajectory. |
-| FRAMERATE | <code>Number</code> | The framerate of the animation. |
-| scene | <code>BABYLON.Scene</code> | The Current scene. |
+| showStatTraj | <code>Boolean</code> | Defines if the static trajectory appears or not. |
 
 
 * * *
@@ -381,7 +364,7 @@ Parameters needed for the creation of a SpatialObject.
 | normalizedSpin | <code>Number</code> | The time needed for the object to revolve around itself (seconds). |
 | normalizedRevolutionPeriod | <code>Number</code> | The time needed for the object to revolve around its star (seconds). |
 | originalPosition | <code>BABYLON.Vector3</code> | The position the object should appear at. |
-| showStaticTrajectory | <code>Boolean</code> | Defines if the static trajectory appears or not. |
+| showStatTraj | <code>Boolean</code> | Defines if the static trajectory appears or not. |
 | animatable | <code>BABYLON.Animatable</code> | Contains all animations. |
 
 

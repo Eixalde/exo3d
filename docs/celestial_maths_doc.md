@@ -55,7 +55,7 @@ touch each other.
 
 ### CelestialMaths~compareSystemOrbits(systemCompareParameters) ⇒ <code>Number</code>
 Applies the compareOrbits function to an entire system (star excluded). The
-result is a factor adapted focanvasr the smallest scaling ratio in the system, this
+result is a factor adapted for the smallest scaling ratio in the system, this
 way only two planets may touch each other and there is no overlap.
 
 **Kind**: inner method of [<code>CelestialMaths</code>](#module_CelestialMaths)

@@ -40,7 +40,7 @@ import { AnimManager } from './anim_manager.mjs'
  * @property {Number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
  * @property {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
  * @property {BABYLON.Vector3} originalPosition - The position the object should appear at.
- * @property {Boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
+ * @property {Boolean} showStatTraj - Defines if the static trajectory appears or not.
  * @property {BABYLON.Animatable} animatable - Contains all animations.
  */
 
@@ -214,6 +214,7 @@ class SystemBuilder {
  * @property {EllipticalTrajectory} trajectory - The trajectory of the object.
  * @property {Number} normalizedSpin - The time needed for the object to revolve around itself (seconds).
  * @property {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
+ * @property {Number} animatableIndex - The position of the animations in the animatable array.
  */
 class SpatialObject {
   /**
@@ -247,11 +248,11 @@ class SpatialObject {
    * object does move.
    * @param {Number} steps - The number of steps required for the animation.
    * @param {BABYLON.Scene} scene - The current scene.
-   * @param {Boolean} showStaticTrajectory - Defines if the static trajectory appears or not.
+   * @param {Boolean} showStatTraj - Defines if the static trajectory appears or not.
    */
-  buildAnimation(steps, scene, showStaticTrajectory, animatable) {
+  buildAnimation(steps, scene, showStatTraj, animatable) {
     // The framerate wanted (30 or 60 if possible).
-    const FRAMERATE = 30
+    const FRAMERATE = 60
     //Checks if the object is supposed to move, eventually creates its movement animation
     if (this.trajectory.canMove) {
       const moveAnimation = new BABYLON.Animation(
@@ -262,11 +263,11 @@ class SpatialObject {
         BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
       )
 
-      /* NOTE : the staticTrajectory method is supposed to show the actual
+      /* NOTE : the buildStaticTrajectory method is supposed to show the actual
       trajectory but many changes in the animation system made it obsolete.
-      Despite its name, it is the animationShow method that does this specific
+      Despite its name, it is the showStaticTrajectory method that does this specific
       feature right now, but it needs to be corrected in the future */
-      const staticTrajectory = this.trajectory.staticTrajectory(steps)
+      const staticTrajectory = this.trajectory.staticTrajectory
       const animMoveKeys = new Array(staticTrajectory.length)
 
       const deltaT = (this.normalizedRevolutionPeriod / steps) * FRAMERATE
@@ -299,8 +300,8 @@ class SpatialObject {
 
       moveAnimation.setKeys(animMoveKeys)
 
-      if (showStaticTrajectory) {
-        this.animationShow(moveAnimation, FRAMERATE, scene)
+      if (showStatTraj) {
+        this.trajectory.showStaticTrajectory(animatable, FRAMERATE, scene, this)
       }
 
       /* If there is any need of tilting the object on it axis, we use an
@@ -309,16 +310,29 @@ class SpatialObject {
       spinAxisParent is defined as a parent of spObj). */
       if (this.spinAxisParent) {
         this.spinAxisParent.animations.push(moveAnimation)
-        animatable.push(
-          scene.beginAnimation(
-            this.spinAxisParent,
-            0,
-            this.normalizedRevolutionPeriod * FRAMERATE,
-            true
-          )
-        )
+        /* We stock the index of the corresponding animation in that object
+        because we will need to find it later for the fixStaticTrajectory (see
+        trajectory). */
+        this.animatableIndex =
+          animatable.push(
+            scene.beginAnimation(
+              this.spinAxisParent,
+              0,
+              this.normalizedRevolutionPeriod * FRAMERATE,
+              true
+            )
+          ) - 1
       } else {
         this.mesh.animations.push(moveAnimation)
+        this.animatableIndex =
+          animatable.push(
+            scene.beginAnimation(
+              this.spinAxisParent,
+              0,
+              this.normalizedRevolutionPeriod * FRAMERATE,
+              true
+            )
+          ) - 1
       }
     }
 
@@ -358,34 +372,11 @@ class SpatialObject {
         true
       )
     )
-  }
-
-  /**
-   * Used to debug animations by showing multiple details, especially interpolation between keys.
-   * @param {BABYLON.Animation} animation - The animation of which we want to see the trajectory.
-   * @param {Number} FRAMERATE - The framerate of the animation.
-   * @param {BABYLON.Scene} scene - The Current scene.
-   */
-  animationShow(animation, FRAMERATE, scene) {
-    const nbFrame = this.normalizedRevolutionPeriod * FRAMERATE
-    const evalTraj = new Array(1000)
-
-    for (let i = 0; i < evalTraj.length; i++) {
-      const curFrame = (nbFrame / (evalTraj.length - 1)) * i
-      evalTraj[i] = animation.evaluate(curFrame)
-    }
-
-    const actualTraj = new BABYLON.Path3D(evalTraj)
-    const actualTrajCurve = actualTraj.getCurve()
-    const line = new BABYLON.CreateLines(this.name + 'Trajectory', {
-      points: actualTrajCurve,
-      scene: scene
-    })
-    line.color = new BABYLON.Color3(1, 0, 0)
-
-    /* Allows the static trajectory to tilt alongside the real trajectory of the
-    planet (see setEclipticInclination). */
-    line.parent = this.revolutionAxisParent
+    console.log(
+      `${this.name} theorical maximal frame : ${
+        this.normalizedRevolutionPeriod * FRAMERATE
+      }`
+    )
   }
 
   /**
@@ -428,6 +419,14 @@ class SpatialObject {
   getVisualDiameter() {
     return this.diameter * this.mesh.scaling.x
   }
+
+  fixStaticTrajectory(scene) {
+    isPointedToPlanet = () =>
+      scene.activeCamera.target === this.spinAxisParent.position
+    isInRealisticView = () => this.mesh.scaling.x === 1
+    if (isPointedToPlanet() && isInRealisticView()) {
+    }
+  }
 }
 
 /**
@@ -460,7 +459,7 @@ class Star extends SpatialObject {
     this.buildAnimation(
       100,
       scene,
-      spatialObjectParams.showStaticTrajectory,
+      spatialObjectParams.showStatTraj,
       spatialObjectParams.animatable
     )
   }
@@ -514,7 +513,7 @@ class Planet extends SpatialObject {
     this.buildAnimation(
       100,
       scene,
-      spatialObjectParams.showStaticTrajectory,
+      spatialObjectParams.showStatTraj,
       spatialObjectParams.animatable
     )
   }
