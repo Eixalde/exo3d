@@ -76,7 +76,7 @@ class GravitationalSystemManager {
       spin: SUN_SPIN,
       normalizedRevolutionPeriod: SUN_SPIN, // Sun does not revolve but it has to specify a value here (could be anything strictly positive)
       originalPosition: V_ORIGIN_SUN,
-      showStaticTrajectory: false
+      showStatTraj: false
     }
 
     const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown), not in caps because it will depend on other parameters
@@ -96,7 +96,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 87.969,
       spin: 58.846,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const venusOptions = {
@@ -114,7 +114,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 224.667,
       spin: -243.023,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const earthOptions = {
@@ -132,7 +132,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 365.25,
       spin: 0.997,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const moonOptions = {
@@ -150,7 +150,7 @@ class GravitationalSystemManager {
       ),
       spin: MOON_REVOLUTION_PERIOD,
       revolutionPeriod: MOON_REVOLUTION_PERIOD,
-      showStaticTrajectory: false
+      showStatTraj: false
     }
 
     const marsOptions = {
@@ -168,7 +168,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 686.885,
       spin: 1.026,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const jupiterOptions = {
@@ -186,7 +186,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 4332.01,
       spin: 0.414,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const saturnOptions = {
@@ -204,7 +204,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 10754,
       spin: 0.448,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const RING_TEXTURE = 'resources/saturn_rings.png'
@@ -220,7 +220,7 @@ class GravitationalSystemManager {
       trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
       spin: 100, //Ad hoc value
       revolutionPeriod: 30, //Ad hoc value
-      showStaticTrajectory: false
+      showStatTraj: false
     }
 
     const uranusOptions = {
@@ -238,7 +238,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 30698,
       spin: -0.718,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const neptuneOptions = {
@@ -256,7 +256,7 @@ class GravitationalSystemManager {
       ),
       revolutionPeriod: 60216,
       spin: 0.671,
-      showStaticTrajectory: true
+      showStatTraj: true
     }
 
     const allPlanetsOptions = [

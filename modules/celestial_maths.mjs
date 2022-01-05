@@ -1,5 +1,3 @@
-import { SpatialObjectParams } from './spatial_object.mjs'
-
 /**
  * @module CelestialMaths
  * @description About the function 'convertTemperature to RGB' : we found the
@@ -91,8 +89,8 @@ function compareOrbits({
   distance to the common focus of their ellipses (the star). */
   for (const i of TRAJECTORIES_DISTANCES.keys()) {
     TRAJECTORIES_DISTANCES[i] = Math.abs(
-      currentObjTraj.posInNu((2 * i * Math.PI) / PRECISION).r -
-        neighbourObjTraj.posInNu((2 * i * Math.PI) / PRECISION).r
+      currentObjTraj.positionWithNu((2 * i * Math.PI) / PRECISION).r -
+        neighbourObjTraj.positionWithNu((2 * i * Math.PI) / PRECISION).r
     )
   }
 
