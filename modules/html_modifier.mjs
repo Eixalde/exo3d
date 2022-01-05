@@ -139,11 +139,14 @@ class NumberOfDaysUpdater {
       /* Converts the day count into a duration of the format 'years, months and
       days'. */
       const duration = daysToDuration(this.#daysCount)
+      const formattedYears = duration.years.toString().padStart(4, '0')
+      const formattedMonths = duration.months.toString().padStart(2, '0')
+      const formattedDays = duration.days.toString().padStart(2, '0')
 
       /* Updates the HTML part. */
       document.querySelector(
         `#simulation-time`
-      ).innerHTML = `Time since the beginning of the animation : ${duration.years} years, ${duration.months} months and ${duration.days} days.`
+      ).innerHTML = `Time since the beginning of the animation :\n${formattedYears} years, ${formattedMonths} months and ${formattedDays} days.`
 
       /* Calling the function again to make it timeout recursively. */
       this.update()

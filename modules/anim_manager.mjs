@@ -69,6 +69,23 @@ class AnimManager {
         planet.revolutionPeriod / planetsOptions[0].revolutionPeriod
     })
 
+    const speedSlider = document.querySelector(`.planet-speed`)
+
+    /**
+     * Updates the information about the scale of time spent in the simulation.
+     * @param {HTMLElement} speedSlider - The slider of the speed relative to a planet.
+     */
+    const updateSimulationSpeedInfo = (speedSlider) => {
+      const idx = speedSlider.value
+      const seconds = this.globalSpeedRatio ? 5 / this.globalSpeedRatio : 0
+      const pause = seconds ? `` : `(paused)`
+      document.querySelector(
+        `#relative-speed`
+      ).innerHTML = `Speed relative to a planet (current : ${seconds}s /${planetsOptions[
+        idx
+      ].revolutionPeriod.toFixed(2)} days ${pause})`
+    }
+
     GENERAL_SPEED_PARAMS.forEach((speed) => {
       document.querySelector(`.btn-group #${speed.name}`).onclick = () => {
         /* Global and relative speed ratios are interdependant, they need to
@@ -78,10 +95,10 @@ class AnimManager {
         this.animatable.forEach(
           (anim) => (anim.speedRatio = speed.value * this.relativeSpeedRatio)
         )
+        updateSimulationSpeedInfo(speedSlider)
       }
     })
 
-    const speedSlider = document.querySelector(`.planet-speed`)
     speedSlider.onchange = () => {
       this.relativeSpeedRatio = RELATIVE_SPEED_PARAMS[speedSlider.value]
       this.animatable.forEach(
@@ -89,6 +106,7 @@ class AnimManager {
           (anim.speedRatio =
             this.globalSpeedRatio * RELATIVE_SPEED_PARAMS[speedSlider.value])
       )
+      updateSimulationSpeedInfo(speedSlider)
     }
   }
 }

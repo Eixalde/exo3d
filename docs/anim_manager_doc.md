@@ -1,7 +1,6 @@
 <a name="module_AnimManager"></a>
 
 ## AnimManager
-
 About the speed management : there used to be only the global
 speed ratio to control the animations, but this implies that any animation
 can only be at 2x speed maximum. For planets that have really high
@@ -14,18 +13,19 @@ the system_manager). Then, every other planet will have to follow that new
 reference, i.e. if the Earth revolves in 5 secondes, Mars would take around 9
 seconds to revolve.
 
+
 * [AnimManager](#module_AnimManager)
-  * [~AnimManager](#module_AnimManager..AnimManager)
-    * [new AnimManager(planetsOptions)](#new_module_AnimManager..AnimManager_new)
-  * [~PlanetOptions](#module_AnimManager..PlanetOptions) : <code>Object</code>
-  * [~ButtonParams](#module_AnimManager..ButtonParams) : <code>Object</code>
+    * [~AnimManager](#module_AnimManager..AnimManager)
+        * [new AnimManager(planetsOptions)](#new_module_AnimManager..AnimManager_new)
+    * [~PlanetOptions](#module_AnimManager..PlanetOptions) : <code>Object</code>
+    * [~ButtonParams](#module_AnimManager..ButtonParams) : <code>Object</code>
+
 
 * * *
 
 <a name="module_AnimManager..AnimManager"></a>
 
 ### AnimManager~AnimManager
-
 The object that manages every animation - their speed in particular.
 
 **Kind**: inner class of [<code>AnimManager</code>](#module_AnimManager)
@@ -37,6 +37,7 @@ The object that manages every animation - their speed in particular.
 | relativeSpeedRatio | <code>Number</code> | The speed ratio relative to a specific planet. |
 | animatable | <code>BABYLON.Animatable</code> | Contains all animations. |
 
+
 * * *
 
 <a name="new_module_AnimManager..AnimManager_new"></a>
@@ -47,12 +48,12 @@ The object that manages every animation - their speed in particular.
 | --- | --- | --- |
 | planetsOptions | <code>Array.&lt;PlanetOptions&gt;</code> | The parameters of the planets in the system. |
 
+
 * * *
 
 <a name="module_AnimManager..PlanetOptions"></a>
 
 ### AnimManager~PlanetOptions : <code>Object</code>
-
 Initial parameters for a planet (not to confuse with SpatialObjectParams in 'SpatialObject').
 
 **Kind**: inner typedef of [<code>AnimManager</code>](#module_AnimManager)
@@ -74,12 +75,12 @@ Initial parameters for a planet (not to confuse with SpatialObjectParams in 'Spa
 | originalPosition | <code>BABYLON.Vector3</code> | The position the object should appear at. |
 | showStaticTrajectory | <code>Boolean</code> | Defines if the static trajectory appears or not. |
 
+
 * * *
 
 <a name="module_AnimManager..ButtonParams"></a>
 
 ### AnimManager~ButtonParams : <code>Object</code>
-
 **Kind**: inner typedef of [<code>AnimManager</code>](#module_AnimManager)
 **Properties**
 
@@ -87,5 +88,6 @@ Initial parameters for a planet (not to confuse with SpatialObjectParams in 'Spa
 | --- | --- | --- |
 | name | <code>String</code> | Name of the button. |
 | value | <code>Number</code> | Value associated to the button. |
+
 
 * * *
