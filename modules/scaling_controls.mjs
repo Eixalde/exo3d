@@ -1,4 +1,6 @@
 import { compareOrbits, compareSystemOrbits, Planet } from '../exo3d.mjs'
+
+const abs = Math.abs
 /**
  * @module ScalingControls
  */
@@ -90,6 +92,13 @@ class ScalingControls {
         const CHANGE_PLANET_FACTOR = idx * PLANET_SCALING_FACTOR + (1 - idx)
         const CHANGE_STAR_FACTOR = idx * STAR_SCALING_FACTOR + (1 - idx)
 
+        /* The zoom lock prevents the camera from zooming in/out when the
+        associated scaling is already active. */
+        const zoomLock =
+          abs(CHANGE_PLANET_FACTOR - planets[0].mesh.scaling.x) < 0.001
+            ? false
+            : true
+
         /* About the scaling : Babylon has indeed many options for smooth
         transitions, including for mesh scaling purposes. But we had a completly
         new issue, probably never encountered before on Babylon : scaling
@@ -111,8 +120,8 @@ class ScalingControls {
 
         /* Sets periodic timeouts over exactly one second, then actually
         increases/decreases the scaling when that timeout is reached. */
+        const SECOND_IN_MS = 1000 // 1000 ms
         for (let i = 1; i <= SCALING_TRANSITION_LENGTH; i++) {
-          const SECOND_IN_MS = 1000 // 1000 ms
           setTimeout(() => {
             planets.forEach((planet) => {
               /* Addition assignment is impossible for Vector3 objects, so it is
@@ -148,93 +157,118 @@ class ScalingControls {
         scaling value. The animation has to be synced with the scaling, it must
         then be one second long. */
 
-        const FRAMERATE = 60
+        if (zoomLock) {
+          const FRAMERATE = 60
+          const buttonsLock = document.querySelectorAll(`input`)
+          buttonsLock.forEach((button) => {
+            button.disabled = true
+            button.setAttribute(`aria-disabled`, `true`)
+          })
+          setTimeout(() => {
+            buttonsLock.forEach((button) => {
+              button.disabled = false
+              button.setAttribute(`aria-disabled`, `false`)
+            })
+          }, SECOND_IN_MS)
 
-        const cameraPlanetRadAnimation = new BABYLON.Animation(
-          'cameraPlanetRadAnimation',
-          'radius',
-          FRAMERATE,
-          BABYLON.Animation.ANIMATIONTYPE_FLOAT
-        )
-        const cameraPlanetLRLAnimation = new BABYLON.Animation(
-          'cameraPlanetLRLAnimation',
-          'lowerRadiusLimit',
-          FRAMERATE,
-          BABYLON.Animation.ANIMATIONTYPE_FLOAT
-        )
+          const cameraPlanetRadAnimation = new BABYLON.Animation(
+            'cameraPlanetRadAnimation',
+            'radius',
+            FRAMERATE,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT
+          )
+          const cameraPlanetLRLAnimation = new BABYLON.Animation(
+            'cameraPlanetLRLAnimation',
+            'lowerRadiusLimit',
+            FRAMERATE,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT
+          )
 
-        cameraPlanetRadAnimation.setKeys([
-          {
-            frame: 0,
-            value: cameras[0].radius
-          },
-          {
-            frame: FRAMERATE,
-            value:
-              (cameras[0].radius * CHANGE_PLANET_FACTOR) /
-              ((1 - idx) * PLANET_SCALING_FACTOR + idx)
+          cameraPlanetRadAnimation.setKeys([
+            {
+              frame: 0,
+              value: cameras[0].radius
+            },
+            {
+              frame: FRAMERATE,
+              value:
+                (cameras[0].radius * CHANGE_PLANET_FACTOR) /
+                ((1 - idx) * PLANET_SCALING_FACTOR + idx)
+            }
+          ])
+          cameraPlanetLRLAnimation.setKeys([
+            {
+              frame: 0,
+              value: cameras[0].lowerRadiusLimit
+            },
+            {
+              frame: FRAMERATE,
+              value:
+                (cameras[0].lowerRadiusLimit * CHANGE_PLANET_FACTOR) /
+                ((1 - idx) * PLANET_SCALING_FACTOR + idx)
+            }
+          ])
+
+          cameras[0].animations = []
+          cameras[0].animations.push(cameraPlanetRadAnimation)
+          cameras[0].animations.push(cameraPlanetLRLAnimation)
+          scene.beginAnimation(cameras[0], 0, FRAMERATE, false)
+
+          const cameraStarRadAnimation = new BABYLON.Animation(
+            'cameraStarRadAnimation',
+            'radius',
+            FRAMERATE,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT
+          )
+          const cameraStarLRLAnimation = new BABYLON.Animation(
+            'cameraStarLRLAnimation',
+            'lowerRadiusLimit',
+            FRAMERATE,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT
+          )
+
+          cameraStarRadAnimation.setKeys([
+            {
+              frame: 0,
+              value: cameras[1].radius
+            },
+            {
+              frame: FRAMERATE,
+              value:
+                (cameras[1].radius * CHANGE_STAR_FACTOR) /
+                ((1 - idx) * STAR_SCALING_FACTOR + idx)
+            }
+          ])
+          cameraStarLRLAnimation.setKeys([
+            {
+              frame: 0,
+              value: cameras[1].lowerRadiusLimit
+            },
+            {
+              frame: FRAMERATE,
+              value:
+                (cameras[1].lowerRadiusLimit * CHANGE_STAR_FACTOR) /
+                ((1 - idx) * STAR_SCALING_FACTOR + idx)
+            }
+          ])
+
+          cameras[1].animations = []
+          /* Avoids zooming out from the star if the camera is already far
+          enough when scaling up. The zoom-in (if the star is scaled down) is
+          always needed nonetheless. */
+          const starOuterZoom =
+            cameras[1].radius / (2 * star.getVisualDiameter()) < 1
+              ? true
+              : false
+          if (starOuterZoom || CHANGE_STAR_FACTOR === 1) {
+            cameras[1].animations.push(cameraStarRadAnimation)
           }
-        ])
-        cameraPlanetLRLAnimation.setKeys([
-          {
-            frame: 0,
-            value: cameras[0].lowerRadiusLimit
-          },
-          {
-            frame: FRAMERATE,
-            value:
-              (cameras[0].lowerRadiusLimit * CHANGE_PLANET_FACTOR) /
-              ((1 - idx) * PLANET_SCALING_FACTOR + idx)
-          }
-        ])
-
-        cameras[0].animations = []
-        cameras[0].animations.push(cameraPlanetRadAnimation)
-        cameras[0].animations.push(cameraPlanetLRLAnimation)
-        scene.beginAnimation(cameras[0], 0, FRAMERATE, false)
-
-        const cameraStarRadAnimation = new BABYLON.Animation(
-          'cameraStarRadAnimation',
-          'radius',
-          FRAMERATE,
-          BABYLON.Animation.ANIMATIONTYPE_FLOAT
-        )
-        const cameraStarLRLAnimation = new BABYLON.Animation(
-          'cameraStarLRLAnimation',
-          'lowerRadiusLimit',
-          FRAMERATE,
-          BABYLON.Animation.ANIMATIONTYPE_FLOAT
-        )
-
-        cameraStarRadAnimation.setKeys([
-          {
-            frame: 0,
-            value: cameras[1].radius
-          },
-          {
-            frame: FRAMERATE,
-            value:
-              (cameras[1].radius * CHANGE_STAR_FACTOR) /
-              ((1 - idx) * STAR_SCALING_FACTOR + idx)
-          }
-        ])
-        cameraStarLRLAnimation.setKeys([
-          {
-            frame: 0,
-            value: cameras[1].lowerRadiusLimit
-          },
-          {
-            frame: FRAMERATE,
-            value:
-              (cameras[1].lowerRadiusLimit * CHANGE_STAR_FACTOR) /
-              ((1 - idx) * STAR_SCALING_FACTOR + idx)
-          }
-        ])
-
-        cameras[1].animations = []
-        cameras[1].animations.push(cameraStarRadAnimation)
-        cameras[1].animations.push(cameraStarLRLAnimation)
-        scene.beginAnimation(cameras[1], 0, FRAMERATE, false)
+          /* NOTE : The above verification is never needed for planets, because the
+          camera is always near the planet by default, zooming out is then
+          mandatory. */
+          cameras[1].animations.push(cameraStarLRLAnimation)
+          scene.beginAnimation(cameras[1], 0, FRAMERATE, false)
+        }
       }
     })
   }
