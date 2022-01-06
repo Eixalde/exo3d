@@ -262,11 +262,6 @@ class SpatialObject {
         BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
         BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
       )
-
-      /* NOTE : the buildStaticTrajectory method is supposed to show the actual
-      trajectory but many changes in the animation system made it obsolete.
-      Despite its name, it is the showStaticTrajectory method that does this specific
-      feature right now, but it needs to be corrected in the future */
       const staticTrajectory = this.trajectory.staticTrajectory
       const animMoveKeys = new Array(staticTrajectory.length)
 
