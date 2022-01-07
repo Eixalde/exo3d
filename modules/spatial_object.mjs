@@ -119,6 +119,10 @@ class SystemBuilder {
       (simulationTime * this.#satelliteOptions.revolutionPeriod) /
       FIRST_PLANET_REVOLUTION_PERIOD
 
+    this.#satelliteOptions.normalizedSpin =
+      (simulationTime * this.#satelliteOptions.spin) /
+      FIRST_PLANET_REVOLUTION_PERIOD
+
     this.#planetsOptions.forEach((planetOptions) => {
       planetOptions.normalizedRevolutionPeriod =
         (simulationTime * planetOptions.revolutionPeriod) /
