@@ -504,6 +504,9 @@ class Planet extends SpatialObject {
     } else {
       this.objectMat.diffuseColor = this.color
     }
+    /* Setting emissive color of planets to black to avoid them glowing or
+    letting light pass through them (because of occlusion). */
+    this.objectMat.emissiveColor = BABYLON.Color3.Black()
     this.mesh.material = this.objectMat
     this.buildAnimation(
       100,

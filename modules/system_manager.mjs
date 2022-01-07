@@ -331,8 +331,16 @@ class GravitationalSystemManager {
     this.light.intensity = 4 // The brightness of the light
 
     const gl = new BABYLON.GlowLayer('glow', scene)
-    gl.intensity = 1
-    gl.referenceMeshToUseItsOwnMaterial(this.gravitationalSystem.star.mesh)
+    gl.intensity = 0.5
+    gl.blurKernelSize = 48
+
+    /* For occlusion reasons - to ensure that glowing objects are correctly
+    rendered relative to the not-glowing objects - we include every planet in
+    the glow effect as well as the star itself. */
+    gl.addIncludedOnlyMesh(this.gravitationalSystem.star.mesh)
+    this.gravitationalSystem.planets.forEach((planet) => {
+      gl.addIncludedOnlyMesh(planet.mesh)
+    })
 
     const SKYBOX_SIZE = 37500 // Arbitrary factor for the size of the skybox (quite large at 3 though)
     this.skybox = new BABYLON.PhotoDome('skybox', SKYBOX_TEXTURE, {}, scene)
