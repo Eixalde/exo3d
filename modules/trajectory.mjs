@@ -101,7 +101,19 @@ class EllipticalTrajectory {
       scene: scene,
       updatable: true
     })
-    line.color = new BABYLON.Color3(1, 0, 0)
+
+    /* To represent the static trajectory, a custom material with specific
+    properties is needed in place of the default ShaderMAterial that does
+    not handle well occlusion i.e. objects rendering over the
+    trajectories at all times, even if they are behind in the scene. */
+    const lineColor = new BABYLON.Color3.Red()
+    line.material = new BABYLON.StandardMaterial(
+      `${spObj.name}TrajectoryMat`,
+      scene
+    )
+    line.material.diffuseColor = lineColor
+    line.material.emissiveColor = lineColor
+    line.material.useLogarithmicDepth = true
 
     /* Allows the static trajectory to tilt alongside the real trajectory of the
     planet (see setEclipticInclination in spatial_object). */

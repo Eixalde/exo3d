@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.3] - 2022-01-07
+
+### Fixed
+
+- Fixed rendering issues with trajectories and planets
+
 ## [0.21.2] - 2022-01-06
 
 ### Fixed
