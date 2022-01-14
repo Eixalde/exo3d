@@ -22,7 +22,7 @@ the star(s) it is dependent of, and if it is in the habitability zone.
 ## How to use
 
 1. Clone the repository.
-1. Install npm on your computer (the equivalent of pip for JavaScript).
+1. [Install npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) on your computer (the equivalent of pip for JavaScript).
 1. Use `npm install` in the project's root to get every dependency of the project.
 1. Launch a local web server on your computer : `python3 -m http.server`.
 1. Open in your browser : <http://localhost:8000/exo3d.html>.
