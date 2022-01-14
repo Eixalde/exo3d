@@ -26,7 +26,7 @@ The 1.0.0 version displays the Solar System as an exemple. Here are some things 
 - The Sun
 - All eight planets following their trajectory
 - The Moon and Saturn Rings
-- Management of the speed fo the simulator
+- Management of the speed for the simulator
 - Free movement across the system
 - Didactic view : oversized objects for a better sight of all planets.
 
