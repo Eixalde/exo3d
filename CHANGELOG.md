@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2022-01-14
+
+### Fixed
+
+- Correction of small errors after release
+
 ## [1.0.0] - 2022-01-14
 
 ### Added
 
-- Wrote the detailled documentation
+- Wrote the detailed documentation
 - Added EUPL 1.2 licence to the project
 - Implemented jsdoc2md for generated documentation in markdown
 - Implemented ecliptic inclination for planets
@@ -109,7 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made the planet an object with properties
 - Considered the collisions for the cameras
 - Modified the animation system
-- Colored the star texture with shades of grey
+- Colored the star texture with shades of gray
 - Added the to-do list to the changelog
 
 ### Fixed
