@@ -19,6 +19,19 @@ the star(s) it is dependent of, and if it is in the habitability zone.
 - Adapt the application to the database as much as possible, while anticipating
   future additions and prospective changes
 
+## Current features
+
+The 1.0.0 version displays the Solar System as an exemple. Here are some things featured :
+
+- The Su
+- All eight planets following their trajectory
+- The Moon and Saturn Rings
+- Management of the speed fo the simulator
+- Free movement across the system
+- Didactic view : oversized objects for a better sight of all planets.
+
+Unfortunately this version does not include Bob. Wait for a future release for even more features !
+
 ## How to use
 
 1. Clone the repository.
