@@ -322,7 +322,8 @@ class GravitationalSystemManager {
       this.gravitationalSystem.star,
       this.gravitationalSystem.planets,
       canvas,
-      ASTRONOMICAL_UNIT
+      ASTRONOMICAL_UNIT,
+      SKYBOX_SIZE
     )
 
     this.scalingControls = new ScalingControls(
