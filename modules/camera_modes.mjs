@@ -17,8 +17,9 @@ class CameraModes {
    * @param {Planet[]} planets - The group of planets we want to look at.
    * @param {HTMLElement} canvas - The current canvas.
    * @param {Number} astroUnit - The value of the astronomical unit (in Babylon units).
+   * @param {Number} skyboxSize - The size of the skybox in the scene.
    */
-  constructor(scene, star, planets, canvas, astroUnit) {
+  constructor(scene, star, planets, canvas, astroUnit, skyboxSize) {
     const HIT_BOX_RADIUS = planets[0].getVisualDiameter()
     const BASE_PLANET = planets[0] // The planet pointed by the planetCamera by default
     // Placing the camera far from the star to see the entire system (2 times the largest trajectory is enough)
@@ -33,11 +34,11 @@ class CameraModes {
     const DEFAULT_PLANET_CAM_BETA =
       PI / 2 + BASE_PLANET.eclipticInclinationAngle // Makes the planetCamera parallel to the ecliptic
 
-    /* The number of AU the camera can see up to (must be larger than the actual
-    size of the hitbox). I should then use that size but I have zero idea of how
-    to get it effectively, because the size of the hitbox is NOT measured in AU.
-    */
-    const CAMERA_FAR_SIGHT = 5000 * astroUnit
+    /* The farthest distance the camera can see up to. It needs to be at least
+    more than the skybox' size, though there is nothing to see beyond it. Its
+    value plus one is then quite appropriate. */
+    const CAMERA_FAR_SIGHT = skyboxSize + 1
+
     /* Represents how much the camera will modify its distance when zooming
     in/out (e.g. 0.1 = 10% of the distance). */
     const CAMERA_WHEEL_PERCENTAGE = 0.01
