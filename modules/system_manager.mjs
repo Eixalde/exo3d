@@ -304,6 +304,19 @@ class GravitationalSystemManager {
       mercuryOptions.revolutionPeriod
     )
 
+    /* Makes the skybox 2.5 times larger than the largest trajectory of the
+    system. Keep in mind that `a` is the semi-major axis which is only half the
+    width of the ellipse.*/
+    const farthestTrajectoryWidth =
+      2 * this.gravitationalSystem.planets.at(-1).trajectory.a
+    const SKYBOX_SIZE = 2.5 * farthestTrajectoryWidth
+    this.skybox = new BABYLON.PhotoDome(
+      'skybox',
+      SKYBOX_TEXTURE,
+      { size: SKYBOX_SIZE },
+      scene
+    )
+    this.skybox.mesh.checkCollisions = true // Ensures that the user can't go out of the universe (forbidden by physicists)
     this.cameras = new CameraModes(
       scene,
       this.gravitationalSystem.star,
@@ -341,15 +354,6 @@ class GravitationalSystemManager {
     this.gravitationalSystem.planets.forEach((planet) => {
       gl.addIncludedOnlyMesh(planet.mesh)
     })
-
-    const SKYBOX_SIZE = 37500 // Arbitrary factor for the size of the skybox (quite large at 3 though)
-    this.skybox = new BABYLON.PhotoDome('skybox', SKYBOX_TEXTURE, {}, scene)
-    this.skybox.scaling = new BABYLON.Vector3(
-      SKYBOX_SIZE,
-      SKYBOX_SIZE,
-      SKYBOX_SIZE
-    ) // Need to enlarge the skybox so the user doesn't zoom out into the skybox limit too early
-    this.skybox.mesh.checkCollisions = true // Ensures that the user can't go out of the universe (forbidden by physicists)
   }
 }
 
