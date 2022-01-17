@@ -1,0 +1,13 @@
+{
+	"diameter": 22.535,
+	"texture": "resources/saturn_rings.png",
+	"distanceToParent": 0,
+	"originalPosition": {"x":0, "y":0, "z":0},
+	"eclipticInclinationAngle": 90,
+	"selfInclinationAngle": 0,
+	"temperature": 0,
+	"trajectory": { "a": 0, "e": 0 },
+	"spin": 100,
+	"revolutionPeriod": 30,
+	"showStatTraj": false
+}

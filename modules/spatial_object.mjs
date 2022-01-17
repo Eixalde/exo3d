@@ -371,11 +371,6 @@ class SpatialObject {
         true
       )
     )
-    console.log(
-      `${this.name} theorical maximal frame : ${
-        this.normalizedRevolutionPeriod * FRAMERATE
-      }`
-    )
   }
 
   /**

@@ -32,243 +32,131 @@ const PI = Math.PI
  *  @property {Planet[]} gravitationalSystem.planets - The list of planets of the system.
  */
 class GravitationalSystemManager {
+  constructor() {}
+
   /**
+   * Initializes the gravitational system. Because of JSON files, we have to use
+   * some `await` with it : thus the async function. Everything in there used to
+   * be the constructor actually, but JSONs really messed up the whole
+   * application. For God sake, it shouldn't be that hard to read compatible
+   * local objects, fix JavaScript please.
    * @param {BABYLON.Scene} scene - The current scene.
-   * @param {BABYLON.GUI} UI - The global Babylon UI for the application.
    * @param {HTMLElement} canvas - The canvas used by the engine.
    */
-  constructor(scene, UI, canvas) {
+  async initialize(scene, canvas) {
     /* For exact scale purposes, ASTRONOMICAL_UNIT is equal to the ratio between
     1 AU and the diameter of the Earth. This way, the size of the Earth can be
     set to 1 unit of the Babylon engine. */
     const ASTRONOMICAL_UNIT = 11727.647 // Semi major axis of the Earth
     const e = 0 // Excentricty, can be anything between 0 included and 1 excluded
-    const V_ORIGIN_SUN = new BABYLON.Vector3(-2 * ASTRONOMICAL_UNIT * e, 0, 0) // Position of the sun, also it is the left focus of the ellipse
+    const V_ORIGIN = new BABYLON.Vector3(-2 * ASTRONOMICAL_UNIT * e, 0, 0) // Position of the sun, also it is the left focus of the ellipse
     const EARTH_DIAMETER = 1
     const SIMULATION_TIME = 5 // The length of the revolution relative to a specific planet (in seconds)
-    const MOON_REVOLUTION_PERIOD = 27.322
-    const SUN_SPIN = 27.28
 
     // Textures' source : https://www.solarsystemscope.com/textures/
-    const SUN_TEXTURE = 'resources/512_sun.jpg'
-    const MERCURY_TEXTURE = 'resources/512_mercury.jpg'
-    const VENUS_TEXTURE = 'resources/512_venus.jpg'
-    const EARTH_TEXTURE = 'resources/512_earth.jpg'
-    const MOON_TEXTURE = 'resources/512_moon.jpg'
-    const MARS_TEXTURE = 'resources/512_mars.jpg'
-    const SATURN_TEXTURE = 'resources/512_saturn.jpg'
-    const JUPITER_TEXTURE = 'resources/512_jupiter.jpg'
-    const URANUS_TEXTURE = 'resources/512_uranus.jpg'
-    const NEPTUNE_TEXTURE = 'resources/512_neptune.jpg'
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
 
-    const sunColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange), not in caps because it will depend on other parameters
-    const sunOptions = {
-      name: 'Sun',
-      diameter: 109.179 * EARTH_DIAMETER, // Approximative real size of the Sun relative to the Earth
-      texture: SUN_TEXTURE,
-      distanceToParent: 0,
-      color: sunColor,
-      eclipticInclinationAngle: 0,
-      selfInclinationAngle: 0,
-      temperature: 5000, // Kelvin degrees
-      trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
-      spin: SUN_SPIN,
-      normalizedRevolutionPeriod: SUN_SPIN, // Sun does not revolve but it has to specify a value here (could be anything strictly positive)
-      originalPosition: V_ORIGIN_SUN,
-      showStatTraj: false
+    const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange)
+
+    const STAR_JSON = 'sun'
+    const PLANETS_JSON = [
+      'mercury',
+      'venus',
+      'earth',
+      'mars',
+      'jupiter',
+      'saturn',
+      'uranus',
+      'neptune'
+    ]
+    const SATELLITE_JSON = 'moon'
+    const RING_JSON = 'ring'
+
+    const systemOptions = {
+      star: undefined,
+      planets: undefined,
+      satellite: undefined,
+      ring: undefined
     }
+
+    /* Getting and setting star options */
+    systemOptions.star = await fetch(`../system_json/${STAR_JSON}.json`).then(
+      (response) => response.json()
+    )
+    systemOptions.star.trajectory = new EllipticalTrajectory(
+      {
+        a: systemOptions.star.trajectory.a,
+        e: systemOptions.star.trajectory.e
+      },
+      false
+    )
+    systemOptions.star.originalPosition = new BABYLON.Vector3(
+      systemOptions.star.originalPosition.x,
+      systemOptions.star.originalPosition.y,
+      systemOptions.star.originalPosition.z
+    )
+    systemOptions.star.diameter *= EARTH_DIAMETER
+    systemOptions.star.color = starColor
 
     const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown), not in caps because it will depend on other parameters
+    const DEG_TO_RAD = PI / 180
 
-    const mercuryOptions = {
-      name: 'Mercury',
-      diameter: 0.383 * EARTH_DIAMETER, // Approximative real size of Mercury relative to the Earth
-      texture: MERCURY_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (7 * PI) / 180,
-      selfInclinationAngle: (0.035 * PI) / 180,
-      temperature: 0, // May seem cold, but it's not as cold as my office right now
-      trajectory: new EllipticalTrajectory(
-        { a: 0.387 * ASTRONOMICAL_UNIT, e: 0.206 },
-        true
-      ),
-      revolutionPeriod: 87.969,
-      spin: 58.846,
-      showStatTraj: true
-    }
+    /* Getting and setting planets options */
+    systemOptions.planets = await Promise.all(
+      PLANETS_JSON.map(async (planet_name) => {
+        const planet = await fetch(`../system_json/${planet_name}.json`).then(
+          (response) => response.json()
+        )
+        planet.trajectory = new EllipticalTrajectory(
+          {
+            a: planet.trajectory.a * ASTRONOMICAL_UNIT,
+            e: planet.trajectory.e
+          },
+          true
+        )
+        planet.diameter *= EARTH_DIAMETER
+        planet.eclipticInclinationAngle *= DEG_TO_RAD
+        planet.selfInclinationAngle *= DEG_TO_RAD
+        planet.color = planetColor
 
-    const venusOptions = {
-      name: 'Venus',
-      diameter: 0.95 * EARTH_DIAMETER, // Approximative real size of Venus relative to the Earth
-      texture: VENUS_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (3.395 * PI) / 180,
-      selfInclinationAngle: (177.36 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 0.723 * ASTRONOMICAL_UNIT, e: 0.00678 },
-        true
-      ),
-      revolutionPeriod: 224.667,
-      spin: -243.023,
-      showStatTraj: true
-    }
+        return planet
+      })
+    )
 
-    const earthOptions = {
-      name: 'Earth',
-      diameter: EARTH_DIAMETER,
-      texture: EARTH_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: 0,
-      selfInclinationAngle: (23.437 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: ASTRONOMICAL_UNIT, e: 0.0167 },
-        true
-      ),
-      revolutionPeriod: 365.25,
-      spin: 0.997,
-      showStatTraj: true
-    }
+    /* Getting and setting satellite options */
+    systemOptions.satellite = await fetch(
+      `../system_json/${SATELLITE_JSON}.json`
+    ).then((response) => response.json())
+    systemOptions.satellite.trajectory = new EllipticalTrajectory(
+      {
+        a: systemOptions.satellite.trajectory.a * ASTRONOMICAL_UNIT,
+        e: systemOptions.satellite.trajectory.e
+      },
+      false
+    )
+    systemOptions.satellite.distanceToParent *= ASTRONOMICAL_UNIT
+    systemOptions.satellite.diameter *= EARTH_DIAMETER
+    systemOptions.satellite.color = planetColor
 
-    const moonOptions = {
-      name: 'Moon',
-      diameter: 0.273 * EARTH_DIAMETER,
-      texture: MOON_TEXTURE,
-      distanceToParent: 0.00257 * ASTRONOMICAL_UNIT, // Position relative to the Earth
-      color: planetColor,
-      eclipticInclinationAngle: 0,
-      selfInclinationAngle: 0,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 0.00257 * ASTRONOMICAL_UNIT, e: 0.0549 },
-        true
-      ),
-      spin: MOON_REVOLUTION_PERIOD,
-      revolutionPeriod: MOON_REVOLUTION_PERIOD,
-      showStatTraj: false
-    }
-
-    const marsOptions = {
-      name: 'Mars',
-      diameter: 0.533 * EARTH_DIAMETER, // Approximative real size of Mars relative to the Earth
-      texture: MARS_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (1.85 * PI) / 180,
-      selfInclinationAngle: (25.19 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 1.523 * ASTRONOMICAL_UNIT, e: 0.0939 },
-        true
-      ),
-      revolutionPeriod: 686.885,
-      spin: 1.026,
-      showStatTraj: true
-    }
-
-    const jupiterOptions = {
-      name: 'Jupiter',
-      diameter: 10.973 * EARTH_DIAMETER,
-      texture: JUPITER_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (1.304 * PI) / 180,
-      selfInclinationAngle: (3.12 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 5.203 * ASTRONOMICAL_UNIT, e: 0.0483 },
-        true
-      ),
-      revolutionPeriod: 4332.01,
-      spin: 0.414,
-      showStatTraj: true
-    }
-
-    const saturnOptions = {
-      name: 'Saturn',
-      diameter: 9.014 * EARTH_DIAMETER,
-      texture: SATURN_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (2.486 * PI) / 180,
-      selfInclinationAngle: (26.73 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 9.537 * ASTRONOMICAL_UNIT, e: 0.0539 },
-        true
-      ),
-      revolutionPeriod: 10754,
-      spin: 0.448,
-      showStatTraj: true
-    }
-
-    const RING_TEXTURE = 'resources/saturn_rings.png'
-    const ringOptions = {
-      diameter: 2.5 * saturnOptions.diameter,
-      texture: RING_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      originalPosition: new BABYLON.Vector3(0, 0, 0),
-      eclipticInclinationAngle: PI / 2, // Must stay at PI/2, otherwise the rings would be vertically aligned and not horizontally
-      selfInclinationAngle: 0,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory({ a: 0, e: 0 }, false),
-      spin: 100, //Ad hoc value
-      revolutionPeriod: 30, //Ad hoc value
-      showStatTraj: false
-    }
-
-    const uranusOptions = {
-      name: 'Uranus',
-      diameter: 3.981 * EARTH_DIAMETER,
-      texture: URANUS_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (0.773 * PI) / 180,
-      selfInclinationAngle: (97.8 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 19.189 * ASTRONOMICAL_UNIT, e: 0.0472 },
-        true
-      ),
-      revolutionPeriod: 30698,
-      spin: -0.718,
-      showStatTraj: true
-    }
-
-    const neptuneOptions = {
-      name: 'Neptune',
-      diameter: 3.865 * EARTH_DIAMETER,
-      texture: NEPTUNE_TEXTURE,
-      distanceToParent: 0,
-      color: planetColor,
-      eclipticInclinationAngle: (1.77 * PI) / 180,
-      selfInclinationAngle: (28.32 * PI) / 180,
-      temperature: 0,
-      trajectory: new EllipticalTrajectory(
-        { a: 30.07 * ASTRONOMICAL_UNIT, e: 0.00859 },
-        true
-      ),
-      revolutionPeriod: 60216,
-      spin: 0.671,
-      showStatTraj: true
-    }
-
-    const allPlanetsOptions = [
-      mercuryOptions,
-      venusOptions,
-      earthOptions,
-      marsOptions,
-      jupiterOptions,
-      saturnOptions,
-      uranusOptions,
-      neptuneOptions
-    ]
+    /* Getting and setting ring options */
+    systemOptions.ring = await fetch(`../system_json/${RING_JSON}.json`).then(
+      (response) => response.json()
+    )
+    systemOptions.ring.trajectory = new EllipticalTrajectory(
+      {
+        a: systemOptions.ring.trajectory.a,
+        e: systemOptions.ring.trajectory.e
+      },
+      false
+    )
+    systemOptions.ring.originalPosition = new BABYLON.Vector3(
+      systemOptions.ring.originalPosition.x,
+      systemOptions.ring.originalPosition.y,
+      systemOptions.ring.originalPosition.z
+    )
+    systemOptions.ring.diameter *= EARTH_DIAMETER
+    systemOptions.ring.color = planetColor
+    systemOptions.ring.eclipticInclinationAngle *= DEG_TO_RAD
 
     /* The use of a builder is needed because the star and planets need the
     existence of an animManager, but with the new relative speed controls, the
@@ -278,16 +166,16 @@ class GravitationalSystemManager {
     finally achieving the system by giving the animManager to the planets.  */
     const systemBuilder = new SystemBuilder()
       .setScene(scene)
-      .setStarOptions(sunOptions)
-      .setRingOptions(ringOptions)
-      .setSatelliteOptions(moonOptions)
-      .setPlanetsOptions(allPlanetsOptions)
+      .setStarOptions(systemOptions.star)
+      .setRingOptions(systemOptions.ring)
+      .setSatelliteOptions(systemOptions.satellite)
+      .setPlanetsOptions(systemOptions.planets)
       .setNormalizedPeriods(SIMULATION_TIME)
-      .setSystemCenter(V_ORIGIN_SUN)
-      .setSatelliteOfPlanet(earthOptions)
-      .setRingOfPlanet(saturnOptions)
+      .setSystemCenter(V_ORIGIN)
+      .setSatelliteOfPlanet(systemOptions.planets[2])
+      .setRingOfPlanet(systemOptions.planets[5])
 
-    this.animManager = new AnimManager(allPlanetsOptions)
+    this.animManager = new AnimManager(systemOptions.planets)
 
     systemBuilder.setAnimatable(this.animManager.animatable)
 
@@ -301,15 +189,15 @@ class GravitationalSystemManager {
     new NumberOfDaysUpdater(
       this.animManager,
       SIMULATION_TIME,
-      mercuryOptions.revolutionPeriod
+      systemOptions.planets[0].revolutionPeriod
     )
 
-    /* Makes the skybox 2.5 times larger than the largest trajectory of the
+    /* Makes the skybox 25 times larger than the largest trajectory of the
     system. Keep in mind that `a` is the semi-major axis which is only half the
-    width of the ellipse.*/
+    width of the ellipse. */
     const farthestTrajectoryWidth =
       2 * this.gravitationalSystem.planets.at(-1).trajectory.a
-    const SKYBOX_SIZE = 2.5 * farthestTrajectoryWidth
+    const SKYBOX_SIZE = 25 * farthestTrajectoryWidth
     this.skybox = new BABYLON.PhotoDome(
       'skybox',
       SKYBOX_TEXTURE,
@@ -317,6 +205,8 @@ class GravitationalSystemManager {
       scene
     )
     this.skybox.mesh.checkCollisions = true // Ensures that the user can't go out of the universe (forbidden by physicists)
+    this.skybox.mesh.material.useLogarithmicDepth = true // Avoids "holes" in the skybox when reaching large sizes
+
     this.cameras = new CameraModes(
       scene,
       this.gravitationalSystem.star,
@@ -338,7 +228,7 @@ class GravitationalSystemManager {
     /* The light of the scene, it need to come from the star. It also need a
     glow effect applied on the star. */
 
-    this.light = new BABYLON.PointLight('light', V_ORIGIN_SUN)
+    this.light = new BABYLON.PointLight('light', V_ORIGIN)
     this.light.diffuse = this.gravitationalSystem.star.color // The color diffused on other objects
     this.light.specular = new BABYLON.Color3.Black() // Avoids white reflections on objects
     this.light.range = 5000 * ASTRONOMICAL_UNIT // How far the light affects the scene

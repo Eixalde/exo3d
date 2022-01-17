@@ -35,9 +35,9 @@ class CameraModes {
       PI / 2 + BASE_PLANET.eclipticInclinationAngle // Makes the planetCamera parallel to the ecliptic
 
     /* The farthest distance the camera can see up to. It needs to be at least
-    more than the skybox' size, though there is nothing to see beyond it. Its
-    value plus one is then quite appropriate. */
-    const CAMERA_FAR_SIGHT = skyboxSize + 1
+    more than the skybox' size, though there is nothing to see beyond it. Twice
+    its is then quite appropriate. */
+    const CAMERA_FAR_SIGHT = skyboxSize * 2
 
     /* Represents how much the camera will modify its distance when zooming
     in/out (e.g. 0.1 = 10% of the distance). */
@@ -111,6 +111,7 @@ class CameraModes {
     this.starCamera.lowerRadiusLimit = MIN_SYSTEM_CAM_DIST // Prevents the camera from going into the mesh
     this.planetCamera.lowerRadiusLimit = MIN_PLANET_CAM_DIST // Prevents the camera from going into the mesh
     this.freeCamera.checkCollisions = true
+    this.starCamera.checkCollisions = true
     this.freeCamera.ellipsoid = new BABYLON.Vector3(
       HIT_BOX_RADIUS,
       HIT_BOX_RADIUS,

@@ -1,0 +1,13 @@
+{
+	"name": "Uranus",
+	"diameter": 3.981,
+	"texture": "resources/512_uranus.jpg",
+	"distanceToParent": 0,
+	"eclipticInclinationAngle": 0.773,
+	"selfInclinationAngle": 97.8,
+	"temperature": 0,
+	"trajectory": { "a": 19.189, "e": 0.0472 },
+	"revolutionPeriod": 30698,
+	"spin": -0.718,
+	"showStatTraj": true
+}
