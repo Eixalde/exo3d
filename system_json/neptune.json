@@ -1,0 +1,13 @@
+{
+	"name": "Neptune",
+	"diameter": 3.865,
+	"texture": "resources/512_neptune.jpg",
+	"distanceToParent": 0,
+	"eclipticInclinationAngle": 1.77,
+	"selfInclinationAngle": 28.32,
+	"temperature": 0,
+	"trajectory": { "a": 30.07, "e": 0.00859 },
+	"revolutionPeriod": 60216,
+	"spin": 0.671,
+	"showStatTraj": true
+}
