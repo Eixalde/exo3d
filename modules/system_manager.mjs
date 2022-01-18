@@ -3,7 +3,7 @@
  * @description Every "magic number" appearing in the parameters of the planets is actually
  * calculated from data on the different values of every planet (sideral day,
  * revolution period, distance to the sun, size...) You can find the detail of
- * those calculations in the [detailled documentation]().
+ * those calculations in the [detailed documentation]().
  */
 
 import {
@@ -58,105 +58,74 @@ class GravitationalSystemManager {
 
     const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange)
 
-    const STAR_JSON = 'sun'
-    const PLANETS_JSON = [
-      'mercury',
-      'venus',
-      'earth',
-      'mars',
-      'jupiter',
-      'saturn',
-      'uranus',
-      'neptune'
-    ]
-    const SATELLITE_JSON = 'moon'
-    const RING_JSON = 'ring'
-
-    const systemOptions = {
-      star: undefined,
-      planets: undefined,
-      satellite: undefined,
-      ring: undefined
-    }
-
-    /* Getting and setting star options */
-    systemOptions.star = await fetch(`../system_json/${STAR_JSON}.json`).then(
-      (response) => response.json()
-    )
-    systemOptions.star.trajectory = new EllipticalTrajectory(
-      {
-        a: systemOptions.star.trajectory.a,
-        e: systemOptions.star.trajectory.e
-      },
-      false
-    )
-    systemOptions.star.originalPosition = new BABYLON.Vector3(
-      systemOptions.star.originalPosition.x,
-      systemOptions.star.originalPosition.y,
-      systemOptions.star.originalPosition.z
-    )
-    systemOptions.star.diameter *= EARTH_DIAMETER
-    systemOptions.star.color = starColor
-
     const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown), not in caps because it will depend on other parameters
     const DEG_TO_RAD = PI / 180
 
-    /* Getting and setting planets options */
-    systemOptions.planets = await Promise.all(
-      PLANETS_JSON.map(async (planet_name) => {
-        const planet = await fetch(`../system_json/${planet_name}.json`).then(
-          (response) => response.json()
-        )
-        planet.trajectory = new EllipticalTrajectory(
-          {
-            a: planet.trajectory.a * ASTRONOMICAL_UNIT,
-            e: planet.trajectory.e
-          },
-          true
-        )
-        planet.diameter *= EARTH_DIAMETER
-        planet.eclipticInclinationAngle *= DEG_TO_RAD
-        planet.selfInclinationAngle *= DEG_TO_RAD
-        planet.color = planetColor
+    const SYSTEM_JSON_NAME = 'solar_system'
 
-        return planet
+    const systemOptions = {
+      star: undefined,
+      planets: [],
+      satellites: [],
+      rings: []
+    }
+
+    /* Gets the system's spatial objects contained in the JSON file. */
+    const systemJson = await fetch(`../system_json/${SYSTEM_JSON_NAME}.json`)
+      .then((response) => response.json())
+      .then((data) => {
+        return data.system
       })
-    )
 
-    /* Getting and setting satellite options */
-    systemOptions.satellite = await fetch(
-      `../system_json/${SATELLITE_JSON}.json`
-    ).then((response) => response.json())
-    systemOptions.satellite.trajectory = new EllipticalTrajectory(
-      {
-        a: systemOptions.satellite.trajectory.a * ASTRONOMICAL_UNIT,
-        e: systemOptions.satellite.trajectory.e
-      },
-      false
-    )
-    systemOptions.satellite.distanceToParent *= ASTRONOMICAL_UNIT
-    systemOptions.satellite.diameter *= EARTH_DIAMETER
-    systemOptions.satellite.color = planetColor
+    /* Adds or completes data comprised in the spatial objects, and sort them by
+    exo type (star, planet, satellite or ring). */
+    for (const [_, spObj] of Object.entries(systemJson)) {
+      const CAN_MOVE = spObj.exo_type === `star` ? false : true
+      spObj.trajectory = new EllipticalTrajectory(
+        {
+          a: spObj.trajectory.a * ASTRONOMICAL_UNIT,
+          e: spObj.trajectory.e
+        },
+        CAN_MOVE
+      )
+      spObj.diameter *= EARTH_DIAMETER
+      spObj.distanceToParent *= ASTRONOMICAL_UNIT
+      spObj.eclipticInclinationAngle *= DEG_TO_RAD
+      spObj.selfInclinationAngle *= DEG_TO_RAD
 
-    /* Getting and setting ring options */
-    systemOptions.ring = await fetch(`../system_json/${RING_JSON}.json`).then(
-      (response) => response.json()
-    )
-    systemOptions.ring.trajectory = new EllipticalTrajectory(
-      {
-        a: systemOptions.ring.trajectory.a,
-        e: systemOptions.ring.trajectory.e
-      },
-      false
-    )
-    systemOptions.ring.originalPosition = new BABYLON.Vector3(
-      systemOptions.ring.originalPosition.x,
-      systemOptions.ring.originalPosition.y,
-      systemOptions.ring.originalPosition.z
-    )
-    systemOptions.ring.diameter *= EARTH_DIAMETER
-    systemOptions.ring.color = planetColor
-    systemOptions.ring.eclipticInclinationAngle *= DEG_TO_RAD
+      switch (spObj.exo_type) {
+        case 'star':
+          spObj.originalPosition = new BABYLON.Vector3(
+            spObj.originalPosition.x,
+            spObj.originalPosition.y,
+            spObj.originalPosition.z
+          )
+          spObj.color = starColor
+          systemOptions.star = spObj
+          break
+        case 'planet':
+          spObj.color = planetColor
+          systemOptions.planets.push(spObj)
+          break
+        case 'satellite':
+          systemOptions.satellites.push(spObj)
+          break
+        case 'ring':
+          spObj.originalPosition = new BABYLON.Vector3(
+            spObj.originalPosition.x,
+            spObj.originalPosition.y,
+            spObj.originalPosition.z
+          )
+          systemOptions.rings.push(spObj)
+      }
+    }
+
+    /* Sorts planets by their semi-major axis, lowest to highest. This is
+    especially important because every module interacting with planets needs
+    them to be in ascending order in the system. */
+    systemOptions.planets.sort((x, y) => {
+      return x.trajectory.a - y.trajectory.a
+    })
 
     /* The use of a builder is needed because the star and planets need the
     existence of an animManager, but with the new relative speed controls, the
@@ -167,8 +136,8 @@ class GravitationalSystemManager {
     const systemBuilder = new SystemBuilder()
       .setScene(scene)
       .setStarOptions(systemOptions.star)
-      .setRingOptions(systemOptions.ring)
-      .setSatelliteOptions(systemOptions.satellite)
+      .setRingOptions(systemOptions.rings[0])
+      .setSatelliteOptions(systemOptions.satellites[0])
       .setPlanetsOptions(systemOptions.planets)
       .setNormalizedPeriods(SIMULATION_TIME)
       .setSystemCenter(V_ORIGIN)

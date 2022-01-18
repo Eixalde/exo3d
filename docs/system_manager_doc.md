@@ -2,14 +2,11 @@
 
 ## SystemManager
 
-Every "magic number" appearing in the parameters of the planets is actually
-calculated from data on the different values of every planet (sideral day,
-revolution period, distance to the sun, size...) You can find the detail of
-those calculations in the [detailled documentation](../docs/detailled_doc.md).
+Every "magic number" appearing in the parameters of the planets is actually calculated from data on the different values of every planet (sideral day, revolution period, distance to the sun, size...) You can find the detail of those calculations in the [detailed documentation]().
 
 - [SystemManager](#module_SystemManager)
   - [~GravitationalSystemManager](#module_SystemManager..GravitationalSystemManager)
-    - [new GravitationalSystemManager(scene, UI, canvas)](#new_module_SystemManager..GravitationalSystemManager_new)
+    - [.initialize(scene, canvas)](#module_SystemManager..GravitationalSystemManager+initialize)
 
 ---
 
@@ -35,14 +32,17 @@ object, the cameras, the background and the light.
 
 ---
 
-<a name="new_module_SystemManager..GravitationalSystemManager_new"></a>
+<a name="module_SystemManager..GravitationalSystemManager+initialize"></a>
 
-#### new GravitationalSystemManager(scene, UI, canvas)
+#### gravitationalSystemManager.initialize(scene, canvas)
 
-| Param  | Type                       | Description                                |
-| ------ | -------------------------- | ------------------------------------------ |
-| scene  | <code>BABYLON.Scene</code> | The current scene.                         |
-| UI     | <code>BABYLON.GUI</code>   | The global Babylon UI for the application. |
-| canvas | <code>HTMLElement</code>   | The canvas used by the engine.             |
+Initializes the gravitational system. Because of JSON files, we have to use some `await` with it : thus the async function. Everything in there used to be the constructor actually, but JSONs really messed up the whole application. For God sake, it shouldn't be that hard to read compatible local objects, fix JavaScript please.
+
+**Kind**: instance method of [<code>GravitationalSystemManager</code>](#module_SystemManager..GravitationalSystemManager)
+
+| Param  | Type                       | Description                    |
+| ------ | -------------------------- | ------------------------------ |
+| scene  | <code>BABYLON.Scene</code> | The current scene.             |
+| canvas | <code>HTMLElement</code>   | The canvas used by the engine. |
 
 ---
