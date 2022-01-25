@@ -1,33 +1,37 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
     hooks:
-    -   id: trailing-whitespace
-    -   id: end-of-file-fixer
-    -   id: check-yaml
-    -   id: check-added-large-files
-    -   id: check-merge-conflict
--   repo: https://github.com/awebdeveloper/pre-commit-stylelint
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-json
+      - id: pretty-format-json
+
+  - repo: https://github.com/awebdeveloper/pre-commit-stylelint
     rev: '0.0.2'
     hooks:
-    -   id: stylelint
-        additional_dependencies: ['stylelint@13.2.1', 'stylelint-config-standard@20.0.0']
--   repo: local
+      - id: stylelint
+        additional_dependencies:
+          ['stylelint@13.2.1', 'stylelint-config-standard@20.0.0']
+  - repo: local
     hooks:
-    -   id: standardjs
+      - id: standardjs
         name: Check JS standard conformity
         entry: ./standard_snazzy.sh
         language: system
         types: [javascript]
         pass_filenames: true
--   repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v7.2.0'  # Use the sha / tag you want to point at
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: 'v7.2.0' # Use the sha / tag you want to point at
     hooks:
-    -   id: eslint
-- repo: https://github.com/jumanjihouse/pre-commit-hooks
-  rev: '2.0.0'  # or specific git tag
-  hooks:
-    - id: markdownlint # Configure in .mdlrc
-      exclude: ^docs/
+      - id: eslint
+  - repo: https://github.com/jumanjihouse/pre-commit-hooks
+    rev: '2.0.0' # or specific git tag
+    hooks:
+      - id: markdownlint # Configure in .mdlrc
+        exclude: ^docs/

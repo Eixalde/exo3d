@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2022-01-19
+
+### Added
+
+- Created a JSON to dictionary converter
+- Made an algorithm to explore the dictionary
+
 ## [1.0.5] - 2022-01-17
 
 ### Changed

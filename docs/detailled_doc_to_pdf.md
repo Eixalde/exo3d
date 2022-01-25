@@ -169,3 +169,25 @@ Finally, we find it interesting to show in the simulator how much time has passe
 - $X$ is the Timeout duration in seconds.
 
 In practice, $X$ is a parameter given in milliseconds and the formula is adapted accordingly, but the result is the same.
+
+\newpage
+
+## JSONs and dictionaries
+
+For the longest time, we used custom local objects to store the properties of the spatial objects. As the project goes on, we want to include more and more support for the rest of the exoplanet project. This is why we had to convert those local objects into proper external files - YAML files to be precise, generated with the work of Ulysse Chosson, engineer on the project. We didn't need to work with YAML, so JSON format was enough, as both can be converted to each other. There begins the adventure : make spatial object information go into a JSON file and read it from there.
+
+The first trouble we had to face was how JSON files are handled in JavaScript. You need to wait some time before JS can give you the corresponding object, and you cannot assign it to a variable or start interacting with it until that time is over. This led us to introduce `await` and `async` support in various modules, due to them needing to interact with the information contained in the JSON. This was tricky, but not impossible, and the result allows to stop the instructions of the program while the JSON hasn't been fully accessed.
+
+Once that step was completed, we also had to think of formatting the data. Ulysse will give us files which are built in a very special way, and from now on we have to work around that. The YAML/JSON files containing information regroup all spatial objects in a system. The first half of the file contains the raw information on these (name, status, size, trajectory, etc.) and the second half describes how they interact with each other by creating sub gravitational systems ("sg" in short most of the time). You can see an example below.
+
+![](./svg_doc/export/json_files.png)
+
+To explore this file, we look first at the main subsystem : the one containing the star(s). From there, we implement an algorithm that travels across this subsystem and tries to recognize elements in it. If the algorithm finds a spatial object, it can take its information from the 'system' part and give them to the system builder for later use. If it is another subsystem from the 'hierarchy' part, the algorithm explores that subsystem and tries to find other spatial objects. But we had a huge problem : those JSON files have their contents in lists, and that makes the 'system' part and the 'hierarchy' part really hard to connect. That would be much easier if all those elements were attributes of their respective parts, because JavaScript has plenty of support for identifying attributes in separate locations. This is why we had to transform the raw JSON file into a dictionary version of it. And now, we are ready to go.
+
+Three major assumptions were raised to make this algorithm work :
+
+- The last subsystem is necessarily the one at the root of the system. It contains the star(s) and every other subsystem/spatial object
+- Satellites and rings are, by definition, associated to one and only one planet. If a subsystem contains either of those two, then there is a planet in that subsystem, and that planet is their parent
+- A spatial object cannot appear more than once in the hierarchy.
+
+Those three conditions make sense in regard of the organization of a system, and they are rules applied on Ulysse's work. If everything above is respected, then the algorithm works fine and extracts correctly all the information we need to build the system.
