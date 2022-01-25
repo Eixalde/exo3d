@@ -16,3 +16,5 @@ export {
   modifyPlanetSpeedSlider,
   NumberOfDaysUpdater
 } from './modules/html_modifier.mjs'
+
+export { JsonToDict } from './modules/json_to_dict.mjs'
