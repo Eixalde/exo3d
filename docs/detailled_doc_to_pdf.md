@@ -180,9 +180,25 @@ The first trouble we had to face was how JSON files are handled in JavaScript. Y
 
 Once that step was completed, we also had to think of formatting the data. Ulysse will give us files which are built in a very special way, and from now on we have to work around that. The YAML/JSON files containing information regroup all spatial objects in a system. The first half of the file contains the raw information on these (name, status, size, trajectory, etc.) and the second half describes how they interact with each other by creating sub gravitational systems ("sg" in short most of the time). You can see an example below.
 
-![](./svg_doc/export/json_files.png)
+![Example of a YAML/JSON formatted file](./svg_doc/export/json_files.png)
 
-To explore this file, we look first at the main subsystem : the one containing the star(s). From there, we implement an algorithm that travels across this subsystem and tries to recognize elements in it. If the algorithm finds a spatial object, it can take its information from the 'system' part and give them to the system builder for later use. If it is another subsystem from the 'hierarchy' part, the algorithm explores that subsystem and tries to find other spatial objects. But we had a huge problem : those JSON files have their contents in lists, and that makes the 'system' part and the 'hierarchy' part really hard to connect. That would be much easier if all those elements were attributes of their respective parts, because JavaScript has plenty of support for identifying attributes in separate locations. This is why we had to transform the raw JSON file into a dictionary version of it. And now, we are ready to go.
+Actually the process is quite simple, you only need to take the list contained in each category and make it an object instead, by also changing its elements into attributes of that new object. And you are done : the JSON is now under a dictionary shape.
+
+\newpage
+
+## System builder : how to read the parameters
+
+Getting a dictionary JSON is only the first step of creating the corresponding system. To build the Spatial Objects properly, these need really specific parameters in a given shape and form. The object passed in parameter of the constructor of every Spatial Object is called a SpatialObjectParams, it even has a typedef included in the Spatial Object module - make sure to take a look at it to understand what it shall contain. We have a long way to go from the dictionary JSON to the SpatialObjectParams, and the System Builder will make all that work for us !
+
+Well, the process does not start with the System Builder, first we will create an object called "systemOptions" that has four attributes : 'star', 'planet', 'satellite' and 'rings'. You should also note that I used a few tricks to make the program a bit more future-proofed : there doesn't necessarily need to be four attributes, nor do they need to be called exactly like this. If 'planet' must become 'exoplanet' or if we add comets, everything is set up for this. This is because the following lines are equivalent :
+
+![Defined attributes](./svg_doc/export/defined_attributes.png)
+
+![Undefined attributes](./svg_doc/export/undefined_attributes.png)
+
+This is especially time-saving for treating multiple objects with that same structure, and implementing it made me gain more than a hundred lines total in three different files. If you previously didn't use the `object['parameter']` instead of the `object.parameter` syntax, please use and abuse it : you can only gain advantage from that.
+
+Back to our systemOptions object, our task is to store every object from the system part of the dictionnary in the corresponding category of systemOptions. To explore this dictionary, we look first at the main subsystem : the one containing the star(s). From there, we implement an algorithm that travels across this subsystem and tries to recognize elements in it. When the algorithm finds a spatial object, it can take its information from the 'system' part and add them accordingly to the systempOptions. If it is another subsystem from the 'hierarchy' part, the algorithm explores that subsystem and tries to find other spatial objects.
 
 Three major assumptions were raised to make this algorithm work :
 
@@ -190,4 +206,12 @@ Three major assumptions were raised to make this algorithm work :
 - Satellites and rings are, by definition, associated to one and only one planet. If a subsystem contains either of those two, then there is a planet in that subsystem, and that planet is their parent
 - A spatial object cannot appear more than once in the hierarchy.
 
-Those three conditions make sense in regard of the organization of a system, and they are rules applied on Ulysse's work. If everything above is respected, then the algorithm works fine and extracts correctly all the information we need to build the system.
+Those three conditions make sense in regard of the organization of a system, and they are rules applied on Ulysse's work. If everything above is respected, then the algorithm works fine and extracts correctly all the information we need to launch the System Builder. We start the process by giving the builder several parameters in order : the Babylon scene, any constants needed (value of the astronomical unit, name of the exotypes), the systemOptions and the defaultOptions. The defaultOptions consists of a JSON file containing exactly four objects : one for each exotype - at the time I am writing this, anyway. Those objects all have the maximum amount of parameters required to build a spatial object : from temperature to inclination, including name, color and eventually original position. While getting the systemOptions into the builder, we compare them to the defaultOptions structure. If any parameter has an undefined value or doesn't exist yet, the defaultOptions is taken as reference for that parameter. This is crucial for the vast majority of exosystems, which have some information missing.
+
+Once the systemOptions are completed by the builder, the next step of the transformation happens : making the parameters 'Babylon-friendly'. The information provided by the JSON contains raw numbers with - maybe - different units along them : two numbers for the semi-major axis and the excentricity don't make up to a Babylon trajectory, for example. All those raw values are treated to match the simulation environment, either by multiplying them by other values or using complex functions such as the EllipticalTrajectory constructor. The result is an almost finished SpatialObjectParams, which only lacks an animatable.
+
+This is where the split nature of the builder shows its true usefulness : the animatable is given by the AnimManager, which needs the Spatial Objects to exist already ! Or at least, it needs some of their parameters in the 'Babylon-friendly' form. The strategy was to modify as much as possible the systemOptions to match the SpatialObjectParams, then create the AnimManager based on those. Once the AnimManager exists, the animatable can be transfered to the systemOptions and achieve their formatting, making them proper SpatialObjectParams. Just run the build function from the System Builder, and it is done.
+
+![Structure in the JSON](./svg_doc/export/initial_options.png){width=70%}
+
+![Final SpatialObjectParams](./svg_doc/export/final_options.png){width=70%}

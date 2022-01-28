@@ -1,0 +1,110 @@
+{
+  "system": [
+    {
+      "name": "bob",
+      "texture": "resources/512_earth.jpg",
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": null,
+      "temperature": 0,
+      "trajectory": { "a": 1.3, "e": 0.0167 },
+      "revolutionPeriod": null,
+      "spin": 0.997,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    },
+    {
+      "name": "freddie",
+      "diameter": 0.7,
+      "texture": "resources/512_mercury.jpg",
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 7,
+      "selfInclinationAngle": 0.035,
+      "temperature": 0,
+      "trajectory": { "a": 0.8, "e": 0.206 },
+      "revolutionPeriod": 160,
+      "spin": 78,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    },
+    {
+      "name": "moon_one",
+      "diameter": 0.25,
+      "texture": "resources/512_moon.jpg",
+      "distanceToParent": 0.00257,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 56,
+      "temperature": 0,
+      "trajectory": { "a": 0.00257, "e": 0.0549 },
+      "spin": 24,
+      "revolutionPeriod": 26,
+      "showStatTraj": false,
+      "exo_type": "satellite"
+    },
+    {
+      "name": "moon_two",
+      "diameter": 0.4,
+      "texture": "resources/512_moon.jpg",
+      "distanceToParent": 0.005,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 56,
+      "temperature": 0,
+      "trajectory": { "a": 0.005, "e": 0.08 },
+      "spin": 40,
+      "revolutionPeriod": 39,
+      "showStatTraj": false,
+      "exo_type": "satellite"
+    },
+    {
+      "name": "satourne",
+      "diameter": 12,
+      "texture": null,
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 2.486,
+      "selfInclinationAngle": 26.73,
+      "temperature": 0,
+      "trajectory": { "a": 13.5, "e": 0.0539 },
+      "revolutionPeriod": 6000,
+      "spin": 0.448,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    },
+    {
+      "name": "son",
+      "diameter": 109.179,
+      "texture": null,
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 5000,
+      "trajectory": { "a": 0, "e": 0 },
+      "spin": 27.28,
+      "normalizedRevolutionPeriod": 27.28,
+      "originalPosition": { "x": 0, "y": 0, "z": 0 },
+      "showStatTraj": false,
+      "exo_type": "star"
+    },
+    {
+      "name": "dtc",
+      "diameter": 6,
+      "texture": "resources/512_uranus.jpg",
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0.773,
+      "selfInclinationAngle": 97.8,
+      "temperature": 0,
+      "trajectory": { "a": 19.189, "e": 0.0472 },
+      "revolutionPeriod": 30698,
+      "spin": -0.718,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    }
+  ],
+  "hierarchy": [
+    {
+      "sg1": ["bob", "moon_one", "moon_two"]
+    },
+    {
+      "sg2": ["son", "sg1", "freddie", "satourne", "dtc"]
+    }
+  ]
+}

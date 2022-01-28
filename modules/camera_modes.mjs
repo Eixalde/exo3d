@@ -2,6 +2,10 @@
  * @module CameraModes
  */
 
+ import {
+  ASTRONOMICAL_UNIT
+} from '../exo3d.mjs'
+
 const PI = Math.PI
 
 /**
@@ -16,10 +20,9 @@ class CameraModes {
    * @param {Star} star - The star of the system observed.
    * @param {Planet[]} planets - The group of planets we want to look at.
    * @param {HTMLElement} canvas - The current canvas.
-   * @param {Number} astroUnit - The value of the astronomical unit (in Babylon units).
    * @param {Number} skyboxSize - The size of the skybox in the scene.
    */
-  constructor(scene, star, planets, canvas, astroUnit, skyboxSize) {
+  constructor(scene, star, planets, canvas, skyboxSize) {
     const HIT_BOX_RADIUS = planets[0].getVisualDiameter()
     const BASE_PLANET = planets[0] // The planet pointed by the planetCamera by default
     // Placing the camera far from the star to see the entire system (2 times the largest trajectory is enough)
@@ -99,7 +102,7 @@ class CameraModes {
     /* Mouse wheel can be used to move but it is really slow. I couldn't
     configure it to match the system's scale, so consider using only keys (for
     movement) and mouse drag (for camera orientation). */
-    const FREE_CAMERA_SPEED = astroUnit * 0.1 // Ad hoc value
+    const FREE_CAMERA_SPEED = ASTRONOMICAL_UNIT * 0.1 // Ad hoc value
     const FREE_CAMERA_ANGULAR = 500 // Ad hoc value
     this.freeCamera.inputs.addMouseWheel()
     this.freeCamera.angularSensibility = FREE_CAMERA_ANGULAR

@@ -10,8 +10,8 @@ those calculations in the [detailed documentation]().
 - [SystemManager](#module_SystemManager)
   - [~GravitationalSystemManager](#module_SystemManager..GravitationalSystemManager)
     - [.initialize(scene, canvas)](#module_SystemManager..GravitationalSystemManager+initialize)
-    - [.findSubsystemElements(objectJson, subsystem)](#module_SystemManager..GravitationalSystemManager+findSubsystemElements)
-    - [.sortSpatialObject(spObj, subsystemHierarchy)](#module_SystemManager..GravitationalSystemManager+sortSpatialObject)
+    - [.convertFromJson(objectJson, contextSystem)](#module_SystemManager..GravitationalSystemManager+convertFromJson)
+    - [.addToSusbystemHierarchy(spObj, contextSubsystemHierarchy)](#module_SystemManager..GravitationalSystemManager+addToSusbystemHierarchy)
 
 ---
 
@@ -42,8 +42,8 @@ object, the cameras, the background and the light.
 
 - [~GravitationalSystemManager](#module_SystemManager..GravitationalSystemManager)
   - [.initialize(scene, canvas)](#module_SystemManager..GravitationalSystemManager+initialize)
-  - [.findSubsystemElements(objectJson, subsystem)](#module_SystemManager..GravitationalSystemManager+findSubsystemElements)
-  - [.sortSpatialObject(spObj, subsystemHierarchy)](#module_SystemManager..GravitationalSystemManager+sortSpatialObject)
+  - [.convertFromJson(objectJson, contextSystem)](#module_SystemManager..GravitationalSystemManager+convertFromJson)
+  - [.addToSusbystemHierarchy(spObj, contextSubsystemHierarchy)](#module_SystemManager..GravitationalSystemManager+addToSusbystemHierarchy)
 
 ---
 
@@ -66,42 +66,42 @@ local objects, fix JavaScript please.
 
 ---
 
-<a name="module_SystemManager..GravitationalSystemManager+findSubsystemElements"></a>
+<a name="module_SystemManager..GravitationalSystemManager+convertFromJson"></a>
 
-#### gravitationalSystemManager.findSubsystemElements(objectJson, subsystem)
+#### gravitationalSystemManager.convertFromJson(objectJson, contextSystem)
 
-Upon giving a subsystem to analyze, this function looks at every element in
-that subsystem. If that element is a spatial object, the function calls
-sortSpatialObject to give it its correct place in the system (star, planet,
-satellite or rings). If that element is another subsystem, the function
+Upon giving a context system to analyze, this function looks at every
+element in that system. If that element is a spatial object, the function
+calls sortSpatialObject to give it its correct place in the system (star,
+planet, satellite or rings). If that element is a subsystem, the function
 will instead call itself with that subsystem, until it eventually finds
-only spatial objects. If there are any satellites or rings in the
-subsystem, this means they are attached to the only planet in the
-same subsystem. Therefore, those are given a special attribute called
-"parent" which is the planet in the subsystem. More information is found
-in the detailed documentation.
+only spatial objects. If there are any satellites or rings in the context
+system, this means they are attached to the only planet in the same system.
+Therefore, those are given a special attribute called "parent" which is the
+planet in the subsystem. More information is found in the detailed
+documentation.
 
 **Kind**: instance method of [<code>GravitationalSystemManager</code>](#module_SystemManager..GravitationalSystemManager)
 
-| Param      | Type                | Description                                                           |
-| ---------- | ------------------- | --------------------------------------------------------------------- |
-| objectJson | <code>Object</code> | The object containing the information of the system in the JSON file. |
-| subsystem  | <code>Object</code> | The subsystem we are currently navigating through.                    |
+| Param         | Type                | Description                                                           |
+| ------------- | ------------------- | --------------------------------------------------------------------- |
+| objectJson    | <code>Object</code> | The object containing the information of the system in the JSON file. |
+| contextSystem | <code>Object</code> | The subsystem we are currently navigating through.                    |
 
 ---
 
-<a name="module_SystemManager..GravitationalSystemManager+sortSpatialObject"></a>
+<a name="module_SystemManager..GravitationalSystemManager+addToSusbystemHierarchy"></a>
 
-#### gravitationalSystemManager.sortSpatialObject(spObj, subsystemHierarchy)
+#### gravitationalSystemManager.addToSusbystemHierarchy(spObj, contextSubsystemHierarchy)
 
 Takes a spatial object, analyzes its type (star, planet, satellite, rings)
 and adds it to both its subsystem hierarchy and the systemOptions.
 
 **Kind**: instance method of [<code>GravitationalSystemManager</code>](#module_SystemManager..GravitationalSystemManager)
 
-| Param              | Type                | Description                                                   |
-| ------------------ | ------------------- | ------------------------------------------------------------- |
-| spObj              | <code>Object</code> | The spatial object options to be sorted.                      |
-| subsystemHierarchy | <code>Object</code> | The hierarchy of the subsystem containing the spatial object. |
+| Param                     | Type                | Description                                                   |
+| ------------------------- | ------------------- | ------------------------------------------------------------- |
+| spObj                     | <code>Object</code> | The spatial object options to be sorted.                      |
+| contextSubsystemHierarchy | <code>Object</code> | The hierarchy of the subsystem containing the spatial object. |
 
 ---

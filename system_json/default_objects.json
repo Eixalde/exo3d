@@ -1,0 +1,70 @@
+{
+  "star": {
+    "name": "default_star",
+    "diameter": 100,
+    "texture": "resources/512_sun.jpg",
+    "distanceToParent": 0,
+    "eclipticInclinationAngle": 0,
+    "selfInclinationAngle": 0,
+    "temperature": 5000,
+    "trajectory": { "a": 0, "e": 0 },
+    "spin": 30,
+    "normalizedRevolutionPeriod": 30,
+    "originalPosition": { "x": 0, "y": 0, "z": 0 },
+    "showStatTraj": false,
+    "exo_type": "star"
+  },
+  "planet": {
+    "name": "default_planet",
+    "diameter": 1,
+    "texture": null,
+    "color": {
+      "r": 0.5,
+      "g": 0.3,
+      "b": 0.3
+    },
+    "distanceToParent": 0,
+    "eclipticInclinationAngle": 0,
+    "selfInclinationAngle": 0,
+    "temperature": 0,
+    "trajectory": { "a": 1, "e": 0 },
+    "revolutionPeriod": 365.25,
+    "spin": 0.997,
+    "showStatTraj": true,
+    "exo_type": "planet"
+  },
+  "satellite": {
+    "name": "default_satellite",
+    "diameter": 0.25,
+    "texture": null,
+    "color": {
+      "r": 0.5,
+      "g": 0.5,
+      "b": 0.5
+    },
+    "distanceToParent": 0.0025,
+    "eclipticInclinationAngle": 0,
+    "selfInclinationAngle": 0,
+    "temperature": 0,
+    "trajectory": { "a": 0.0025, "e": 0 },
+    "spin": 30,
+    "revolutionPeriod": 30,
+    "showStatTraj": false,
+    "exo_type": "satellite"
+  },
+  "rings": {
+    "name": "default_rings",
+    "diameter": 20,
+    "texture": "resources/saturn_rings.png",
+    "distanceToParent": 0,
+    "originalPosition": { "x": 0, "y": 0, "z": 0 },
+    "eclipticInclinationAngle": 0,
+    "selfInclinationAngle": 90,
+    "temperature": 0,
+    "trajectory": { "a": 0, "e": 0 },
+    "spin": 100,
+    "revolutionPeriod": 30,
+    "showStatTraj": false,
+    "exo_type": "rings"
+  }
+}
