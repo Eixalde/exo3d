@@ -35,20 +35,34 @@ const abs = Math.abs
  * @property {BABYLON.Vector3[]} staticTrajectory - The actual representation of the trajectory in the simulation.
  */
 class EllipticalTrajectory {
+  #staticTrajectory
   /**
    * @param {Number} a
    * @param {Number} e
    * @param {Boolean} canMove
    */
   constructor({ a, e }, canMove) {
-    const STATIC_TRAJECTORY_LENGTH = 100
     this.a = a
     this.e = e
     this.canMove = canMove
     if (canMove) {
       this.b = sqrt(pow(this.a, 2) * (1 - pow(this.e, 2)))
     }
-    this.staticTrajectory = this.buildStaticTrajectory(STATIC_TRAJECTORY_LENGTH)
+    this.#staticTrajectory = undefined
+  }
+
+  /**
+   * Lazy accessor for the static trajectory.
+   * @returns {BABYLON.Vector3[]}
+   */
+  get staticTrajectory() {
+    const STATIC_TRAJECTORY_LENGTH = 100
+    if (!this.#staticTrajectory) {
+      this.#staticTrajectory = this.buildStaticTrajectory(
+        STATIC_TRAJECTORY_LENGTH
+      )
+    }
+    return this.#staticTrajectory
   }
 
   /**
@@ -56,7 +70,7 @@ class EllipticalTrajectory {
    *
    * @param {Number} nu - The true anomaly : angle between the direction of
    * periapsis and the position, as seen from the main focus of the ellipse.
-   * @return {{x: Number, y: Number, r: Number}} The coordinates of a 2D-point and its distance to the focus.
+   * @returns {{x: Number, y: Number, r: Number}} The coordinates of a 2D-point and its distance to the focus.
    */
   positionWithNu(nu) {
     const r = this.a * ((1 - pow(this.e, 2)) / (1 + this.e * cos(nu)))
@@ -71,7 +85,7 @@ class EllipticalTrajectory {
    * Creates a static trajectory.
    *
    * @param {Number} steps - Number of points to use.
-   * @return {Array} The 3D-points contained in the static trajectory.
+   * @returns {BABYLON.Vector3[]} The 3D-points contained in the static trajectory.
    */
   buildStaticTrajectory(steps) {
     const stTraj = new Array(steps + 1)

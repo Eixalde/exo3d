@@ -1,0 +1,97 @@
+{
+  "star": [
+    {
+      "name": "sun",
+      "diameter": 100,
+      "texture": "resources/512_sun.jpg",
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 8000,
+      "trajectory": { "a": 0, "e": 0 },
+      "spin": 30,
+      "normalizedRevolutionPeriod": 30,
+      "originalPosition": { "x": 10, "y": 10, "z": -10 },
+      "showStatTraj": false,
+      "exo_type": "star"
+    }
+  ],
+  "planet": [
+    {
+      "name": "planet_one",
+      "diameter": 5,
+      "texture": null,
+      "color": {
+        "r": 0.5,
+        "g": 0.3,
+        "b": 0.3
+      },
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 100,
+      "trajectory": { "a": 40, "e": 0.1 },
+      "spin": 1,
+      "revolutionPeriod": 360,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    },
+    {
+      "name": "planet_two",
+      "diameter": 4,
+      "texture": null,
+      "color": {
+        "r": 0.5,
+        "g": 0.3,
+        "b": 0.3
+      },
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 100,
+      "trajectory": { "a": 160, "e": 0.15 },
+      "spin": 0.5,
+      "revolutionPeriod": 7200,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    }
+  ],
+  "satellite": [
+    {
+      "name": "satellite_one",
+      "diameter": 0.5,
+      "texture": null,
+      "color": {
+        "r": 0.5,
+        "g": 0.3,
+        "b": 0.3
+      },
+      "distanceToParent": 4,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 100,
+      "trajectory": { "a": 12, "e": 0.05 },
+      "spin": 30,
+      "revolutionPeriod": 30,
+      "showStatTraj": false,
+      "exo_type": "satellite"
+    }
+  ],
+  "rings": [
+    {
+      "name": "rings_one",
+      "diameter": 20,
+      "texture": "resources/saturn_rings.png",
+      "originalPosition": { "x": 0, "y": 0, "z": 0 },
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 90,
+      "temperature": 0,
+      "trajectory": { "a": 0, "e": 0 },
+      "spin": 30,
+      "revolutionPeriod": 30,
+      "showStatTraj": false,
+      "exo_type": "rings"
+    }
+  ]
+}

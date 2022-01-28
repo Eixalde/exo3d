@@ -9,21 +9,17 @@
 import {
   CameraModes,
   AnimManager,
-  EllipticalTrajectory,
   DebugUI,
   ScalingControls,
   addPlanetRadioButtons,
   modifyPlanetSpeedSlider,
   NumberOfDaysUpdater,
   SystemBuilder,
-  JsonToDict
+  JsonToDict,
+  ASTRONOMICAL_UNIT,
+  EXO_TYPES
 } from '../exo3d.mjs'
 
-const PI = Math.PI
-/* For exact scale purposes, ASTRONOMICAL_UNIT is equal to the ratio between 1
-AU and the diameter of the Earth. This way, the size of the Earth can be set to
-1 unit of the Babylon engine. */
-const ASTRONOMICAL_UNIT = 11727.647
 
 /**
  * The handler for any gravitational system. It instantiates every spatial
@@ -61,13 +57,11 @@ class GravitationalSystemManager {
     // Textures' source : https://www.solarsystemscope.com/textures/
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
 
-    const SYSTEM_JSON_NAME = 'solar_system'
+    const SYSTEM_JSON_NAME = 'exosystem_one'
 
-    this.systemOptions = {
-      star: undefined,
-      planets: [],
-      satellites: [],
-      rings: []
+    this.systemOptions = {}
+    for (const exotype in EXO_TYPES) {
+      this.systemOptions[exotype] = []
     }
 
     const originJson = await fetch(
@@ -89,9 +83,13 @@ class GravitationalSystemManager {
     /* Sorts planets by their semi-major axis, lowest to highest. This is
     especially important because every module interacting with planets needs
     them to be in ascending order in the system. */
-    this.systemOptions.planets.sort((x, y) => {
+    this.systemOptions[EXO_TYPES.planet].sort((x, y) => {
       return x.trajectory.a - y.trajectory.a
     })
+
+    const defaultOptions = await fetch(
+      `../system_json/default_objects.json`
+    ).then((response) => response.json())
 
     /* The use of a builder is needed because the star and planets need the
     existence of an animManager, but with the new relative speed controls, the
@@ -101,16 +99,12 @@ class GravitationalSystemManager {
     finally achieving the system by giving the animManager to the planets. */
     const systemBuilder = new SystemBuilder()
       .setScene(scene)
-      .setStarOptions(this.systemOptions.star)
-      .setRingOptions(this.systemOptions.rings[0])
-      .setSatelliteOptions(this.systemOptions.satellites[0])
-      .setPlanetsOptions(this.systemOptions.planets)
-      .setNormalizedPeriods(SIMULATION_TIME)
+      .setSystemOptions(this.systemOptions)
+      .setDefaultOptions(defaultOptions)
+      .normalizeParameters(SIMULATION_TIME)
       .setSystemCenter(V_ORIGIN)
-      .setSatelliteOfPlanet(this.systemOptions.planets[2])
-      .setRingOfPlanet(this.systemOptions.planets[5])
 
-    this.animManager = new AnimManager(this.systemOptions.planets)
+    this.animManager = new AnimManager(this.systemOptions[EXO_TYPES.planet])
 
     systemBuilder.setAnimatable(this.animManager.animatable)
 
@@ -124,7 +118,7 @@ class GravitationalSystemManager {
     new NumberOfDaysUpdater(
       this.animManager,
       SIMULATION_TIME,
-      this.systemOptions.planets[0].revolutionPeriod
+      this.systemOptions[EXO_TYPES.planet][0].revolutionPeriod
     )
 
     /* Makes the skybox 25 times larger than the largest trajectory of the
@@ -147,7 +141,6 @@ class GravitationalSystemManager {
       this.gravitationalSystem.star,
       this.gravitationalSystem.planets,
       canvas,
-      ASTRONOMICAL_UNIT,
       SKYBOX_SIZE
     )
 
@@ -200,11 +193,9 @@ class GravitationalSystemManager {
   convertFromJson(objectJson, contextSystem) {
     /* Creating a local object to classify spatial objects in the subsystem.
     This is what associates satellites/rings with their planet. */
-    const hierarchy = {
-      star: undefined,
-      planets: [],
-      satellites: [],
-      rings: []
+    const hierarchy = {}
+    for (const exotype in EXO_TYPES) {
+      hierarchy[exotype] = []
     }
 
     /* This is the algorithm of search through the objectJson, which is divided
@@ -226,14 +217,16 @@ class GravitationalSystemManager {
 
     /* If there is any satellite or rings, associate them with the only planet
     of the subsystem. */
-    if (hierarchy.satellites.length > 0) {
-      hierarchy.satellites.forEach(
-        (satellite) => (satellite.parent = hierarchy.planets[0])
+    if (hierarchy[EXO_TYPES.satellite].length > 0) {
+      hierarchy[EXO_TYPES.satellite].forEach(
+        (satellite) => (satellite.parentName = hierarchy[EXO_TYPES.planet][0].name)
       )
     }
 
-    if (hierarchy.rings.length > 0) {
-      hierarchy.rings.forEach((ring) => (ring.parent = hierarchy.planets[0]))
+    if (hierarchy[EXO_TYPES.rings].length > 0) {
+      hierarchy[EXO_TYPES.rings].forEach(
+        (ring) => (ring.parentName = hierarchy[EXO_TYPES.planet][0].name)
+      )
     }
   }
 
@@ -244,65 +237,8 @@ class GravitationalSystemManager {
    * @param {Object} contextSubsystemHierarchy - The hierarchy of the subsystem containing the spatial object.
    */
   addToSusbystemHierarchy(spObj, contextSubsystemHierarchy) {
-    /* Several modifications are done to the parameters contained in the spObj,
-    because they are not in the correct format to be treated by the system
-    builder. */
-    const DEG_TO_RAD = PI / 180
-    const CAN_MOVE = spObj.exo_type === `star` ? false : true
-    const EARTH_DIAMETER = 1
-
-    const starColor = new BABYLON.Color3(1, 0.6, 0.5) // Arbitrary color (orange)
-
-    const planetColor = new BABYLON.Color3(0.5, 0.3, 0.3) // Arbitrary color (brown)
-
-    /* Actually makes the trajectory for the spatial object. */
-    spObj.trajectory = new EllipticalTrajectory(
-      {
-        a: spObj.trajectory.a * ASTRONOMICAL_UNIT,
-        e: spObj.trajectory.e
-      },
-      CAN_MOVE
-    )
-
-    /* Converts raw data into Babylon-friendly values (diameter based on the
-    Earth, distances in AU, angles in radians, etc). */
-    spObj.diameter *= EARTH_DIAMETER
-    spObj.distanceToParent *= ASTRONOMICAL_UNIT
-    spObj.eclipticInclinationAngle *= DEG_TO_RAD
-    spObj.selfInclinationAngle *= DEG_TO_RAD
-
-    switch (spObj.exo_type) {
-      case 'star':
-        /* Converts the original position of the star into a vector. */
-        spObj.originalPosition = new BABYLON.Vector3(
-          spObj.originalPosition.x,
-          spObj.originalPosition.y,
-          spObj.originalPosition.z
-        )
-        spObj.color = starColor
-        contextSubsystemHierarchy.star = spObj
-        this.systemOptions.star = spObj
-        break
-      case 'planet':
-        spObj.color = planetColor
-        contextSubsystemHierarchy.planets.push(spObj)
-        this.systemOptions.planets.push(spObj)
-        break
-      case 'satellite':
-        contextSubsystemHierarchy.satellites.push(spObj)
-        this.systemOptions.satellites.push(spObj)
-        break
-      case 'ring':
-        /* Converts the original position of the rings into a vector. */
-        spObj.originalPosition = new BABYLON.Vector3(
-          spObj.originalPosition.x,
-          spObj.originalPosition.y,
-          spObj.originalPosition.z
-        )
-        contextSubsystemHierarchy.rings.push(spObj)
-        this.systemOptions.rings.push(spObj)
-        break
-    }
+    contextSubsystemHierarchy[spObj.exo_type].push(spObj)
+    this.systemOptions[spObj.exo_type].push(spObj)
   }
 }
 

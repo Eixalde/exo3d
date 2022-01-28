@@ -1,0 +1,59 @@
+{
+  "star": [
+    {
+      "name": "sun",
+      "diameter": 100,
+      "texture": "resources/512_sun.jpg",
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 8000,
+      "trajectory": { "a": 0, "e": 0 },
+      "spin": 30,
+      "normalizedRevolutionPeriod": 30,
+      "originalPosition": { "x": 0, "y": 0, "z": 0 },
+      "showStatTraj": false,
+      "exo_type": "star"
+    }
+  ],
+  "planet": [
+    {
+      "name": "planet_one",
+      "diameter": 10,
+      "texture": null,
+      "color": {
+        "r": 0.5,
+        "g": 0.3,
+        "b": 0.3
+      },
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 0,
+      "trajectory": { "a": 5, "e": 0.1 },
+      "revolutionPeriod": 365.25,
+      "spin": 0.997,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    },
+    {
+      "name": "planet_two",
+      "diameter": 5,
+      "texture": null,
+      "color": {
+        "r": 0.5,
+        "g": 0.3,
+        "b": 0.3
+      },
+      "distanceToParent": 0,
+      "eclipticInclinationAngle": 0,
+      "selfInclinationAngle": 0,
+      "temperature": 0,
+      "trajectory": { "a": 1, "e": 0 },
+      "revolutionPeriod": 365.25,
+      "spin": 0.997,
+      "showStatTraj": true,
+      "exo_type": "planet"
+    }
+  ]
+}

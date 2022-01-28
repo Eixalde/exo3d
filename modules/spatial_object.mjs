@@ -1,5 +1,4 @@
 import { convertTemperatureToRGB } from '../exo3d.mjs'
-import { AnimManager } from './anim_manager.mjs'
 
 /**
  * @module SpatialObject
@@ -41,164 +40,8 @@ import { AnimManager } from './anim_manager.mjs'
  * @property {Number} normalizedRevolutionPeriod - The time needed for the object to revolve around its star (seconds).
  * @property {BABYLON.Vector3} originalPosition - The position the object should appear at.
  * @property {Boolean} showStatTraj - Defines if the static trajectory appears or not.
- * @property {BABYLON.Animatable} animatable - Contains all animations.
+ * @property {BABYLON.Animatable[]} animatable - Contains all animations.
  */
-
-/**
- * Builds a system with a star, several planets and - if existing - their rings
- * and satellites.
- */
-class SystemBuilder {
-  #scene
-  #starOptions
-  #planetsOptions
-  #ringOptions
-  #satelliteOptions
-
-  /**
-   * @param {BABYLON.Scene} scene - The current scene.
-   * @returns {SystemBuilder}
-   */
-  setScene(scene) {
-    this.#scene = scene
-    return this
-  }
-  /**
-   * @param {Object} starOptions - Parameters needed for the creation of a star.
-   * @returns {SystemBuilder}
-   */
-  setStarOptions(starOptions) {
-    this.#starOptions = starOptions
-    return this
-  }
-
-  /**
-   * @param {Object} ringOptions - Parameters needed for the creation of a ring.
-   * @returns {SystemBuilder}
-   */
-  setRingOptions(ringOptions) {
-    this.#ringOptions = ringOptions
-    return this
-  }
-
-  /**
-   * @param {Object} satelliteOptions - Parameters needed for the creation of a satellite.
-   * @returns {SystemBuilder}
-   */
-  setSatelliteOptions(satelliteOptions) {
-    this.#satelliteOptions = satelliteOptions
-    return this
-  }
-
-  /**
-   * @param {Array} planetsOptions - The array of the parameters need for several planets.
-   * @returns {SystemBuilder}
-   */
-  setPlanetsOptions(planetsOptions) {
-    this.#planetsOptions = planetsOptions
-    return this
-  }
-
-  /**
-   * @param {Number} simulationTime - The time needed for a given planet to revolve.
-   * @returns {SystemBuilder}
-   */
-  setNormalizedPeriods(simulationTime) {
-    /* Every period given in days is adapted relative to the first planet (which
-    has the lowest period of revolution). We then multiply it by the
-    simulationTime variable, which is the wanted duration of the revolution/spin
-    (in seconds) for that first planet. Every other planet will then have its
-    revolve/spin period scaled around that simulation time. */
-    const FIRST_PLANET_REVOLUTION_PERIOD =
-      this.#planetsOptions[0].revolutionPeriod
-
-    this.#starOptions.normalizedSpin =
-      (simulationTime * this.#starOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
-
-    this.#satelliteOptions.normalizedRevolutionPeriod =
-      (simulationTime * this.#satelliteOptions.revolutionPeriod) /
-      FIRST_PLANET_REVOLUTION_PERIOD
-
-    this.#satelliteOptions.normalizedSpin =
-      (simulationTime * this.#satelliteOptions.spin) /
-      FIRST_PLANET_REVOLUTION_PERIOD
-
-    this.#planetsOptions.forEach((planetOptions) => {
-      planetOptions.normalizedRevolutionPeriod =
-        (simulationTime * planetOptions.revolutionPeriod) /
-        FIRST_PLANET_REVOLUTION_PERIOD
-
-      planetOptions.normalizedSpin =
-        (simulationTime * planetOptions.spin) / FIRST_PLANET_REVOLUTION_PERIOD
-    })
-    return this
-  }
-
-  setSystemCenter(systemCenter) {
-    this.#planetsOptions.forEach((planetOptions) => {
-      planetOptions.systemCenter = systemCenter
-    })
-    return this
-  }
-
-  /**
-   * @param {AnimManager.animatable} animatable - Contains every animation of every object.
-   * @returns {SystemBuilder}
-   */
-  setAnimatable(animatable) {
-    this.#starOptions.animatable = animatable
-    this.#planetsOptions.forEach(
-      (planetOptions) => (planetOptions.animatable = animatable)
-    )
-    this.#ringOptions.animatable = animatable
-    this.#satelliteOptions.animatable = animatable
-    return this
-  }
-
-  /**
-   * @param {Object} planetOptions - Parameters needed for the creation of a planet.
-   * @returns {SystemBuilder}
-   */
-  setSatelliteOfPlanet(planetOptions) {
-    this.#satelliteOptions.parentName = planetOptions.name
-    return this
-  }
-
-  /**
-   * @param {Object} planetOptions - Parameters needed for the creation of a planet.
-   * @returns {SystemBuilder}
-   */
-  setRingOfPlanet(planetOptions) {
-    this.#ringOptions.parentName = planetOptions.name
-    return this
-  }
-
-  /* NOTE : this method does not consider the fact that there can be more (or
-  less) than one satellite and one ring. I will fix this in a future issue. */
-  build() {
-    const star = new Star(this.#starOptions, this.#scene)
-    const planets = new Array(this.#planetsOptions.length)
-    const ring = new Ring(this.#ringOptions, this.#scene)
-    const satellite = new Planet(this.#satelliteOptions, this.#scene)
-
-    this.#planetsOptions.forEach((planetOptions, idx) => {
-      planets[idx] = new Planet(planetOptions, this.#scene)
-      if (planetOptions.name === this.#satelliteOptions.parentName) {
-        satellite.mesh.parent = planets[idx].mesh
-        satellite.mesh.position = new BABYLON.Vector3(
-          satellite.distanceToParent,
-          0,
-          0
-        )
-        planets[idx].satellites.push(satellite)
-      }
-      if (planetOptions.name === this.#ringOptions.parentName) {
-        ring.mesh.parent = planets[idx].mesh
-      }
-    })
-    return { star: star, planets: planets }
-  }
-}
 
 /**
  * The base class for any spatial object. It shall not be instantiated as such,
@@ -226,24 +69,24 @@ class SpatialObject {
    * @param {BABYLON.Scene} scene - The current scene.
    */
   constructor(spatialObjectParams, scene) {
-    this.name = spatialObjectParams.name
-    this.diameter = spatialObjectParams.diameter
-    this.texture = spatialObjectParams.texture
-    this.color = spatialObjectParams.color
-    this.temperature = spatialObjectParams.temperature
+    /* Creates an attribute of the same name of every parameter passed. There
+    may subsist redundant attributes, such as the original spin or revolution
+    period, but this doesn't do much, and this structure will stay efficient
+    even if parameters are added or changed. */
+    for (const [attribute, value] of Object.entries(spatialObjectParams)) {
+      switch (attribute) {
+        case `texture`:
+          if (value) {
+            this.texture = new BABYLON.Texture(value, scene)
+          }
+          break
+        default:
+          this[attribute] = value
+          break
+      }
+    }
     this.objectMat = new BABYLON.StandardMaterial(this.name + 'Mat', scene)
     this.objectMat.useLogarithmicDepth = true
-    if (spatialObjectParams.texture) {
-      this.texture = new BABYLON.Texture(spatialObjectParams.texture, scene)
-    }
-    this.eclipticInclinationAngle = spatialObjectParams.eclipticInclinationAngle
-    this.selfInclinationAngle = spatialObjectParams.selfInclinationAngle
-    this.systemCenter = spatialObjectParams.systemCenter
-    this.distanceToParent = spatialObjectParams.distanceToParent
-    this.trajectory = spatialObjectParams.trajectory
-    this.normalizedSpin = spatialObjectParams.normalizedSpin
-    this.normalizedRevolutionPeriod =
-      spatialObjectParams.normalizedRevolutionPeriod
     this.nu = 0
   }
 
@@ -326,7 +169,7 @@ class SpatialObject {
         this.animatableIndex =
           animatable.push(
             scene.beginAnimation(
-              this.spinAxisParent,
+              this.mesh,
               0,
               this.normalizedRevolutionPeriod * FRAMERATE,
               true
@@ -413,19 +256,10 @@ class SpatialObject {
   getVisualDiameter() {
     return this.diameter * this.mesh.scaling.x
   }
-
-  fixStaticTrajectory(scene) {
-    isPointedToPlanet = () =>
-      scene.activeCamera.target === this.spinAxisParent.position
-    isInRealisticView = () => this.mesh.scaling.x === 1
-    if (isPointedToPlanet() && isInRealisticView()) {
-    }
-  }
 }
 
 /**
  * The class used for any star.
- *
  * @extends SpatialObject
  */
 class Star extends SpatialObject {
@@ -460,7 +294,7 @@ class Star extends SpatialObject {
 }
 
 /**
- * The class used for planets and satellites.
+ * The class used for planets.
  * @property {Array} satellites - Planet-exclusive member, dedicated to the list of its satellites (if any).
  * @extends SpatialObject
  */
@@ -515,6 +349,42 @@ class Planet extends SpatialObject {
     )
   }
 }
+/**
+ * The class for the satellites. It is essentially the same object as a planet,
+ * but it doesn't need a spinAxisParent (this also interferes with the fact that
+ * the planet mesh is already the parent of the satellite mesh).
+ * @extends SpatialObject
+ */
+class Satellite extends SpatialObject {
+  /**
+   * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
+   * @param {BABYLON.Scene} scene - The current scene.
+   */
+  constructor(spatialObjectParams, scene) {
+    super(spatialObjectParams, scene)
+    this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
+      diameter: this.diameter,
+      updatable: true
+    })
+    this.mesh.animations = []
+
+    if (this.texture) {
+      this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the satellite, texture by default (if existing)
+    } else {
+      this.objectMat.diffuseColor = this.color
+    }
+    /* Setting emissive color of satellites to black to avoid them glowing or
+    letting light pass through them (because of occlusion). */
+    this.objectMat.emissiveColor = BABYLON.Color3.Black()
+    this.mesh.material = this.objectMat
+    this.buildAnimation(
+      100,
+      scene,
+      spatialObjectParams.showStatTraj,
+      spatialObjectParams.animatable
+    )
+  }
+}
 
 /**
  * The planetary disc support (for objects like Saturn rings e.g.)
@@ -527,7 +397,7 @@ class Ring extends SpatialObject {
    */
   constructor(spatialObjectParams, scene) {
     super(spatialObjectParams, scene)
-    this.mesh = BABYLON.CreateDisc('disc', {
+    this.mesh = BABYLON.CreateDisc(`${this.parentName}Rings`, {
       radius: spatialObjectParams.diameter / 2,
       sideOrientation: BABYLON.Mesh.DOUBLESIDE
     })
@@ -539,4 +409,4 @@ class Ring extends SpatialObject {
   }
 }
 
-export { Star, Planet, Ring, SystemBuilder }
+export { Star, Planet, Ring, Satellite }

@@ -1,0 +1,23 @@
+{
+  "star": [
+    {
+      "name": "sun",
+      "diameter": 100,
+      "temperature": 8000
+    }
+  ],
+  "planet": [
+    {
+      "name": "planet_one",
+      "diameter": 10,
+      "trajectory": {
+        "a": 5,
+        "e": 0.1
+      }
+    },
+    {
+      "name": "planet_two",
+      "diameter": 5
+    }
+  ]
+}
