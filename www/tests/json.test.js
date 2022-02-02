@@ -1,6 +1,6 @@
 /* global test, expect */
 
-import { JsonToDict } from '../exo3d.mjs'
+import { convertJsonToDict } from '../exo3d.mjs'
 
 /* ----- Valid tests ----- */
 
@@ -17,7 +17,7 @@ test('Conversion on empty categories (should pass)', () => {
     hierarchy: {}
   }
 
-  expect(JsonToDict(emptyObject)).toEqual(emptyExpected)
+  expect(convertJsonToDict(emptyObject)).toEqual(emptyExpected)
 })
 
 /* Minimal valid system */
@@ -70,7 +70,7 @@ test('Conversion on minimal valid system (should pass)', () => {
     }
   }
 
-  expect(JsonToDict(minValidObject)).toEqual(minValidExpected)
+  expect(convertJsonToDict(minValidObject)).toEqual(minValidExpected)
 })
 
 /* Full valid system */
@@ -159,7 +159,7 @@ test('Conversion on full valid system (should pass)', () => {
       gs3: ['gs1', 'gs2', 's']
     }
   }
-  expect(JsonToDict(fullValidObject)).toEqual(fullValidExpected)
+  expect(convertJsonToDict(fullValidObject)).toEqual(fullValidExpected)
 })
 
 /* ----- End of valid tests ----- */
@@ -172,7 +172,7 @@ test('Conversion on JSON with missing categories (should throw "missing category
 
   const nullObject = JSON.parse(nullJson)
   expect(() => {
-    JsonToDict(nullObject)
+    convertJsonToDict(nullObject)
   }).toThrow('Category system is missing in the JSON file !')
 
   const noSystemJson = `{
@@ -182,7 +182,7 @@ test('Conversion on JSON with missing categories (should throw "missing category
   /* No system provided */
   const noSystemObject = JSON.parse(noSystemJson)
   expect(() => {
-    JsonToDict(noSystemObject)
+    convertJsonToDict(noSystemObject)
   }).toThrow('Category system is missing in the JSON file !')
 
   /* No hierarchy provided */
@@ -192,7 +192,7 @@ test('Conversion on JSON with missing categories (should throw "missing category
 
   const noHierarchyObject = JSON.parse(noHierarchyJson)
   expect(() => {
-    JsonToDict(noHierarchyObject)
+    convertJsonToDict(noHierarchyObject)
   }).toThrow('Category hierarchy is missing in the JSON file !')
 })
 
@@ -209,7 +209,7 @@ test('Conversion on JSON with wrong category (should throw "invalid category" er
 
   const wrongCategoryObject = JSON.parse(wrongCategoryJson)
   expect(() => {
-    JsonToDict(wrongCategoryObject)
+    convertJsonToDict(wrongCategoryObject)
   }).toThrow('Category wrong is invalid !')
 })
 

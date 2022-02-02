@@ -10,8 +10,6 @@ those calculations in the [detailed documentation]().
 - [SystemManager](#module_SystemManager)
   - [~GravitationalSystemManager](#module_SystemManager..GravitationalSystemManager)
     - [.initialize(scene, canvas)](#module_SystemManager..GravitationalSystemManager+initialize)
-    - [.convertFromJson(objectJson, contextSystem)](#module_SystemManager..GravitationalSystemManager+convertFromJson)
-    - [.addToSusbystemHierarchy(spObj, contextSubsystemHierarchy)](#module_SystemManager..GravitationalSystemManager+addToSusbystemHierarchy)
 
 ---
 
@@ -40,11 +38,6 @@ object, the cameras, the background and the light.
 | gravitationalSystem.star    | <code>Star</code>                 | The star of the system.                           |
 | gravitationalSystem.planets | <code>Array.&lt;Planet&gt;</code> | The list of planets of the system.                |
 
-- [~GravitationalSystemManager](#module_SystemManager..GravitationalSystemManager)
-  - [.initialize(scene, canvas)](#module_SystemManager..GravitationalSystemManager+initialize)
-  - [.convertFromJson(objectJson, contextSystem)](#module_SystemManager..GravitationalSystemManager+convertFromJson)
-  - [.addToSusbystemHierarchy(spObj, contextSubsystemHierarchy)](#module_SystemManager..GravitationalSystemManager+addToSusbystemHierarchy)
-
 ---
 
 <a name="module_SystemManager..GravitationalSystemManager+initialize"></a>
@@ -63,45 +56,5 @@ local objects, fix JavaScript please.
 | ------ | -------------------------- | ------------------------------ |
 | scene  | <code>BABYLON.Scene</code> | The current scene.             |
 | canvas | <code>HTMLElement</code>   | The canvas used by the engine. |
-
----
-
-<a name="module_SystemManager..GravitationalSystemManager+convertFromJson"></a>
-
-#### gravitationalSystemManager.convertFromJson(objectJson, contextSystem)
-
-Upon giving a context system to analyze, this function looks at every
-element in that system. If that element is a spatial object, the function
-calls sortSpatialObject to give it its correct place in the system (star,
-planet, satellite or rings). If that element is a subsystem, the function
-will instead call itself with that subsystem, until it eventually finds
-only spatial objects. If there are any satellites or rings in the context
-system, this means they are attached to the only planet in the same system.
-Therefore, those are given a special attribute called "parent" which is the
-planet in the subsystem. More information is found in the detailed
-documentation.
-
-**Kind**: instance method of [<code>GravitationalSystemManager</code>](#module_SystemManager..GravitationalSystemManager)
-
-| Param         | Type                | Description                                                           |
-| ------------- | ------------------- | --------------------------------------------------------------------- |
-| objectJson    | <code>Object</code> | The object containing the information of the system in the JSON file. |
-| contextSystem | <code>Object</code> | The subsystem we are currently navigating through.                    |
-
----
-
-<a name="module_SystemManager..GravitationalSystemManager+addToSusbystemHierarchy"></a>
-
-#### gravitationalSystemManager.addToSusbystemHierarchy(spObj, contextSubsystemHierarchy)
-
-Takes a spatial object, analyzes its type (star, planet, satellite, rings)
-and adds it to both its subsystem hierarchy and the systemOptions.
-
-**Kind**: instance method of [<code>GravitationalSystemManager</code>](#module_SystemManager..GravitationalSystemManager)
-
-| Param                     | Type                | Description                                                   |
-| ------------------------- | ------------------- | ------------------------------------------------------------- |
-| spObj                     | <code>Object</code> | The spatial object options to be sorted.                      |
-| contextSubsystemHierarchy | <code>Object</code> | The hierarchy of the subsystem containing the spatial object. |
 
 ---

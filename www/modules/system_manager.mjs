@@ -15,11 +15,12 @@ import {
   modifyPlanetSpeedSlider,
   NumberOfDaysUpdater,
   SystemBuilder,
-  JsonToDict,
+  convertJsonToDict,
   ASTRONOMICAL_UNIT,
-  EXO_TYPES
+  EXO_TYPES,
+  readJsonFromStorage,
+  convertDictToSystem
 } from '../exo3d.mjs'
-
 
 /**
  * The handler for any gravitational system. It instantiates every spatial
@@ -57,27 +58,26 @@ class GravitationalSystemManager {
     // Textures' source : https://www.solarsystemscope.com/textures/
     const SKYBOX_TEXTURE = 'resources/8k_stars.jpg'
 
-    const SYSTEM_JSON_NAME = 'exosystem_one'
-
     this.systemOptions = {}
     for (const exotype in EXO_TYPES) {
       this.systemOptions[exotype] = []
     }
 
-    const originJson = await fetch(
-      `../system_json/${SYSTEM_JSON_NAME}.json`
-    ).then((response) => response.json())
+    const originJson = readJsonFromStorage()
 
-    const normalizedSystem = JsonToDict(originJson)
+    console.log(originJson)
+
+    const normalizedSystem = convertJsonToDict(originJson)
 
     /* The main subsystem is the one that contains the star(s). By convention,
     it is ALWAYS the last one in the hierarchy part. See why in the detailed
     documentation. */
     const starSubsystemName = Object.keys(normalizedSystem.hierarchy).at(-1)
 
-    this.convertFromJson(
+    convertDictToSystem(
       normalizedSystem,
-      normalizedSystem.hierarchy[starSubsystemName]
+      normalizedSystem.hierarchy[starSubsystemName],
+      this.systemOptions
     )
 
     /* Sorts planets by their semi-major axis, lowest to highest. This is
@@ -88,7 +88,7 @@ class GravitationalSystemManager {
     })
 
     const defaultOptions = await fetch(
-      `../system_json/default_objects.json`
+      '../system_json/default_objects.json'
     ).then((response) => response.json())
 
     /* The use of a builder is needed because the star and planets need the
@@ -173,72 +173,6 @@ class GravitationalSystemManager {
     this.gravitationalSystem.planets.forEach((planet) => {
       gl.addIncludedOnlyMesh(planet.mesh)
     })
-  }
-
-  /**
-   * Upon giving a context system to analyze, this function looks at every
-   * element in that system. If that element is a spatial object, the function
-   * calls sortSpatialObject to give it its correct place in the system (star,
-   * planet, satellite or rings). If that element is a subsystem, the function
-   * will instead call itself with that subsystem, until it eventually finds
-   * only spatial objects. If there are any satellites or rings in the context
-   * system, this means they are attached to the only planet in the same system.
-   * Therefore, those are given a special attribute called "parent" which is the
-   * planet in the subsystem. More information is found in the detailed
-   * documentation.
-   *
-   * @param {Object} objectJson - The object containing the information of the system in the JSON file.
-   * @param {Object} contextSystem - The subsystem we are currently navigating through.
-   */
-  convertFromJson(objectJson, contextSystem) {
-    /* Creating a local object to classify spatial objects in the subsystem.
-    This is what associates satellites/rings with their planet. */
-    const hierarchy = {}
-    for (const exotype in EXO_TYPES) {
-      hierarchy[exotype] = []
-    }
-
-    /* This is the algorithm of search through the objectJson, which is divided
-    in two parts : `system` and `hierarchy`. The first one contains raw
-    informations on all spatial objects, and the second one specifies the
-    interactions between them (eventually creating multiple subsystems). If the
-    element listed in the subsystem is found in `system`, then it is a spatial
-    object : the sortSpatialObject is called. Otherwise, the element is in
-    `hierarchy`, so findSubsystem calls itself on that element. */
-    for (const systemElement of Object.values(contextSystem)) {
-      if (systemElement in objectJson.system) {
-        const spObj = objectJson.system[systemElement]
-        this.addToSusbystemHierarchy(spObj, hierarchy)
-      } else {
-        const internSubsystem = objectJson.hierarchy[systemElement]
-        this.convertFromJson(objectJson, internSubsystem)
-      }
-    }
-
-    /* If there is any satellite or rings, associate them with the only planet
-    of the subsystem. */
-    if (hierarchy[EXO_TYPES.satellite].length > 0) {
-      hierarchy[EXO_TYPES.satellite].forEach(
-        (satellite) => (satellite.parentName = hierarchy[EXO_TYPES.planet][0].name)
-      )
-    }
-
-    if (hierarchy[EXO_TYPES.rings].length > 0) {
-      hierarchy[EXO_TYPES.rings].forEach(
-        (ring) => (ring.parentName = hierarchy[EXO_TYPES.planet][0].name)
-      )
-    }
-  }
-
-  /**
-   * Takes a spatial object, analyzes its type (star, planet, satellite, rings)
-   * and adds it to both its subsystem hierarchy and the systemOptions.
-   * @param {Object} spObj - The spatial object options to be sorted.
-   * @param {Object} contextSubsystemHierarchy - The hierarchy of the subsystem containing the spatial object.
-   */
-  addToSusbystemHierarchy(spObj, contextSubsystemHierarchy) {
-    contextSubsystemHierarchy[spObj.exo_type].push(spObj)
-    this.systemOptions[spObj.exo_type].push(spObj)
   }
 }
 

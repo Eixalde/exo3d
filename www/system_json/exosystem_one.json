@@ -85,7 +85,7 @@
       "exo_type": "star"
     },
     {
-      "name": "dtc",
+      "name": "blue",
       "diameter": 6,
       "texture": "resources/512_uranus.jpg",
       "distanceToParent": 0,
@@ -104,7 +104,7 @@
       "sg1": ["bob", "moon_one", "moon_two"]
     },
     {
-      "sg2": ["son", "sg1", "freddie", "satourne", "dtc"]
+      "sg2": ["son", "sg1", "freddie", "satourne", "blue"]
     }
   ]
 }

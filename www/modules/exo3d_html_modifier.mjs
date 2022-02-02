@@ -1,10 +1,12 @@
 /**
- * @module HTMLModifier
- * @description This module contains every function used to add of modify HTML
- * elements that are dependant of variable parameters (such as the number and
- * the name of planets in the system). None of this functions control anything
- * on the features they support, they only provide fixed elements based on the
- * parameters they receive.
+ * @module Exo3DHTMLModifier
+ * @description This module contains every function used to add of modify
+ * elements of the Exo3D HTML, that are dependant of variable parameters (such
+ * as the number and the name of planets in the system). None of this functions
+ * control anything on the features they support, they only provide fixed
+ * elements based on the parameters they receive. Most modifications are made on
+ * exo3d.html but we recently had to modify the index.html as well so the module
+ * contains methods for both.
  */
 
 import { daysToDuration, Planet } from '../exo3d.mjs'
@@ -145,7 +147,7 @@ class NumberOfDaysUpdater {
 
       /* Updates the HTML part. */
       document.querySelector(
-        `#simulation-time`
+        '#simulation-time'
       ).innerHTML = `Time since the beginning of the animation :\n${formattedYears} years, ${formattedMonths} months and ${formattedDays} days.`
 
       /* Calling the function again to make it timeout recursively. */
