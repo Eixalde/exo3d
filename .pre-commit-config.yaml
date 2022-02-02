@@ -33,4 +33,4 @@ repos:
     rev: '2.0.0' # or specific git tag
     hooks:
       - id: markdownlint # Configure in .mdlrc
-        exclude: ^docs/
+        exclude: ^www/docs/

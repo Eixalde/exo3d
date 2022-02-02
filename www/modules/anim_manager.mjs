@@ -69,7 +69,7 @@ class AnimManager {
         planet.revolutionPeriod / planetsOptions[0].revolutionPeriod
     })
 
-    const speedSlider = document.querySelector(`.planet-speed`)
+    const speedSlider = document.querySelector('.planet-speed')
 
     /**
      * Updates the information about the scale of time spent in the simulation.
@@ -78,9 +78,9 @@ class AnimManager {
     const updateSimulationSpeedInfo = (speedSlider) => {
       const idx = speedSlider.value
       const seconds = this.globalSpeedRatio ? 5 / this.globalSpeedRatio : 0
-      const pause = seconds ? `` : `(paused)`
+      const pause = seconds ? '' : '(paused)'
       document.querySelector(
-        `#relative-speed`
+        '#relative-speed'
       ).innerHTML = `Speed relative to a planet (current : ${seconds}s /${planetsOptions[
         idx
       ].revolutionPeriod.toFixed(2)} days ${pause})`

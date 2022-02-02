@@ -75,7 +75,7 @@ class SpatialObject {
     even if parameters are added or changed. */
     for (const [attribute, value] of Object.entries(spatialObjectParams)) {
       switch (attribute) {
-        case `texture`:
+        case 'texture':
           if (value) {
             this.texture = new BABYLON.Texture(value, scene)
           }

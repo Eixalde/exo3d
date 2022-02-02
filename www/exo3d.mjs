@@ -16,7 +16,16 @@ export {
   addPlanetRadioButtons,
   modifyPlanetSpeedSlider,
   NumberOfDaysUpdater
-} from './modules/html_modifier.mjs'
+} from './modules/exo3d_html_modifier.mjs'
 
-export { JsonToDict } from './modules/json_to_dict.mjs'
-export { ASTRONOMICAL_UNIT, EXO_TYPES } from './modules/constants.mjs'
+export {
+  convertJsonToDict,
+  writeJsonToStorage,
+  readJsonFromStorage,
+  convertDictToSystem
+} from './modules/json_treatment.mjs'
+export {
+  ASTRONOMICAL_UNIT,
+  EXO_TYPES,
+  SYSTEM_FILE_NAMES
+} from './modules/constants.mjs'

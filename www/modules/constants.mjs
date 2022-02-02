@@ -15,4 +15,6 @@ const EXO_TYPES = {
   rings: 'rings'
 }
 
-export { ASTRONOMICAL_UNIT, EXO_TYPES }
+const SYSTEM_FILE_NAMES = ['solar_system.json', 'exosystem_one.json']
+
+export { ASTRONOMICAL_UNIT, EXO_TYPES, SYSTEM_FILE_NAMES }
