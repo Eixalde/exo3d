@@ -1,6 +1,6 @@
 {
   "name": "exo3d",
-  "version": "0.20.2",
+  "version": "2.0.0",
   "description": "Didactical and somwhat realistic 3d representation of exoplanet systems. Designed to interact with the exoplanet.eu website.",
   "homepage": "https://gitlab.obspm.fr/exoplanet/exo3d",
   "keywords": [

@@ -7,54 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.1.0] - 2022-01-31
+## [2.0.0] - 2022-03-10
 
 ### Added
 
 - Basic system generation form
-
-## [1.0.7] - 2022-01-26
-
-### Added
-
 - Created default parameters for each exotype
+- Created a JSON to dictionary converter
+- Made an algorithm to explore the dictionary
 
 ### Changed
 
 - Refactored the system builder
-
-## [1.0.6] - 2022-01-19
-
-### Added
-
-- Created a JSON to dictionary converter
-- Made an algorithm to explore the dictionary
-
-## [1.0.5] - 2022-01-17
-
-### Changed
-
 - Unified all JSONs into one
-
-## [1.0.4] - 2022-01-17
-
-### Changed
-
 - Transferred system parameters into JSONs
-
-## [1.0.3] - 2022-01-17
-
-### Changed
-
 - Scaled the camera far sight relative to the skybox size
-
-## [1.0.2] - 2022-01-17
-
-### Changed
-
 - Adapted the size of the skybox to the system
-
-## [1.0.1] - 2022-01-14
 
 ### Fixed
 
