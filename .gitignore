@@ -183,3 +183,4 @@ build
 .DS_Store
 .env
 npm-debug.log
+__pycache__

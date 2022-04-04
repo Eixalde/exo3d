@@ -65,8 +65,6 @@ class GravitationalSystemManager {
 
     const originJson = readJsonFromStorage()
 
-    console.log(originJson)
-
     const normalizedSystem = convertJsonToDict(originJson)
 
     /* The main subsystem is the one that contains the star(s). By convention,
@@ -88,7 +86,7 @@ class GravitationalSystemManager {
     })
 
     const defaultOptions = await fetch(
-      '../system_json/default_objects.json'
+      './system_json/default_objects.json'
     ).then((response) => response.json())
 
     /* The use of a builder is needed because the star and planets need the
