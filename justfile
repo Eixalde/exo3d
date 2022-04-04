@@ -1,8 +1,7 @@
 server:
 	#!/usr/bin/env bash
 	set -euxo pipefail
-	cd www
-	python3 -m http.server
+	sudo python3 -m server.py
 
 doc NAME:
 	#!/usr/bin/env bash

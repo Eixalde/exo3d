@@ -21,11 +21,12 @@ async function writeJsonToStorage(jsonName = 'solar_system.json') {
   if (exo3dSystemJson) {
     // Nothing until a future update
   } else {
-    exo3dSystemJson = await fetch(`../system_json/${jsonName}`).then(
-      (response) => response.json()
-    )
+    exo3dSystemJson = await fetch(`./system_json/${jsonName}`)
+      .then((response) => response.json())
+      .catch(function (error) {
+        throw error
+      })
   }
-
   sessionStorage.setItem('exo3dSystemJson', JSON.stringify(exo3dSystemJson))
 }
 
