@@ -1,6 +1,6 @@
 export { CameraModes } from './modules/camera_modes.mjs'
 export { DebugUI } from './modules/debug_UI.mjs'
-export { GravitationalSystemManager } from './modules/system_manager.mjs'
+export { EngineManager } from './modules/engine_manager.mjs'
 export { AnimManager } from './modules/anim_manager.mjs'
 export { Star, Planet, Ring, Satellite } from './modules/spatial_object.mjs'
 export { SystemBuilder } from './modules/system_builder.mjs'
@@ -29,3 +29,4 @@ export {
   EXO_TYPES,
   SYSTEM_FILE_NAMES
 } from './modules/constants.mjs'
+export { XRLauncher } from './modules/xr_launch.mjs'

@@ -2,9 +2,7 @@
  * @module CameraModes
  */
 
- import {
-  ASTRONOMICAL_UNIT
-} from '../exo3d.mjs'
+import { ASTRONOMICAL_UNIT } from '../exo3d.mjs'
 
 const PI = Math.PI
 
@@ -13,6 +11,7 @@ const PI = Math.PI
  * @property {BABYLON.ArcRotateCamera} starCamera - A camera focused on the center of the system (the star, mostly).
  * @property {BABYLON.ArcRotateCamera} planetCamera - A camera focused on the planet.
  * @property {BABYLON.UniversalCamera} freeCamera - A camera controlled by the user, can move anywhere in the system.
+ * @property {Number} cameraFarSight - The distance the camera needs to see up to.
  */
 class CameraModes {
   /**
@@ -39,8 +38,10 @@ class CameraModes {
 
     /* The farthest distance the camera can see up to. It needs to be at least
     more than the skybox' size, though there is nothing to see beyond it. Twice
-    its is then quite appropriate. */
-    const CAMERA_FAR_SIGHT = skyboxSize * 2
+    the size is quite enough then. Also, this has to be an attribute and not a
+    constant, because the external module xr_launch needs that exact value
+    for the XR Camera. */
+    this.cameraFarSight = skyboxSize * 2
 
     /* Represents how much the camera will modify its distance when zooming
     in/out (e.g. 0.1 = 10% of the distance). */
@@ -55,7 +56,7 @@ class CameraModes {
       star.mesh.position
     )
     this.starCamera.attachControl(canvas, true)
-    this.starCamera.maxZ = CAMERA_FAR_SIGHT
+    this.starCamera.maxZ = this.cameraFarSight
     this.starCamera.wheelDeltaPercentage = CAMERA_WHEEL_PERCENTAGE
 
     // Planet-centered camera
@@ -80,7 +81,7 @@ class CameraModes {
     /* Sets the near plane of the camera (no planet shall ever be smaller than
     0.01 so that is the appropriate value). */
     this.planetCamera.minZ = 0.01
-    this.planetCamera.maxZ = CAMERA_FAR_SIGHT
+    this.planetCamera.maxZ = this.cameraFarSight
     this.planetCamera.wheelDeltaPercentage = CAMERA_WHEEL_PERCENTAGE
 
     // Free camera
@@ -107,7 +108,7 @@ class CameraModes {
     this.freeCamera.inputs.addMouseWheel()
     this.freeCamera.angularSensibility = FREE_CAMERA_ANGULAR
     this.freeCamera.speed = FREE_CAMERA_SPEED
-    this.freeCamera.maxZ = CAMERA_FAR_SIGHT
+    this.freeCamera.maxZ = this.cameraFarSight
 
     /* Collisions and movement restrictions for the cameras */
     scene.collisionsEnabled = true
