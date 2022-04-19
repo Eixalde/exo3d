@@ -17,8 +17,11 @@ systemGenForm.addEventListener(
   async () => {
     if (systemGenForm.checkValidity()) {
       const jsonNameSelected = exoSelect.options[exoSelect.selectedIndex].text
-      await writeJsonToStorage(jsonNameSelected)
-      let _ = window.open('exo3d.html', '_self', '')
+      writeJsonToStorage(jsonNameSelected)
+      /* We can't use .open with '_self' as the second parameter, for some reason
+      the HTML of the form won't replace its tab with the HTML of Exo3D. Well, we
+      just open a new tab then. */
+      let _ = window.open('exo3d.html', 'Exo3D', '')
     }
   },
   false
