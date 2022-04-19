@@ -4,7 +4,7 @@
 
 * [CameraModes](#module_CameraModes)
     * [~CameraModes](#module_CameraModes..CameraModes)
-        * [new CameraModes(scene, star, planets, canvas, astroUnit)](#new_module_CameraModes..CameraModes_new)
+        * [new CameraModes(scene, star, planets, canvas, skyboxSize)](#new_module_CameraModes..CameraModes_new)
         * [.changeCameraMode(toCamera, scene, allCameras, canvas)](#module_CameraModes..CameraModes+changeCameraMode)
         * [.changeCameraToNearbyPlanet(btnLabel, planetCamLabels, planets)](#module_CameraModes..CameraModes+changeCameraToNearbyPlanet)
 
@@ -16,7 +16,7 @@
 ### CameraModes~CameraModes
 Manages all cameras and views for the user.
 
-**Kind**: inner class of [<code>CameraModes</code>](#module_CameraModes)
+**Kind**: inner class of [<code>CameraModes</code>](#module_CameraModes)  
 **Properties**
 
 | Name | Type | Description |
@@ -24,10 +24,11 @@ Manages all cameras and views for the user.
 | starCamera | <code>BABYLON.ArcRotateCamera</code> | A camera focused on the center of the system (the star, mostly). |
 | planetCamera | <code>BABYLON.ArcRotateCamera</code> | A camera focused on the planet. |
 | freeCamera | <code>BABYLON.UniversalCamera</code> | A camera controlled by the user, can move anywhere in the system. |
+| cameraFarSight | <code>Number</code> | The distance the camera needs to see up to. |
 
 
 * [~CameraModes](#module_CameraModes..CameraModes)
-    * [new CameraModes(scene, star, planets, canvas, astroUnit)](#new_module_CameraModes..CameraModes_new)
+    * [new CameraModes(scene, star, planets, canvas, skyboxSize)](#new_module_CameraModes..CameraModes_new)
     * [.changeCameraMode(toCamera, scene, allCameras, canvas)](#module_CameraModes..CameraModes+changeCameraMode)
     * [.changeCameraToNearbyPlanet(btnLabel, planetCamLabels, planets)](#module_CameraModes..CameraModes+changeCameraToNearbyPlanet)
 
@@ -36,7 +37,7 @@ Manages all cameras and views for the user.
 
 <a name="new_module_CameraModes..CameraModes_new"></a>
 
-#### new CameraModes(scene, star, planets, canvas, astroUnit)
+#### new CameraModes(scene, star, planets, canvas, skyboxSize)
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -44,7 +45,7 @@ Manages all cameras and views for the user.
 | star | <code>Star</code> | The star of the system observed. |
 | planets | <code>Array.&lt;Planet&gt;</code> | The group of planets we want to look at. |
 | canvas | <code>HTMLElement</code> | The current canvas. |
-| astroUnit | <code>Number</code> | The value of the astronomical unit (in Babylon units). |
+| skyboxSize | <code>Number</code> | The size of the skybox in the scene. |
 
 
 * * *
@@ -54,7 +55,7 @@ Manages all cameras and views for the user.
 #### cameraModes.changeCameraMode(toCamera, scene, allCameras, canvas)
 Switches the view between the system, any planet of a free view.
 
-**Kind**: instance method of [<code>CameraModes</code>](#module_CameraModes..CameraModes)
+**Kind**: instance method of [<code>CameraModes</code>](#module_CameraModes..CameraModes)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -72,7 +73,7 @@ Switches the view between the system, any planet of a free view.
 Changes the focus of the planet camera, switching to any planet selected by
 the user.
 
-**Kind**: instance method of [<code>CameraModes</code>](#module_CameraModes..CameraModes)
+**Kind**: instance method of [<code>CameraModes</code>](#module_CameraModes..CameraModes)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -82,3 +83,4 @@ the user.
 
 
 * * *
+

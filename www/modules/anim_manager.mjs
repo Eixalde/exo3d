@@ -8,7 +8,7 @@
  * the speed to larger scales. In particular, the relative speed ratio takes a
  * specific planet and accelerates its movement to make it revolve in a definite
  * amount of time (mostly 5 seconds, see the constant BASE_REVOLUTION_PERIOD in
- * the system_manager). Then, every other planet will have to follow that new
+ * the engine_manager). Then, every other planet will have to follow that new
  * reference, i.e. if the Earth revolves in 5 secondes, Mars would take around 9
  * seconds to revolve.
  */

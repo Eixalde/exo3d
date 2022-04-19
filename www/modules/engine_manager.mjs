@@ -1,5 +1,5 @@
 /**
- * @module SystemManager
+ * @module EngineManager
  * @description Every "magic number" appearing in the parameters of the planets is actually
  * calculated from data on the different values of every planet (sideral day,
  * revolution period, distance to the sun, size...) You can find the detail of
@@ -38,13 +38,13 @@ import {
  *  @property {Star} gravitationalSystem.star - The star of the system.
  *  @property {Planet[]} gravitationalSystem.planets - The list of planets of the system.
  */
-class GravitationalSystemManager {
+class EngineManager {
   constructor() {}
 
   /**
-   * Initializes the gravitational system. Because of JSON files, we have to use
-   * some `await` with it : thus the async function. Everything in there used to
-   * be the constructor actually, but JSONs really messed up the whole
+   * Initializes the engine of the application. Because of JSON files, we have
+   * to use some `await` with it : thus the async function. Everything in there
+   * used to be the constructor actually, but JSONs really messed up the whole
    * application. For God sake, it shouldn't be that hard to read compatible
    * local objects, fix JavaScript please.
    * @param {BABYLON.Scene} scene - The current scene.
@@ -174,4 +174,4 @@ class GravitationalSystemManager {
   }
 }
 
-export { GravitationalSystemManager }
+export { EngineManager }

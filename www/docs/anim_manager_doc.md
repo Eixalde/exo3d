@@ -9,7 +9,7 @@ extremely slowly. Thus we made a relative speed ratio, that allows to change
 the speed to larger scales. In particular, the relative speed ratio takes a
 specific planet and accelerates its movement to make it revolve in a definite
 amount of time (mostly 5 seconds, see the constant BASE_REVOLUTION_PERIOD in
-the system_manager). Then, every other planet will have to follow that new
+the engine_manager). Then, every other planet will have to follow that new
 reference, i.e. if the Earth revolves in 5 secondes, Mars would take around 9
 seconds to revolve.
 
@@ -28,7 +28,7 @@ seconds to revolve.
 ### AnimManager~AnimManager
 The object that manages every animation - their speed in particular.
 
-**Kind**: inner class of [<code>AnimManager</code>](#module_AnimManager)
+**Kind**: inner class of [<code>AnimManager</code>](#module_AnimManager)  
 **Properties**
 
 | Name | Type | Description |
@@ -56,7 +56,7 @@ The object that manages every animation - their speed in particular.
 ### AnimManager~PlanetOptions : <code>Object</code>
 Initial parameters for a planet (not to confuse with SpatialObjectParams in 'SpatialObject').
 
-**Kind**: inner typedef of [<code>AnimManager</code>](#module_AnimManager)
+**Kind**: inner typedef of [<code>AnimManager</code>](#module_AnimManager)  
 **Properties**
 
 | Name | Type | Description |
@@ -81,7 +81,7 @@ Initial parameters for a planet (not to confuse with SpatialObjectParams in 'Spa
 <a name="module_AnimManager..ButtonParams"></a>
 
 ### AnimManager~ButtonParams : <code>Object</code>
-**Kind**: inner typedef of [<code>AnimManager</code>](#module_AnimManager)
+**Kind**: inner typedef of [<code>AnimManager</code>](#module_AnimManager)  
 **Properties**
 
 | Name | Type | Description |
@@ -91,3 +91,4 @@ Initial parameters for a planet (not to confuse with SpatialObjectParams in 'Spa
 
 
 * * *
+
