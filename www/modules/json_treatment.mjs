@@ -11,31 +11,21 @@ import { EXO_TYPES } from '../exo3d.mjs'
  * pre-existing exosystem JSON.
  * @param {String} jsonName - The name of a JSON file that may be passed
  */
-async function writeJsonToStorage(jsonName = 'solar_system.json') {
-  let exo3dSystemJson = undefined
-
-  /* NOTE : at the moment, we only consider pre-existing JSONs, but in the near
-  future the form will allow the users to give the informations by themselves.
-  The exo3dSystemJson will contain any input given in the form, and if it doesn't
-  have one then the pre-existing systems are used instead. */
-  if (exo3dSystemJson) {
-    // Nothing until a future update
-  } else {
-    exo3dSystemJson = await fetch(`./system_json/${jsonName}`)
-      .then((response) => response.json())
-      .catch(function (error) {
-        throw error
-      })
-  }
-  sessionStorage.setItem('exo3dSystemJson', JSON.stringify(exo3dSystemJson))
+function writeJsonToStorage(jsonName = 'solar_system.json') {
+  sessionStorage.setItem('jsonName', jsonName)
 }
 
 /**
  * Reads the JSON that was stored upon completing the system generation form.
  * @returns {Object} The JSON passed by the generation form.
  */
-function readJsonFromStorage() {
-  const exo3dSystemJson = JSON.parse(sessionStorage.getItem('exo3dSystemJson'))
+async function readJsonFromStorage() {
+  const jsonName = sessionStorage.getItem('jsonName')
+  const exo3dSystemJson = await fetch(`./system_json/${jsonName}`)
+    .then((response) => response.json())
+    .catch(function (error) {
+      throw error
+    })
   return exo3dSystemJson
 }
 

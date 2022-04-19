@@ -63,7 +63,7 @@ class EngineManager {
       this.systemOptions[exotype] = []
     }
 
-    const originJson = readJsonFromStorage()
+    const originJson = await readJsonFromStorage()
 
     const normalizedSystem = convertJsonToDict(originJson)
 
