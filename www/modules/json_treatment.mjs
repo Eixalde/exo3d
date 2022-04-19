@@ -110,8 +110,6 @@ function convertDictToSystem(objectJson, contextSystem, systemOptions) {
     hierarchy[exotype] = []
   }
 
-  console.log(systemOptions)
-
   /* This is the algorithm of search through the objectJson, which is divided in
   two parts : `system` and `hierarchy`. The first one contains raw informations
   on all spatial objects, and the second one specifies the interactions between
