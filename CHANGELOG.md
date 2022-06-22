@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.2.0] - 2022-06-06
+
+### Added
+
+- Created basic spaceship for XR Session
+
 ## [2.1.1] - 2022-04-19
 
 ## Hotfixed
