@@ -17,4 +17,13 @@ const EXO_TYPES = {
 
 const SYSTEM_FILE_NAMES = ['solar_system.json', 'exosystem_one.json']
 
-export { ASTRONOMICAL_UNIT, EXO_TYPES, SYSTEM_FILE_NAMES }
+/* Default position of the spaceship for the XR Session. Cannot be a
+BABYLON.Vector3 because BABYLON is not recognized here. Also those are ad hoc
+values. DO NOT GIVE DOUBLE VALUES TO THIS. EVER. */
+const SPACESHIP_POSITION = {
+  x: 0,
+  y: 5000,
+  z: -8000
+}
+
+export { ASTRONOMICAL_UNIT, EXO_TYPES, SYSTEM_FILE_NAMES, SPACESHIP_POSITION }

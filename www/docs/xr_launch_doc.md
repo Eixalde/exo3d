@@ -27,6 +27,7 @@ Manages the launch of the XR-mode.
 | xrCamPos | <code>BABYLON.Vector3</code> | The default position to set for the XR Camera. |
 | xrCamRot | <code>BABYLON.Vector3</code> | The default rotation to set for the XR Camera. |
 | engineManager | <code>EngineManager</code> | The engine manager used for the application. |
+| spaceshipManager | <code>SpaceshipManager</code> | The spaceship manager used in the XR mode. |
 
 
 * [~XRLauncher](#module_XRLauncher..XRLauncher)

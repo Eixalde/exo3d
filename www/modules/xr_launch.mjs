@@ -2,6 +2,8 @@
  * @module XRLauncher
  */
 
+import { SPACESHIP_POSITION, SpaceshipManager } from '../exo3d.mjs'
+
 /**
  * Manages the launch of the XR-mode.
  * @property {BABYLON.GroundMesh} ground - The platform where the user stands on.
@@ -9,14 +11,19 @@
  * @property {BABYLON.Vector3} xrCamPos - The default position to set for the XR Camera.
  * @property {BABYLON.Vector3} xrCamRot - The default rotation to set for the XR Camera.
  * @property {EngineManager} engineManager - The engine manager used for the application.
+ * @property {SpaceshipManager} spaceshipManager - The spaceship manager used in the XR mode.
  */
 class XRLauncher {
   /**
    * @param {EngineManager} engineManager - The engine manager created in the main module.
    */
   constructor(engineManager) {
-    const PLATFORM_HEIGHT = 10000 // Ad hoc value, for testing purposes
-    this.xrCamPos = new BABYLON.Vector3(0, PLATFORM_HEIGHT, 0)
+    /* Sets the XR Camera at the spaceship's position. */
+    this.xrCamPos = new BABYLON.Vector3(
+      SPACESHIP_POSITION.x,
+      SPACESHIP_POSITION.y,
+      SPACESHIP_POSITION.z
+    )
     this.xrCamRot = new BABYLON.Vector3.Zero()
     this.engineManager = engineManager
   }
@@ -26,25 +33,21 @@ class XRLauncher {
    * @param {BABYLON.Scene} scene - The current scene.
    */
   async initialize(scene) {
-    /* A ground of 10 units per 10 units is just enough to move around a bit and
-    still see the majority of the system. */
-    const PLATFORM_SIZE = 10
-    this.ground = new BABYLON.CreateGround(
-      'ground',
-      { width: PLATFORM_SIZE, height: PLATFORM_SIZE },
-      scene
+    this.spaceshipManager = new SpaceshipManager()
+    await this.spaceshipManager.buildSpaceship(
+      scene,
+      this.engineManager.glowLayer
     )
-    this.ground.checkCollisions = true
-    this.ground.material = new BABYLON.GridMaterial('mat', scene)
-    this.ground.position.y = this.xrCamPos.y // Ground placed at the same height as the camera
 
     /* WebXR experience launcher. Doesn't need much lines to run, and it works
     immediately with the engine manager. */
     this.xrHandler = await scene
       .createDefaultXRExperienceAsync({
-        floorMeshes: [this.ground]
+        floorMeshes: this.spaceshipManager.spaceship.meshes
       })
       .then((xr) => {
+        /* Preemptively hides the spaceship until being in XR mode. */
+        this.spaceshipManager.spaceship.meshes[0].setEnabled(false)
         /* Doing some specific actions on either entering or leaving the
         XR-mode (see the respective functions). */
         xr.baseExperience.onStateChangedObservable.add((state) => {
@@ -81,6 +84,9 @@ class XRLauncher {
     scene.activeCamera = xrCamera
     xrCamera.position = this.xrCamPos
     xrCamera.rotation = this.xrCamRot
+
+    /* Reveals the spaceship in XR mode. */
+    this.spaceshipManager.spaceship.meshes[0].setEnabled(true)
   }
 
   /**
@@ -90,6 +96,9 @@ class XRLauncher {
   onLeavingXR(scene) {
     /* Setting back the star camera as the active camera. */
     scene.activeCamera = this.engineManager.cameras.starCamera
+
+    /* Hides the spaceship outside of XR mode. */
+    this.spaceshipManager.spaceship.meshes[0].setEnabled(false)
   }
 }
 

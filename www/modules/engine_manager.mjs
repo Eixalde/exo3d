@@ -160,16 +160,16 @@ class EngineManager {
     this.light.range = 5000 * ASTRONOMICAL_UNIT // How far the light affects the scene
     this.light.intensity = 4 // The brightness of the light
 
-    const gl = new BABYLON.GlowLayer('glow', scene)
-    gl.intensity = 0.5
-    gl.blurKernelSize = 48
+    this.glowLayer = new BABYLON.GlowLayer('glow', scene)
+    this.glowLayer.intensity = 0.5
+    this.glowLayer.blurKernelSize = 48
 
     /* For occlusion reasons - to ensure that glowing objects are correctly
     rendered relative to the not-glowing objects - we include every planet in
     the glow effect as well as the star itself. */
-    gl.addIncludedOnlyMesh(this.gravitationalSystem.star.mesh)
+    this.glowLayer.addIncludedOnlyMesh(this.gravitationalSystem.star.mesh)
     this.gravitationalSystem.planets.forEach((planet) => {
-      gl.addIncludedOnlyMesh(planet.mesh)
+      this.glowLayer.addIncludedOnlyMesh(planet.mesh)
     })
   }
 }
