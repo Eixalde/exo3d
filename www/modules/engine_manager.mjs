@@ -19,7 +19,8 @@ import {
   ASTRONOMICAL_UNIT,
   EXO_TYPES,
   readJsonFromStorage,
-  convertDictToSystem
+  convertDictToSystem,
+  InhabitableSphere
 } from '../exo3d.mjs'
 
 /**
@@ -171,6 +172,12 @@ class EngineManager {
     this.gravitationalSystem.planets.forEach((planet) => {
       this.glowLayer.addIncludedOnlyMesh(planet.mesh)
     })
+
+    const inhabitableSphere = new InhabitableSphere(
+      0.95 * ASTRONOMICAL_UNIT,
+      2 * ASTRONOMICAL_UNIT,
+      scene
+    )
   }
 }
 

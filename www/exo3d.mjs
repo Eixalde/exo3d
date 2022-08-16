@@ -32,3 +32,4 @@ export {
 } from './modules/constants.mjs'
 export { XRLauncher } from './modules/xr_launch.mjs'
 export { SpaceshipManager } from './modules/spaceship_manager.mjs'
+export { InhabitableSphere } from './modules/inhabitable_sphere.mjs'
