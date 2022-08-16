@@ -14,3 +14,9 @@ pandoc NAME:
 	set -euxo pipefail
 	cd www/docs
 	pandoc {{NAME}}_to_pdf.md -o {{NAME}}.pdf
+
+test:
+	#!/usr/bin/env bash
+	set -euxo pipefail
+	cd www
+	npm test

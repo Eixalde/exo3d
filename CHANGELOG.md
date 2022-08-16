@@ -7,22 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [2.2.0] - 2022-06-06
+## [3.0.1] - 2022-08-16
+
+### Modified
+
+- Version bump for Babylonjs to 5.19.0
+
+## [3.0.0] - 2022-08-16
 
 ### Added
 
 - Created basic spaceship for XR Session
-
-## [2.1.1] - 2022-04-19
-
-## Hotfixed
-
-- Slapped the HTML form and stole its lunch money
-
-## [2.1.0] - 2022-04-19
-
-### Added
-
 - Basic WebXR mode
 - Wrote observations about WebXR mode
 - Made a module for the XR stuff
