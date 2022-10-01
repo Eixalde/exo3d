@@ -130,9 +130,37 @@ function daysToDuration(daysTotal) {
   return { years: years, months: months, days: days }
 }
 
+function colorInhabitable(a, e, innerRadius, outerRadius) {
+  const b = a * pow(1 - pow(e, 2), 0.5)
+  const color = { red: 0, green: 0 }
+  if (innerRadius < a && a < outerRadius) {
+    if (innerRadius < b && b < outerRadius) {
+      // Both axis in zone : green
+      color.red = 0
+      color.green = 1
+    } else {
+      // Only major axis in zone : orange
+      color.red = 0.5
+      color.green = 0.5
+    }
+  } else {
+    if (innerRadius < b && b < outerRadius) {
+      // Only minor axis in zone : orange
+      color.red = 0.5
+      color.green = 0.5
+    } else {
+      // Neither axis in zone : red
+      color.red = 1
+      color.green = 0
+    }
+  }
+  return color
+}
+
 export {
   convertTemperatureToRGB,
   compareOrbits,
   compareSystemOrbits,
-  daysToDuration
+  daysToDuration,
+  colorInhabitable
 }

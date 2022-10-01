@@ -12,8 +12,8 @@ const createScene = async function (engine, canvas) {
   await engineManager.initialize(scene, canvas)
 
   /* WebXR part here. */
-  const xr = new XRLauncher(engineManager)
-  await xr.initialize(scene)
+  // const xr = new XRLauncher(engineManager)
+  // await xr.initialize(scene)
 
   /* The Babylon lib gives access to an inspector, that allows a lot of good
   options for debugging. Activate only for debugging ! */

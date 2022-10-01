@@ -20,7 +20,8 @@ import {
   EXO_TYPES,
   readJsonFromStorage,
   convertDictToSystem,
-  InhabitableSphere
+  InhabitableSphere,
+  highlightPlanets
 } from '../exo3d.mjs'
 
 /**
@@ -173,10 +174,18 @@ class EngineManager {
       this.glowLayer.addIncludedOnlyMesh(planet.mesh)
     })
 
+    const INNER_RADIUS = 0.95 * ASTRONOMICAL_UNIT
+    const OUTER_RADIUS = 2 * ASTRONOMICAL_UNIT
     const inhabitableSphere = new InhabitableSphere(
-      0.95 * ASTRONOMICAL_UNIT,
-      2 * ASTRONOMICAL_UNIT,
+      INNER_RADIUS,
+      OUTER_RADIUS,
       scene
+    )
+
+    highlightPlanets(
+      this.gravitationalSystem.planets,
+      INNER_RADIUS,
+      OUTER_RADIUS
     )
   }
 }
