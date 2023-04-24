@@ -9,7 +9,8 @@ export {
   convertTemperatureToRGB,
   compareOrbits,
   compareSystemOrbits,
-  daysToDuration
+  daysToDuration,
+  colorInhabitable
 } from './modules/celestial_maths.mjs'
 export { ScalingControls } from './modules/scaling_controls.mjs'
 export {
@@ -32,3 +33,7 @@ export {
 } from './modules/constants.mjs'
 export { XRLauncher } from './modules/xr_launch.mjs'
 export { SpaceshipManager } from './modules/spaceship_manager.mjs'
+export {
+  InhabitableSphere,
+  highlightPlanets
+} from './modules/inhabitable_zone.mjs'
