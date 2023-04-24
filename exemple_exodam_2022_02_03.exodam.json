@@ -1,0 +1,2555 @@
+{
+  "data": {
+    "DOI": "blabla12345blabla",
+    "objects": [
+      {
+        "name": "sun",
+        "exo_type": "star",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "pro_motion": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "pro_motion_ra": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "pro_motion_dec": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 617.6,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "angular_dis": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "physical": {
+          "radius": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "density": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 28.02,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.603,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "earth",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 11186,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 23.93,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 1,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.017,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 0.0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["O2", "N2"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 5.52,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 1,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 254.0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.543,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "jupiter",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 81013,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": -37603,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 59500,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 9.92,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 5.203,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.048,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 1.85,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["H2", "He", "CH4", "NH3"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 1.33,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 2.528,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 109.9,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.603,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "mars",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 64814,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": -85814,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 5030,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 24.62,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 1.524,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.093,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 1.85,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["CO2", "N2"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 3.93,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 0.379,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 209.8,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.603,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "publication_status": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "mercury",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 73075,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": -58039,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 4300,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "semi_major_axis": {
+            "value": 0.387,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.206,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 7.0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": [null],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 5.43,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 0.377,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": 167,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 439.6,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.503,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "neptune",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 84502,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": -16690,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 23500,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 16.11,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 30.11,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.009,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 1.77,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["H2", "He", "CH4"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 1.64,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 1.137,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 46.6,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.503,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "saturn",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 76011,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": -62690,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 35500,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 10.65,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 9.537,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.054,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 2.48,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["H2", "He", "CH4", "NH3"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "mass": {
+            "value": 95.16,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radius": {
+            "value": 9.45,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "density": {
+            "value": 0.69,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 1.065,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 81,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.503,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "uranus",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 9241,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": 52884,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 21300,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "period": {
+            "value": 17.24,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "semi_major_axis": {
+            "value": 19.218,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.046,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 0.77,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["H2", "He", "CH4"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 1.32,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 0.886,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 58.1,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.503,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      },
+      {
+        "name": "venus",
+        "exo_type": "planet",
+        "alternate_names": null,
+        "position": {
+          "distance": {
+            "value": 0,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ra": {
+            "value": 68260,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "dec": {
+            "value": -56875,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "radial_velocity": {
+            "value": 10360,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "orbital": {
+          "semi_major_axis": {
+            "value": 0.723,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "eccentrity": {
+            "value": 0.007,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "inclination": {
+            "value": 3.39,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "omega": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "specific_planet_parametre": {
+          "detection_method": null,
+          "t_peri": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_conj": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_0": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t0_sec": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "lambda_ang": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "impact_param": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "tvr": {
+            "value": null,
+            "unit": {
+              "name": "Julian day",
+              "symbol": "JD",
+              "wiki_data_rdf": "Q14267"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "k": {
+            "value": null,
+            "unit": {
+              "name": "meter per second",
+              "symbol": "m/s",
+              "wiki_data_rdf": "Q182429"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "mass_meas_method": null,
+          "rad_meas_method": null
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "value": null,
+            "unit": {
+              "name": "degree",
+              "symbol": "deg",
+              "wiki_data_rdf": "Q28390"
+            },
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "ag": {
+            "value": null,
+            "unit": "N",
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "temp": {
+            "temp_type": null,
+            "temp_note": null,
+            "temp_source": null,
+            "temp_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          },
+          "molecule": {
+            "molecule_type": null,
+            "molecule_name": ["CO2", "N2"],
+            "molecule_note": null,
+            "molecule_result": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            },
+            "molecule_fig": {
+              "value": null,
+              "unit": null,
+              "pos_uncert": null,
+              "neg_uncert": null
+            }
+          }
+        },
+        "physical": {
+          "density": {
+            "value": 5.2,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "logg": {
+            "value": 0.905,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_calc": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "t_meas": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "spectral_type": {
+            "value": null,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "teff": {
+            "value": 226.6,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          },
+          "age": {
+            "value": 4.503,
+            "unit": null,
+            "pos_uncert": null,
+            "neg_uncert": null
+          }
+        },
+        "general": {
+          "discovered_date": null,
+          "remarks": null,
+          "links": null,
+          "url_simbad": null
+        }
+      }
+    ],
+    "gs": null
+  },
+  "dictionary": {
+    "doi": {
+      "definition": "serial code used to uniquely identify digital objects like academic papers",
+      "alternate_name": "Digital object identifier",
+      "wiki_data_rdf": "P356",
+      "links": ["https://www.doi.org/"]
+    },
+    "basic": {
+      "global_informations": {
+        "name": { "definition": "object's name" },
+        "exo_type": {
+          "definition": "object's type",
+          "types_no_pla_sat": ["star", "pulsar", "small_body"],
+          "types_pla_sat": ["satellite", "planet"]
+        },
+        "alternate_names": {
+          "definition": "object's alternate_names",
+          "str": true
+        }
+      }
+    },
+    "charac": {
+      "MASS_UNIT": [
+        {
+          "name": "jupiter mass",
+          "symbol": ["M_J", "MJ", "mjupiter", "mass jupiter"],
+          "wiki_data_rdf": "Q651336"
+        },
+        {
+          "name": "solar mass",
+          "symbol": ["M\u2609", "mass of the Sun"],
+          "wiki_data_rdf": "Q180892"
+        },
+        {
+          "name": "earth mass",
+          "symbol": ["M\u2295"],
+          "wiki_data_rdf": "Q681996"
+        }
+      ],
+      "RADIUS_UNIT": [
+        {
+          "name": "jupiter radius",
+          "symbol": ["RJ", "Rj"],
+          "wiki_data_rdf": "Q3421309"
+        },
+        {
+          "name": "solar radius",
+          "symbol": ["R\u2609"],
+          "wiki_data_rdf": "Q48440"
+        },
+        {
+          "name": "earth radius",
+          "symbol": ["terrestrial radius", "R\u2295", "radius of the Earth"],
+          "wiki_data_rdf": "Q95689145"
+        }
+      ],
+      "TIME_UNIT": [
+        { "name": "hour", "symbol": "h", "wiki_data_rdf": "Q25235" },
+        { "name": "year", "symbol": "y", "wiki_data_rdf": "Q577" },
+        { "name": "day", "symbol": "day", "wiki_data_rdf": "Q573" },
+        { "name": "second", "symbol": "s", "wiki_data_rdf": "Q11574" }
+      ],
+      "ANGLE_UNIT": [
+        { "name": "degree", "symbol": "deg", "wiki_data_rdf": "Q28390" },
+        { "name": "hms", "symbol": "hh:mm:ss", "wiki_data_rdf": "Q13442" },
+        { "name": "dms", "symbol": "dd:mm:ss", "wiki_data_rdf": "Q76287" }
+      ],
+      "objects": {
+        "planet": {
+          "definition": "any planet beyond the Solar System",
+          "wiki_data_rdf": "Q44559",
+          "remark": "the catalogue limit is 60 Jupiter mass for a planet",
+          "links": []
+        },
+        "satellite": {
+          "definition": "celestial body that orbits a planet",
+          "wiki_data_rdf": "Q2537",
+          "remark": null,
+          "links": []
+        }
+      },
+      "characteristic": {
+        "specific_planet_parameter": {
+          "detection_method": {
+            "definition": "Methods which have detected the exoplanet",
+            "methods": [
+              {
+                "RV": {
+                  "definition": "Radial velocity method",
+                  "wiki_data_rdf": "Q2273386"
+                }
+              },
+              { "timing": null },
+              {
+                "microlensing": {
+                  "definition": "Microlensing method",
+                  "wiki_data_rdf": "Q56048480"
+                }
+              },
+              { "imaging": null },
+              { "primary transit": null },
+              { "secondary transit": null },
+              { "astrometry": { "wiki_data_rdf": "Q181505" } },
+              {
+                "TTV": {
+                  "definition": "Transit timing variation method",
+                  "wiki_data_rdf": "Q2945337"
+                }
+              },
+              {
+                "disk kinematics": {
+                  "definition": "Detection of a Keplerian perturbation due to a planet in a gas disk"
+                }
+              },
+              { "other": null }
+            ]
+          },
+          "discovery_method": {
+            "definition": "Methods to discover the exoplanet",
+            "methods": [
+              {
+                "RV": {
+                  "definition": "Radial velocity method",
+                  "wiki_data_rdf": "Q2273386"
+                }
+              },
+              { "timing": null },
+              {
+                "microlensing": {
+                  "definition": "Microlensing method",
+                  "wiki_data_rdf": "Q56048480"
+                }
+              },
+              { "imaging": null },
+              { "primary transit": null },
+              { "secondary transit": null },
+              { "astrometry": { "wiki_data_rdf": "Q181505" } },
+              {
+                "TTV": {
+                  "definition": "Transit timing variation method",
+                  "wiki_data_rdf": "Q2945337"
+                }
+              },
+              {
+                "disk kinematics": {
+                  "definition": "Detection of a Keplerian perturbation due to a planet in a gas disk"
+                }
+              },
+              { "other": null }
+            ],
+            "wiki_data_rdf": "Q591022"
+          },
+          "t_peri": {
+            "definition": "Time of passage at the periapse for eccentric orbits",
+            "unit": [
+              {
+                "name": "Julian day",
+                "symbol": "JD",
+                "wiki_data_rdf": "Q14267"
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "t_conj": {
+            "definition": "Time of the star-planet upper conjunction when using the RV method",
+            "unit": [
+              {
+                "name": "Julian day",
+                "symbol": "JD",
+                "wiki_data_rdf": "Q14267"
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "t_0": {
+            "definition": "Time of passage at the center of the transit light curve for the primary transit",
+            "unit": [
+              {
+                "name": "Julian day",
+                "symbol": "JD",
+                "wiki_data_rdf": "Q14267"
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "t0_sec": {
+            "definition": "Time of passage at the center of the transit light curve for the secondary transit",
+            "unit": [
+              {
+                "name": "Julian day",
+                "symbol": "JD",
+                "wiki_data_rdf": "Q14267"
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "lambda_ang": {
+            "definition": "sky-projected angle between the planetary orbital spin and the stellar rotational spin (Rossiter-McLaughlin anomaly)",
+            "unit": [
+              { "name": "degree", "symbol": "deg", "wiki_data_rdf": "Q28390" },
+              {
+                "name": "hms",
+                "symbol": "hh:mm:ss",
+                "wiki_data_rdf": "Q13442"
+              },
+              { "name": "dms", "symbol": "dd:mm:ss", "wiki_data_rdf": "Q76287" }
+            ],
+            "wiki_data_rdf": null
+          },
+          "impact_param": {
+            "definition": "Minimum distance of the planet to the stellar center for transiting planets with respect to the stellar radius",
+            "unit": "None",
+            "remark": "% of the stellar radius, symbol : %",
+            "wiki_data_rdf": null
+          },
+          "tvr": {
+            "definition": "Time of zero increasing radial velocity (i.e. when the planet moves towards the observer) for circular orbits",
+            "unit": [
+              {
+                "name": "Julian day",
+                "symbol": "JD",
+                "wiki_data_rdf": "Q14267"
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "k": {
+            "definition": "semi-amplitude of the radial velocity curve",
+            "unit": [
+              {
+                "name": "meter per second",
+                "symbol": "m/s",
+                "wiki_data_rdf": "Q182429"
+              },
+              {
+                "name": "astronomical unit per year",
+                "symbol": "au/yr",
+                "wiki_data_rdf": "Q60742631"
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "mass_meas_method": {
+            "definition": "Method of measurement of the planet mass",
+            "methods": [
+              { "RV": { "wiki_data_rdf": "Q2273386" } },
+              { "microlensing": { "wiki_data_rdf": "Q56048480" } },
+              { "timing": null },
+              { "controversial": null },
+              { "astrometry": { "wiki_data_rdf": "Q181505" } },
+              { "ttv": { "wiki_data_rdf": "Q2945337" } },
+              { "spectrum": null },
+              {
+                "theoretical": {
+                  "definition": "Mass determination derived from a theoretical model"
+                }
+              }
+            ],
+            "wiki_data_rdf": null
+          },
+          "rad_meas_method": {
+            "definition": "Method of measurement of the planet radius",
+            "methods": [
+              { "primary transit": { "wiki_data_rdf": "Q6888" } },
+              {
+                "theoretical": {
+                  "definition": "Radius determination derived from a theoretical model"
+                }
+              },
+              { "flux": { "wiki_data_rdf": "Q177831" } }
+            ],
+            "wiki_data_rdf": null
+          }
+        },
+        "atmospheric": {
+          "hot_pt": {
+            "definition": "Longitude of the planet hottest point",
+            "unit": [
+              { "name": "degree", "symbol": "deg", "wiki_data_rdf": "Q28390" },
+              {
+                "name": "hms",
+                "symbol": "hh:mm:ss",
+                "wiki_data_rdf": "Q13442"
+              },
+              { "name": "dms", "symbol": "dd:mm:ss", "wiki_data_rdf": "Q76287" }
+            ],
+            "remark": "counted from the substellar point",
+            "wiki_data_rdf": null
+          },
+          "ag": {
+            "definition": "Geometric Albedo (ratio of reflected radiation to incident radiation)",
+            "unit": "None",
+            "wiki_data_rdf": "Q2832068"
+          },
+          "temp": {
+            "temp_type": {
+              "definition": "type of Temperature measurement",
+              "types": [
+                "disk_average",
+                "day_average",
+                "night_average",
+                "spatial_variations",
+                "vertical_profile",
+                "3D_map",
+                "hottest_point_longitude"
+              ],
+              "wiki_data_rdf": null
+            },
+            "temp_note": {
+              "definition": "Note on Temperature measurement",
+              "str": true
+            },
+            "temp_source": {
+              "definition": "Source of the temperature data",
+              "sources": ["measurement", "modelling"]
+            },
+            "temp_result": { "definition": "Temperature value", "str": true },
+            "temp_fig": {
+              "definition": "Link to a figure showing the temperature measurement",
+              "str": true
+            }
+          },
+          "molecule": {
+            "molecule_type": {
+              "definition": "type of molecule measurement",
+              "types": [
+                "detected",
+                "disk_average",
+                "vertical_profile",
+                "detected_1_sigma",
+                "detected_2_sigma",
+                "detected_3_sigma",
+                "detected_4_sigma",
+                "detected_5_sigma",
+                "detected_6_sigma"
+              ],
+              "wiki_data_rdf": null
+            },
+            "molecule_name": {
+              "definition": "Name of Molecule",
+              "names": [
+                "CH4",
+                "CO",
+                "CO2",
+                "H",
+                "H2O",
+                "Na",
+                "TiO",
+                "VO",
+                "O2",
+                "H2",
+                "K",
+                "Mg",
+                "C",
+                "OI",
+                "NH3",
+                "N2",
+                "Si",
+                "He",
+                "SO",
+                "Fe",
+                "Fe+",
+                "Ti+",
+                "Li",
+                "SH",
+                "N",
+                "AIO",
+                "TiH",
+                "CrH",
+                "ScH",
+                "Sr",
+                "Cr",
+                "Sc",
+                "Y"
+              ]
+            },
+            "molecule_note": {
+              "definition": "Note on Molecule measurement",
+              "str": true
+            },
+            "molecule_result": {
+              "definition": "Molecule mixing ratio value",
+              "str": true
+            },
+            "molecule_source": {
+              "definition": "Source of the molecule data",
+              "sources": ["measurements", "modeling"]
+            },
+            "molecule_fig": {
+              "definition": "Link to a figure showing the molecule observation",
+              "str": true
+            }
+          }
+        }
+      },
+      "VELOCITY_UNIT": [
+        {
+          "name": "meter per second",
+          "symbol": "m/s",
+          "wiki_data_rdf": "Q182429"
+        },
+        {
+          "name": "astronomical unit per year",
+          "symbol": "au/yr",
+          "wiki_data_rdf": "Q60742631"
+        }
+      ],
+      "JULIAN_DAY_UNIT": [
+        { "name": "Julian day", "symbol": "JD", "wiki_data_rdf": "Q14267" }
+      ]
+    },
+    "general": {
+      "general": {
+        "object_status": {
+          "definition": "object status, must be in this list : confirmed, candidate, controversial, retracted",
+          "status": ["confirmed", "candidate", "controversial", "retracted"]
+        },
+        "discovered_date": {
+          "definition": "date of discovery of the astonomic object",
+          "date": true
+        },
+        "embargo_end_date": {
+          "definition": "Date on which we can publish the object in the catalog",
+          "date": true
+        },
+        "display_status": {
+          "definition": "website page status",
+          "boolean": true
+        },
+        "remarks": {
+          "definition": "Any additional information on the object",
+          "str": true
+        },
+        "links": { "definiton": "all useful links", "str": true },
+        "url_simbad": {
+          "definition": "url corresponding to the object on simbad",
+          "str": true
+        }
+      },
+      "publication": {
+        "title": { "definition": "publication title", "str": true },
+        "author": { "definition": "publication authors", "str": true },
+        "date": { "definition": "publication date", "str": true },
+        "type": {
+          "definition": "publication type",
+          "types": [
+            "book",
+            "thesis",
+            "refeeed article",
+            "proceeding",
+            "unknown",
+            "report"
+          ]
+        },
+        "journal_name": {
+          "definition": "publication journal name",
+          "str": true
+        },
+        "journal_volume": {
+          "definition": "publication journal volume",
+          "str": true
+        },
+        "journal_page": {
+          "definition": "publication journal page",
+          "str": true
+        },
+        "bib_code": { "definition": "publication bibcode", "str": true },
+        "keyword": { "definition": "publication keyword", "str": true },
+        "ref": { "definition": "publication references", "str": true },
+        "doi": { "definition": "publication DOI" },
+        "url": { "definition": "publication url", "str": true },
+        "publication_status": {
+          "definition": "status of the reveal's object publication, must be in this list : R \u2014 Published in a refereed paper, S \u2014 Submitted to a professional journal, C \u2014 Announced on a professional conference, W \u2014 Announced on a website",
+          "status": ["R", "S", "C", "W"]
+        }
+      }
+    },
+    "gs": {
+      "gs": {
+        "definition": "Gravitational system, in this part you can fill in all the gravitational relations of the objects described in the file in list with the format described below cf. [Document name] for examples"
+      }
+    }
+  }
+}
