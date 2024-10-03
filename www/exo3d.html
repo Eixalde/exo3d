@@ -31,7 +31,8 @@
           <div class="card-group small container-fluid">
             <div class="row-6">
               <div id="simulation-time" class="card bg-transparent card-body">
-                Time since the beginning of the animation : 0 days
+                <!-- Time since the beginning of the animation : 0 days  -->
+                Temps écoulé depuis le début de la simulation : 0 jours
               </div>
             </div>
             <div class="row-6">
@@ -41,7 +42,8 @@
                     <use id="scales-info-icon" xlink:href="node_modules/bootstrap-icons/bootstrap-icons.svg#info-circle-fill"/>
                   </svg>
                   <span id="scales-info-paragraph">
-                    All sizes and distances are currently on a realistic scale. This is almost how you would see them in reality.
+                    <!-- All sizes and distances are currently on a realistic scale. This is almost how you would see them in reality. -->
+                    Toutes les tailles et les distances sont actuellement en échelle réaliste. Vous verriez notre système quasiment de cette façon en réalité.
                   </span>
                 </p>
               </div>
@@ -62,7 +64,7 @@
             <div class="container-fluid row g-0">
               <!-- Global speed controls -->
               <div class="card bg-dark col-4">
-                <h6 class="card-header">Animation speed</h6>
+                <h6 class="card-header"><!-- Animation speed --> Vitesse d'animation</h6>
                 <div class="card-body">
                   <div class="btn-group" role="group">
                     <input
@@ -129,7 +131,8 @@
                 <div class="card-body">
                   <div class="controls overlay">
                     <span id = "relative-speed">
-                      Speed relative to a planet (current : 5s / 87 days)
+                      <!-- Speed relative to a planet (current : 5s / 87 days) -->
+                      Vitesse relative à une planète (actuelle : 5s / 87 jours)
                     </span>
                     <input type="range" class="form-range planet-speed" min="0" step="1" list="speed-tickmarks">
                     <datalist id="speed-tickmarks">
@@ -146,7 +149,7 @@
           <div class="card-group">
             <div class="container-fluid row g-0">
               <div class="card bg-dark col-7">
-                <h6 class="card-header">Scaling of the system</h6>
+                <h6 class="card-header"><!-- Scaling of the system --> Échelle du système</h6>
                 <div class="card-body">
                   <div class="btn-group" role="group">
                     <input
@@ -158,7 +161,7 @@
                       checked
                       aria-label="Realistic view of the system, all scales respected"
                     >
-                    <label class="btn btn-outline-primary" for="realistic">Realistic</label>
+                    <label class="btn btn-outline-primary" for="realistic"><!-- Realistic --> Réaliste</label>
 
                     <input
                       type="radio"
@@ -168,17 +171,17 @@
                       autocomplete="off"
                       aria-label="Didactic view of the system, scales exagerated for esthetic purposes"
                     >
-                    <label class="btn btn-outline-primary" for="didactic">Didactic</label>
+                    <label class="btn btn-outline-primary" for="didactic"><!-- Didactic --> Didactique </label>
                   </div>
                 </div>
               </div>
               <div class="card bg-dark col-5">
                 <div class="card-body">
                   <div id="scalingStar" class="controls overlay">
-                    Star scale - <span id="starScale">1:1</span>
+                    <!-- Star scale --> Échelle de l'étoile - <span id="starScale">1:1</span>
                   </div>
                   <div id="scalingPlanets" class="controls overlay">
-                    Planets scale - <span id="planetsScale">1:1</span>
+                    <!-- Planets scale --> Échelle des planètes - <span id="planetsScale">1:1</span>
                   </div>
                 </div>
               </div>
@@ -190,7 +193,7 @@
         <div id="cameraMode" class="controls overlay col-4">
           <div class="card-group">
             <div class="card bg-dark">
-              <h6 class="card-header">Focus of the camera</h6>
+              <h6 class="card-header"><!-- Focus of the camera --> Cible de la caméra</h6>
               <div class="card-body">
                 <div class="btn-group" role="group">
                   <input
@@ -202,7 +205,7 @@
                     checked
                     aria-label="Camera centered on the system"
                   >
-                  <label class="btn btn-outline-primary" for="star">System</label>
+                  <label class="btn btn-outline-primary" for="star"><!-- System --> Système </label>
 
                   <input
                     type="radio"
@@ -217,7 +220,7 @@
                     aria-controls="collapsePlanetChoice"
                     data-bs-auto-close="true"
                   >
-                  <label class="btn btn-outline-primary" for="planet">Planet</label>
+                  <label class="btn btn-outline-primary" for="planet"><!-- Planet --> Planète </label>
 
                   <input
                     type="radio"
@@ -227,7 +230,7 @@
                     autocomplete="off"
                     aria-label="Camera free to move"
                   >
-                  <label class="btn btn-outline-primary" for="free">Free</label>
+                  <label class="btn btn-outline-primary" for="free"><!-- Free --> Libre </label>
                 </div>
               </div>
             </div>

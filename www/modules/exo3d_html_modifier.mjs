@@ -148,7 +148,7 @@ class NumberOfDaysUpdater {
       /* Updates the HTML part. */
       document.querySelector(
         '#simulation-time'
-      ).innerHTML = `Time since the beginning of the animation :\n${formattedYears} years, ${formattedMonths} months and ${formattedDays} days.`
+      ).innerHTML = `Temps écoulé depuis le début de la simulation :\n${formattedYears} années, ${formattedMonths} mois et ${formattedDays} jours.`
 
       /* Calling the function again to make it timeout recursively. */
       this.update()

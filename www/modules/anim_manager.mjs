@@ -81,9 +81,9 @@ class AnimManager {
       const pause = seconds ? '' : '(paused)'
       document.querySelector(
         '#relative-speed'
-      ).innerHTML = `Speed relative to a planet (current : ${seconds}s /${planetsOptions[
+      ).innerHTML = `Vitesse relative à une planète (actuelle : ${seconds}s /${planetsOptions[
         idx
-      ].revolutionPeriod.toFixed(2)} days ${pause})`
+      ].revolutionPeriod.toFixed(2)} jours ${pause})`
     }
 
     GENERAL_SPEED_PARAMS.forEach((speed) => {
