@@ -12,6 +12,7 @@ import ssl
 # replace the port by 4443), but if you are VR-testing, '0.0.0.0' may be
 # mandatory (for Oculus Quest or any mobile headset).
 server_address = ('0.0.0.0', 443)
+print("Started server on https://0.0.0.0/www/select_system.html")
 httpd = http.server.HTTPServer(
     server_address, http.server.SimpleHTTPRequestHandler)
 httpd.socket = ssl.wrap_socket(httpd.socket,
@@ -19,3 +20,4 @@ httpd.socket = ssl.wrap_socket(httpd.socket,
                                certfile='localhost.pem',
                                ssl_version=ssl.PROTOCOL_TLS)
 httpd.serve_forever()
+
