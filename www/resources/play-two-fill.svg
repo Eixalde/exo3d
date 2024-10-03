@@ -1,3 +1,5 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:078cd93ac6f67964bc22d89ffc21d2bd76e3da0e7c3a754bddcb08e8428ab30e
-size 498
+<?xml version="1.0" encoding="UTF-8"?>
+<svg class="bi bi-play-fill" width="21.076" height="16" fill="currentColor" version="1.1" viewBox="0 0 21.076 16" xmlns="http://www.w3.org/2000/svg">
+ <path d="m11.596 8.697-6.363 3.692c-0.54 0.313-1.233-0.066-1.233-0.697v-7.384c0-0.63 0.692-1.01 1.233-0.696l6.363 3.692a0.802 0.802 0 0 1 0 1.393z"/>
+ <path d="m16.672 8.697-6.363 3.692c-0.54 0.313-1.233-0.066-1.233-0.697v-7.384c0-0.63 0.692-1.01 1.233-0.696l6.363 3.692a0.802 0.802 0 0 1 0 1.393z"/>
+</svg>
