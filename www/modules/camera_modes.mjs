@@ -2,7 +2,7 @@
  * @module CameraModes
  */
 
-import { ASTRONOMICAL_UNIT } from '../exo3d.mjs'
+import { ASTRONOMICAL_UNIT, EARTH_SIZE } from '../exo3d.mjs'
 
 const PI = Math.PI
 
@@ -135,6 +135,10 @@ class CameraModes {
           const collapseElement =
             bootstrap.Collapse.getOrCreateInstance(collapseNode)
           collapseElement.hide()
+          document.getElementById('planet-information').hidden = true
+        } else {
+          document.getElementById('planet-information').hidden = false
+          this.fillPlanetInformation(planets)
         }
         this.changeCameraMode(allCameras[idx], scene, allCameras, canvas)
       }
@@ -179,6 +183,47 @@ class CameraModes {
   }
 
   /**
+   * 
+   *  @param {Planet[]} planets - All the planets of the system.
+   */
+  fillPlanetInformation(planets){
+    let currentPlanet = {
+      name: "",
+      revolutionPeriod : 0,
+      spin : 0,
+      diameter: 0,
+      distanceToSun : 0
+    }
+    for (const planet of planets){
+      if (this.planetCamera.parent == planet.revolutionAxisParent){
+        currentPlanet = {
+          name: planet.name,
+          revolutionPeriod : planet.revolutionPeriod,
+          spin : planet.spin,
+          diameter: planet.diameter * EARTH_SIZE,
+          distanceToSun : (planet.trajectory.a/ASTRONOMICAL_UNIT)
+        }
+      }
+    }
+    document.querySelector(
+      '#planet-name'
+    ).innerHTML = currentPlanet.name
+    document.querySelector(
+      '#planet-diameter'
+    ).innerHTML = currentPlanet.diameter.toFixed(0)
+    document.querySelector(
+      '#planet-rotation'
+    ).innerHTML = currentPlanet.spin.toFixed(2)
+    document.querySelector(
+      '#planet-revolution'
+    ).innerHTML = currentPlanet.revolutionPeriod.toFixed(2)
+    document.querySelector(
+      '#planet-distance'
+    ).innerHTML = currentPlanet.distanceToSun.toFixed(4)
+
+  }
+
+  /**
    * Changes the focus of the planet camera, switching to any planet selected by
    * the user.
    * @param {String} btnLabel - The name of the button.
@@ -208,6 +253,7 @@ class CameraModes {
     ecliptic. This allows to see the inclination of the planet. */
     this.planetCamera.alpha = -PI / 2
     this.planetCamera.beta = PI / 2 + nextPlanet.eclipticInclinationAngle
+    this.fillPlanetInformation(planets)
   }
 }
 

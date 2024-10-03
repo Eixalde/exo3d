@@ -29,7 +29,8 @@ export {
   ASTRONOMICAL_UNIT,
   EXO_TYPES,
   SYSTEM_FILE_NAMES,
-  SPACESHIP_POSITION
+  SPACESHIP_POSITION,
+  EARTH_SIZE
 } from './modules/constants.mjs'
 export { XRLauncher } from './modules/xr_launch.mjs'
 export { SpaceshipManager } from './modules/spaceship_manager.mjs'
