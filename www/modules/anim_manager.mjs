@@ -54,7 +54,7 @@ class AnimManager {
     /* General speed values and labels. */
     const GENERAL_SPEED_PARAMS = [
       { name: 'pause', value: 0 },
-      { name: 'slow', value: 0.5 },
+      { name: 'slow', value: 0.02 },
       { name: 'normal', value: 1 },
       { name: 'fast', value: 2 }
     ]
