@@ -26,9 +26,9 @@
       <canvas id="renderCanvas" touch-action="none"></canvas>
 
       <!-- Informative messages for the user -->
-      <div class="row-2 g-0 align-items-end">
-        <div id="informative-messages" class="col-2 controls overlay">
-          <div class="card-group small container-fluid">
+      <div class="row-1 g-0 justify-content-between">
+        <div id="informative-messages" class="col-2">
+          <div class="card-group small controls overlay container-fluid">
             <div class="row-6">
               <div id="simulation-time" class="card bg-transparent card-body">
                 <!-- Time since the beginning of the animation : 0 days  -->
@@ -46,6 +46,23 @@
                     Toutes les tailles et les distances sont actuellement en échelle réaliste. Vous verriez notre système quasiment de cette façon en réalité.
                   </span>
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="planet-information" class="col-2">
+          <div class="card bg-dark controls overlay">
+            <h6 id="planet-title "class="card-header"><!-- Scaling of the system --> Informations sur <span id="planet-name"></span></h6>
+            <div class="card-body">
+              <div class="controls overlay">
+                Diamètre : <span id="planet-diameter"></span> km<br>
+                Masse : <span id="planet-mass"></span> kg<br>
+                Période de rotation : <span id="planet-rotation"></span> jours<br>
+                Période de révolution : <span id="planet-revolution"></span> jours<br>
+                Distance au Soleil : <span id="planet-distance"></span> UA<br>
+                <b>Rotation :</b> <i>mouvement de la planète sur elle-même</i><br>
+                <b>Révolution :</b> <i>mouvement de la planète autour du Soleil</i><br>
+                <b>UA (unité astronomique) :</b> <i>distance Terre-Soleil (environ 150 000 000 km)</i><br>
               </div>
             </div>
           </div>
