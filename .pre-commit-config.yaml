@@ -11,26 +11,19 @@ repos:
       - id: check-merge-conflict
       - id: check-json
 
-  - repo: https://github.com/awebdeveloper/pre-commit-stylelint
-    rev: '0.0.2'
+  # JavaScript/HTML hooks
+  - repo: https://github.com/biomejs/pre-commit
+    # full list of options here: https://biomejs.dev/reference/configuration
+    rev: "v0.1.0"
     hooks:
-      - id: stylelint
-        additional_dependencies:
-          ['stylelint@13.2.1', 'stylelint-config-standard@20.0.0']
-  - repo: local
+    -   id: biome-format
+        additional_dependencies: ["@biomejs/biome@1.8.3"]
+
+  # Python hooks
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    # full list of options here: https://black.readthedocs.io/en/stable/usage_and_configuration/the_basics.html
+    # add any rules in the 'args' list : "args : ['l 100']" for a line length of 100
+    rev: 24.2.0
     hooks:
-      - id: standardjs
-        name: Check JS standard conformity
-        entry: ./standard_snazzy.sh
-        language: system
-        types: [javascript]
-        pass_filenames: true
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: 'v7.2.0' # Use the sha / tag you want to point at
-    hooks:
-      - id: eslint
-  - repo: https://github.com/jumanjihouse/pre-commit-hooks
-    rev: '2.0.0' # or specific git tag
-    hooks:
-      - id: markdownlint # Configure in .mdlrc
-        exclude: ^www/docs/
+    -   id: black
+        args: ['-l 110']
