@@ -176,11 +176,11 @@ class EngineManager {
 
 		const INNER_RADIUS = 0.95 * ASTRONOMICAL_UNIT
 		const OUTER_RADIUS = 2 * ASTRONOMICAL_UNIT
-		/* const inhabitableSphere = new InhabitableSphere(
-      INNER_RADIUS,
-      OUTER_RADIUS,
-      scene
-    ) */
+		/*const inhabitableSphere = new InhabitableSphere(
+			INNER_RADIUS,
+			OUTER_RADIUS,
+			scene
+		)*/
 
 		highlightPlanets(
 			this.gravitationalSystem.planets,
