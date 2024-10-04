@@ -43,72 +43,74 @@
  * @property {BABYLON.Animatable} animatable - Contains all animations.
  */
 class AnimManager {
-  /**
-   * @param {PlanetOptions[]} planetsOptions - The parameters of the planets in the system.
-   */
-  constructor(planetsOptions) {
-    this.globalSpeedRatio = 1
-    this.relativeSpeedRatio = 1
-    this.animatable = []
+	/**
+	 * @param {PlanetOptions[]} planetsOptions - The parameters of the planets in the system.
+	 */
+	constructor(planetsOptions) {
+		this.globalSpeedRatio = 1
+		this.relativeSpeedRatio = 1
+		this.animatable = []
 
-    /* General speed values and labels. */
-    const GENERAL_SPEED_PARAMS = [
-      { name: 'pause', value: 0 },
-      { name: 'slow', value: 0.5 },
-      { name: 'normal', value: 1 },
-      { name: 'fast', value: 2 }
-    ]
+		/* General speed values and labels. */
+		const GENERAL_SPEED_PARAMS = [
+			{ name: "pause", value: 0 },
+			{ name: "slow", value: 0.02 },
+			{ name: "normal", value: 1 },
+			{ name: "fast", value: 2 },
+		]
 
-    /* Relative speed values (no labels needed). */
-    const RELATIVE_SPEED_PARAMS = new Array(planetsOptions.length)
+		/* Relative speed values (no labels needed). */
+		const RELATIVE_SPEED_PARAMS = new Array(planetsOptions.length)
 
-    /* Calculates the ratio between the periods of all planets, relative to the
+		/* Calculates the ratio between the periods of all planets, relative to the
     first one. */
-    planetsOptions.forEach((planet, idx) => {
-      RELATIVE_SPEED_PARAMS[idx] =
-        planet.revolutionPeriod / planetsOptions[0].revolutionPeriod
-    })
+		planetsOptions.forEach((planet, idx) => {
+			RELATIVE_SPEED_PARAMS[idx] =
+				planet.revolutionPeriod / planetsOptions[0].revolutionPeriod
+		})
 
-    const speedSlider = document.querySelector('.planet-speed')
+		const speedSlider = document.querySelector(".planet-speed")
 
-    /**
-     * Updates the information about the scale of time spent in the simulation.
-     * @param {HTMLElement} speedSlider - The slider of the speed relative to a planet.
-     */
-    const updateSimulationSpeedInfo = (speedSlider) => {
-      const idx = speedSlider.value
-      const seconds = this.globalSpeedRatio ? 5 / this.globalSpeedRatio : 0
-      const pause = seconds ? '' : '(paused)'
-      document.querySelector(
-        '#relative-speed'
-      ).innerHTML = `Speed relative to a planet (current : ${seconds}s /${planetsOptions[
-        idx
-      ].revolutionPeriod.toFixed(2)} days ${pause})`
-    }
+		/**
+		 * Updates the information about the scale of time spent in the simulation.
+		 * @param {HTMLElement} speedSlider - The slider of the speed relative to a planet.
+		 */
+		const updateSimulationSpeedInfo = (speedSlider) => {
+			const idx = speedSlider.value
+			const seconds = this.globalSpeedRatio ? 5 / this.globalSpeedRatio : 0
+			const pause = seconds ? "" : "(paused)"
+			document.querySelector("#relative-speed").innerHTML =
+				`Vitesse relative à une planète (actuelle : ${seconds}s /${planetsOptions[
+					idx
+				].revolutionPeriod.toFixed(2)} jours ${pause})`
+		}
 
-    GENERAL_SPEED_PARAMS.forEach((speed) => {
-      document.querySelector(`.btn-group #${speed.name}`).onclick = () => {
-        /* Global and relative speed ratios are interdependant, they need to
+		for (const speed of GENERAL_SPEED_PARAMS) {
+			document.querySelector(`.btn-group #${speed.name}`).onclick = () => {
+				/* Global and relative speed ratios are interdependant, they need to
         know each other's value when they change individually. This is why they
         are updated, which wasn't the case when only the global existed. */
-        this.globalSpeedRatio = speed.value
-        this.animatable.forEach(
-          (anim) => (anim.speedRatio = speed.value * this.relativeSpeedRatio)
-        )
-        updateSimulationSpeedInfo(speedSlider)
-      }
-    })
+				this.globalSpeedRatio = speed.value
+				for (const anim of this.animatable)
+					anim.speedRatio = speed.value * this.relativeSpeedRatio
+				updateSimulationSpeedInfo(speedSlider)
+			}
+		}
 
-    speedSlider.onchange = () => {
-      this.relativeSpeedRatio = RELATIVE_SPEED_PARAMS[speedSlider.value]
-      this.animatable.forEach(
-        (anim) =>
-          (anim.speedRatio =
-            this.globalSpeedRatio * RELATIVE_SPEED_PARAMS[speedSlider.value])
-      )
-      updateSimulationSpeedInfo(speedSlider)
-    }
-  }
+		speedSlider.onchange = () => {
+			this.relativeSpeedRatio = RELATIVE_SPEED_PARAMS[speedSlider.value]
+			for (const anim of this.animatable)
+				anim.speedRatio =
+					this.globalSpeedRatio * RELATIVE_SPEED_PARAMS[speedSlider.value]
+			updateSimulationSpeedInfo(speedSlider)
+		}
+	}
+
+	randomizeAnimationStartPosition() {
+		for (const anim of this.animatable) {
+			anim.goToFrame(Math.random() * anim.toFrame)
+		}
+	}
 }
 
 export { AnimManager }

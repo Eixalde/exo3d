@@ -7,6 +7,7 @@
 AU and the diameter of the Earth. This way, the size of the Earth can be set to
 1 unit of the Babylon engine. */
 const ASTRONOMICAL_UNIT = 11727.647
+const EARTH_SIZE = 12742
 
 const EXO_TYPES = {
   star: 'star',
@@ -26,4 +27,4 @@ const SPACESHIP_POSITION = {
   z: -8000
 }
 
-export { ASTRONOMICAL_UNIT, EXO_TYPES, SYSTEM_FILE_NAMES, SPACESHIP_POSITION }
+export { ASTRONOMICAL_UNIT, EXO_TYPES, SYSTEM_FILE_NAMES, SPACESHIP_POSITION, EARTH_SIZE }

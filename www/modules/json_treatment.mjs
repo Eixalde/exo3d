@@ -3,7 +3,7 @@
  * @description Contains every function or class needed to interact with JSON files/objects.
  */
 
-import { EXO_TYPES } from '../exo3d.mjs'
+import { EXO_TYPES } from "../exo3d.mjs"
 
 /**
  * Stores whatever JSON was chosen by the user. This JSON can be created based
@@ -11,8 +11,8 @@ import { EXO_TYPES } from '../exo3d.mjs'
  * pre-existing exosystem JSON.
  * @param {String} jsonName - The name of a JSON file that may be passed
  */
-function writeJsonToStorage(jsonName = 'solar_system.json') {
-  sessionStorage.setItem('jsonName', jsonName)
+function writeJsonToStorage(jsonName = "solar_system.json") {
+	sessionStorage.setItem("jsonName", jsonName)
 }
 
 /**
@@ -20,13 +20,13 @@ function writeJsonToStorage(jsonName = 'solar_system.json') {
  * @returns {Object} The JSON passed by the generation form.
  */
 async function readJsonFromStorage() {
-  const jsonName = sessionStorage.getItem('jsonName')
-  const exo3dSystemJson = await fetch(`./system_json/${jsonName}`)
-    .then((response) => response.json())
-    .catch(function (error) {
-      throw error
-    })
-  return exo3dSystemJson
+	const jsonName = sessionStorage.getItem("jsonName")
+	const exo3dSystemJson = await fetch(`./system_json/${jsonName}`)
+		.then((response) => response.json())
+		.catch((error) => {
+			throw error
+		})
+	return exo3dSystemJson
 }
 
 /**
@@ -34,48 +34,48 @@ async function readJsonFromStorage() {
  * @param {String} jsonName - The name of the raw JSON file (minus the .json extension).
  */
 function convertJsonToDict(originJson) {
-  const OBJECTS_CATEGORY = 'system'
-  const HIERARCHY_CATEGORY = 'hierarchy'
+	const OBJECTS_CATEGORY = "system"
+	const HIERARCHY_CATEGORY = "hierarchy"
 
-  const dictionnaryJson = {}
+	const dictionnaryJson = {}
 
-  /* The JSON file must include the two categories mentioned. If either is
+	/* The JSON file must include the two categories mentioned. If either is
   missing, we throw an error. */
-  for (const CATEGORY of [OBJECTS_CATEGORY, HIERARCHY_CATEGORY]) {
-    if (!(CATEGORY in originJson)) {
-      throw `Category ${CATEGORY} is missing in the JSON file !`
-    }
-  }
+	for (const CATEGORY of [OBJECTS_CATEGORY, HIERARCHY_CATEGORY]) {
+		if (!(CATEGORY in originJson)) {
+			throw `Category ${CATEGORY} is missing in the JSON file !`
+		}
+	}
 
-  /* Both `system` and `hierarchy` have their contents formatted in lists. We
+	/* Both `system` and `hierarchy` have their contents formatted in lists. We
     will instead make each element of the list an attribute of the category they
     belong to. */
-  for (const [attributeName, list] of Object.entries(originJson)) {
-    dictionnaryJson[attributeName] = {}
-    switch (attributeName) {
-      case OBJECTS_CATEGORY:
-        list.forEach((listNode) => {
-          /* In the case of the spatial objects, the attribute that should reference them
+	for (const [attributeName, list] of Object.entries(originJson)) {
+		dictionnaryJson[attributeName] = {}
+		switch (attributeName) {
+			case OBJECTS_CATEGORY:
+				for (const listNode of list) {
+					/* In the case of the spatial objects, the attribute that should reference them
             is their name. */
-          const objName = listNode.name
-          dictionnaryJson[attributeName][objName] = listNode
-        })
-        break
+					const objName = listNode.name
+					dictionnaryJson[attributeName][objName] = listNode
+				}
+				break
 
-      case HIERARCHY_CATEGORY:
-        list.forEach((listNode) => {
-          /* For the subsystems in the hierarchy, we take the name of the attribute which
+			case HIERARCHY_CATEGORY:
+				for (const listNode of list) {
+					/* For the subsystems in the hierarchy, we take the name of the attribute which
             contains the subsystem (often named "sg1", "sg2", "sg3", etc). */
-          const sysName = Object.keys(listNode)[0]
-          dictionnaryJson[attributeName][sysName] = Object.values(listNode)[0]
-        })
-        break
+					const sysName = Object.keys(listNode)[0]
+					dictionnaryJson[attributeName][sysName] = Object.values(listNode)[0]
+				}
+				break
 
-      default:
-        throw `Category ${attributeName} is invalid !`
-    }
-  }
-  return dictionnaryJson
+			default:
+				throw `Category ${attributeName} is invalid !`
+		}
+	}
+	return dictionnaryJson
 }
 
 /**
@@ -93,44 +93,41 @@ function convertJsonToDict(originJson) {
  * @param {Object} systemOptions - The parameters needed for the creation of a system.
  */
 function convertDictToSystem(objectJson, contextSystem, systemOptions) {
-  /* Creating a local object to classify spatial objects in the subsystem.
+	/* Creating a local object to classify spatial objects in the subsystem.
   This is what associates satellites/rings with their planet. */
-  const hierarchy = {}
-  for (const exotype in EXO_TYPES) {
-    hierarchy[exotype] = []
-  }
+	const hierarchy = {}
+	for (const exotype in EXO_TYPES) {
+		hierarchy[exotype] = []
+	}
 
-  /* This is the algorithm of search through the objectJson, which is divided in
+	/* This is the algorithm of search through the objectJson, which is divided in
   two parts : `system` and `hierarchy`. The first one contains raw informations
   on all spatial objects, and the second one specifies the interactions between
   them (eventually creating multiple subsystems). If the element listed in the
   subsystem is found in `system`, then it is a spatial object : the
   addToSubsystemHierarchy is called. Otherwise, the element is in `hierarchy`,
   so convertDictToSystem calls itself on that element. */
-  for (const systemElement of Object.values(contextSystem)) {
-    if (systemElement in objectJson.system) {
-      const spObj = objectJson.system[systemElement]
-      addToSusbystemHierarchy(spObj, hierarchy, systemOptions)
-    } else {
-      const internSubsystem = objectJson.hierarchy[systemElement]
-      convertDictToSystem(objectJson, internSubsystem, systemOptions)
-    }
-  }
+	for (const systemElement of Object.values(contextSystem)) {
+		if (systemElement in objectJson.system) {
+			const spObj = objectJson.system[systemElement]
+			addToSusbystemHierarchy(spObj, hierarchy, systemOptions)
+		} else {
+			const internSubsystem = objectJson.hierarchy[systemElement]
+			convertDictToSystem(objectJson, internSubsystem, systemOptions)
+		}
+	}
 
-  /* If there is any satellite or rings, associate them with the only planet
+	/* If there is any satellite or rings, associate them with the only planet
   of the subsystem. */
-  if (hierarchy[EXO_TYPES.satellite].length > 0) {
-    hierarchy[EXO_TYPES.satellite].forEach(
-      (satellite) =>
-        (satellite.parentName = hierarchy[EXO_TYPES.planet][0].name)
-    )
-  }
+	if (hierarchy[EXO_TYPES.satellite].length > 0) {
+		for (const satellite of hierarchy[EXO_TYPES.satellite])
+			satellite.parentName = hierarchy[EXO_TYPES.planet][0].name
+	}
 
-  if (hierarchy[EXO_TYPES.rings].length > 0) {
-    hierarchy[EXO_TYPES.rings].forEach(
-      (ring) => (ring.parentName = hierarchy[EXO_TYPES.planet][0].name)
-    )
-  }
+	if (hierarchy[EXO_TYPES.rings].length > 0) {
+		for (const ring of hierarchy[EXO_TYPES.rings])
+			ring.parentName = hierarchy[EXO_TYPES.planet][0].name
+	}
 }
 
 /**
@@ -141,17 +138,17 @@ function convertDictToSystem(objectJson, contextSystem, systemOptions) {
  * @param {Object} systemOptions - The parameters needed for the creation of a system.
  */
 function addToSusbystemHierarchy(
-  spObj,
-  contextSubsystemHierarchy,
-  systemOptions
+	spObj,
+	contextSubsystemHierarchy,
+	systemOptions
 ) {
-  contextSubsystemHierarchy[spObj.exo_type].push(spObj)
-  systemOptions[spObj.exo_type].push(spObj)
+	contextSubsystemHierarchy[spObj.exo_type].push(spObj)
+	systemOptions[spObj.exo_type].push(spObj)
 }
 
 export {
-  convertJsonToDict,
-  writeJsonToStorage,
-  readJsonFromStorage,
-  convertDictToSystem
+	convertJsonToDict,
+	writeJsonToStorage,
+	readJsonFromStorage,
+	convertDictToSystem,
 }

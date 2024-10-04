@@ -1,7 +1,7 @@
 {
   "system": [
     {
-      "name": "earth",
+      "name": "Terre",
       "diameter": 1,
       "texture": "resources/512_earth.jpg",
       "distanceToParent": 0,
@@ -15,7 +15,7 @@
       "exo_type": "planet"
     },
     {
-      "name": "jupiter",
+      "name": "Jupiter",
       "diameter": 10.973,
       "texture": "resources/512_jupiter.jpg",
       "distanceToParent": 0,
@@ -29,7 +29,7 @@
       "exo_type": "planet"
     },
     {
-      "name": "mars",
+      "name": "Mars",
       "diameter": 0.533,
       "texture": "resources/512_mars.jpg",
       "distanceToParent": 0,
@@ -43,7 +43,7 @@
       "exo_type": "planet"
     },
     {
-      "name": "mercury",
+      "name": "Mercure",
       "diameter": 0.383,
       "texture": "resources/512_mercury.jpg",
       "distanceToParent": 0,
@@ -57,7 +57,7 @@
       "exo_type": "planet"
     },
     {
-      "name": "moon",
+      "name": "Lune",
       "diameter": 0.273,
       "texture": "resources/512_moon.jpg",
       "distanceToParent": 0.00257,
@@ -71,7 +71,7 @@
       "exo_type": "satellite"
     },
     {
-      "name": "neptune",
+      "name": "Neptune",
       "diameter": 3.865,
       "texture": "resources/512_neptune.jpg",
       "distanceToParent": 0,
@@ -100,7 +100,7 @@
       "exo_type": "rings"
     },
     {
-      "name": "saturn",
+      "name": "Saturne",
       "diameter": 9.014,
       "texture": "resources/512_saturn.jpg",
       "distanceToParent": 0,
@@ -114,7 +114,7 @@
       "exo_type": "planet"
     },
     {
-      "name": "sun",
+      "name": "Soleil",
       "diameter": 109.179,
       "texture": "resources/512_sun.jpg",
       "distanceToParent": 0,
@@ -129,7 +129,7 @@
       "exo_type": "star"
     },
     {
-      "name": "uranus",
+      "name": "Uranus",
       "diameter": 3.981,
       "texture": "resources/512_uranus.jpg",
       "distanceToParent": 0,
@@ -143,7 +143,7 @@
       "exo_type": "planet"
     },
     {
-      "name": "venus",
+      "name": "Vénus",
       "diameter": 0.95,
       "texture": "resources/512_venus.jpg",
       "distanceToParent": 0,
@@ -159,22 +159,22 @@
   ],
   "hierarchy": [
     {
-      "sg1": ["earth", "moon"]
+      "sg1": ["Terre", "Lune"]
     },
     {
-      "sg2": ["saturn", "saturn_rings"]
+      "sg2": ["Saturne", "saturn_rings"]
     },
     {
       "sg3": [
-        "sun",
+        "Soleil",
         "sg1",
-        "jupiter",
-        "mars",
-        "mercury",
-        "neptune",
+        "Jupiter",
+        "Mars",
+        "Mercure",
+        "Neptune",
         "sg2",
-        "uranus",
-        "venus"
+        "Uranus",
+        "Vénus"
       ]
     }
   ]
