@@ -35,158 +35,158 @@ const abs = Math.abs
  * @property {BABYLON.Vector3[]} staticTrajectory - The actual representation of the trajectory in the simulation.
  */
 class EllipticalTrajectory {
-  #staticTrajectory
-  /**
-   * @param {Number} a
-   * @param {Number} e
-   * @param {Boolean} canMove
-   */
-  constructor({ a, e }, canMove) {
-    this.a = a
-    this.e = e
-    this.canMove = canMove
-    if (canMove) {
-      this.b = sqrt(pow(this.a, 2) * (1 - pow(this.e, 2)))
-    }
-    this.#staticTrajectory = undefined
-  }
+	#staticTrajectory
+	/**
+	 * @param {Number} a
+	 * @param {Number} e
+	 * @param {Boolean} canMove
+	 */
+	constructor({ a, e }, canMove) {
+		this.a = a
+		this.e = e
+		this.canMove = canMove
+		if (canMove) {
+			this.b = sqrt(pow(this.a, 2) * (1 - pow(this.e, 2)))
+		}
+		this.#staticTrajectory = undefined
+	}
 
-  /**
-   * Lazy accessor for the static trajectory.
-   * @returns {BABYLON.Vector3[]}
-   */
-  get staticTrajectory() {
-    const STATIC_TRAJECTORY_LENGTH = 100
-    if (!this.#staticTrajectory) {
-      this.#staticTrajectory = this.buildStaticTrajectory(
-        STATIC_TRAJECTORY_LENGTH
-      )
-    }
-    return this.#staticTrajectory
-  }
+	/**
+	 * Lazy accessor for the static trajectory.
+	 * @returns {BABYLON.Vector3[]}
+	 */
+	get staticTrajectory() {
+		const STATIC_TRAJECTORY_LENGTH = 100
+		if (!this.#staticTrajectory) {
+			this.#staticTrajectory = this.buildStaticTrajectory(
+				STATIC_TRAJECTORY_LENGTH
+			)
+		}
+		return this.#staticTrajectory
+	}
 
-  /**
-   * Computes a position (on the ellipse) based on the true anomaly.
-   *
-   * @param {Number} nu - The true anomaly : angle between the direction of
-   * periapsis and the position, as seen from the main focus of the ellipse.
-   * @returns {{x: Number, y: Number, r: Number}} The coordinates of a 2D-point and its distance to the focus.
-   */
-  positionWithNu(nu) {
-    const r = this.a * ((1 - pow(this.e, 2)) / (1 + this.e * cos(nu)))
-    return {
-      x: r * cos(nu),
-      y: r * sin(nu),
-      r: r
-    }
-  }
+	/**
+	 * Computes a position (on the ellipse) based on the true anomaly.
+	 *
+	 * @param {Number} nu - The true anomaly : angle between the direction of
+	 * periapsis and the position, as seen from the main focus of the ellipse.
+	 * @returns {{x: Number, y: Number, r: Number}} The coordinates of a 2D-point and its distance to the focus.
+	 */
+	positionWithNu(nu) {
+		const r = this.a * ((1 - pow(this.e, 2)) / (1 + this.e * cos(nu)))
+		return {
+			x: r * cos(nu),
+			y: r * sin(nu),
+			r: r,
+		}
+	}
 
-  /**
-   * Creates a static trajectory.
-   *
-   * @param {Number} steps - Number of points to use.
-   * @returns {BABYLON.Vector3[]} The 3D-points contained in the static trajectory.
-   */
-  buildStaticTrajectory(steps) {
-    const stTraj = new Array(steps + 1)
+	/**
+	 * Creates a static trajectory.
+	 *
+	 * @param {Number} steps - Number of points to use.
+	 * @returns {BABYLON.Vector3[]} The 3D-points contained in the static trajectory.
+	 */
+	buildStaticTrajectory(steps) {
+		const stTraj = new Array(steps + 1)
 
-    for (const i of stTraj.keys()) {
-      stTraj[i] = new BABYLON.Vector3(
-        this.positionWithNu((2 * i * Math.PI) / steps).x,
-        0,
-        this.positionWithNu((2 * i * Math.PI) / steps).y
-      )
-    }
-    return stTraj
-  }
+		for (const i of stTraj.keys()) {
+			stTraj[i] = new BABYLON.Vector3(
+				this.positionWithNu((2 * i * Math.PI) / steps).x,
+				0,
+				this.positionWithNu((2 * i * Math.PI) / steps).y
+			)
+		}
+		return stTraj
+	}
 
-  /**
-   * Creates lines to approach the real trajectory of the object.
-   * @param {BABYLON.Animatable[]} animatable - The animation of which we want to see the trajectory.
-   * @param {Number} framerate - The framerate of the animation.
-   * @param {BABYLON.Scene} scene - The current scene.
-   * @param {SpatialObject} spObj - The spatial object of reference for the trajectory.
-   */
-  showStaticTrajectory(animatable, framerate, scene, spObj) {
-    const SHOW_STAT_TRAJ_LENGTH = 1000
-    const evalTraj = this.buildStaticTrajectory(SHOW_STAT_TRAJ_LENGTH)
-    let line = new BABYLON.CreateLines(`${spObj.name}Trajectory`, {
-      points: evalTraj,
-      scene: scene,
-      updatable: true
-    })
+	/**
+	 * Creates lines to approach the real trajectory of the object.
+	 * @param {BABYLON.Animatable[]} animatable - The animation of which we want to see the trajectory.
+	 * @param {Number} framerate - The framerate of the animation.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 * @param {SpatialObject} spObj - The spatial object of reference for the trajectory.
+	 */
+	showStaticTrajectory(animatable, framerate, scene, spObj) {
+		const SHOW_STAT_TRAJ_LENGTH = 1000
+		const evalTraj = this.buildStaticTrajectory(SHOW_STAT_TRAJ_LENGTH)
+		const line = new BABYLON.CreateLines(`${spObj.name}Trajectory`, {
+			points: evalTraj,
+			scene: scene,
+			updatable: true,
+		})
 
-    /* To represent the static trajectory, a custom material with specific
+		/* To represent the static trajectory, a custom material with specific
     properties is needed in place of the default ShaderMAterial that does
     not handle well occlusion i.e. objects rendering over the
     trajectories at all times, even if they are behind in the scene. */
-    const lineColor = new BABYLON.Color3.Red()
-    line.material = new BABYLON.StandardMaterial(
-      `${spObj.name}TrajectoryMat`,
-      scene
-    )
-    line.material.diffuseColor = lineColor
-    line.material.emissiveColor = lineColor
-    line.material.useLogarithmicDepth = true
+		const lineColor = new BABYLON.Color3.Red()
+		line.material = new BABYLON.StandardMaterial(
+			`${spObj.name}TrajectoryMat`,
+			scene
+		)
+		line.material.diffuseColor = lineColor
+		line.material.emissiveColor = lineColor
+		line.material.useLogarithmicDepth = true
 
-    /* Allows the static trajectory to tilt alongside the real trajectory of the
+		/* Allows the static trajectory to tilt alongside the real trajectory of the
     planet (see setEclipticInclination in spatial_object). */
-    line.parent = spObj.revolutionAxisParent
+		line.parent = spObj.revolutionAxisParent
 
-    /* Updates the trajectory to make it more precise when looking at its
+		/* Updates the trajectory to make it more precise when looking at its
     specific object. See the detailled documentation for more explanations. */
-    scene.registerBeforeRender(() => {
-      let isPointedToPlanet = () =>
-        scene.activeCamera.target === spObj.spinAxisParent.position
-      let isInRealisticView = () => abs(spObj.mesh.scaling.x - 1) < 0.001
-      if (isPointedToPlanet() && isInRealisticView()) {
-        let currentFrame =
-          animatable[spObj.animatableIndex].getAnimations()[0].currentFrame
-        this.fixStaticTrajectory(
-          scene,
-          spObj,
-          currentFrame,
-          framerate,
-          evalTraj,
-          line
-        )
-      }
-    })
-  }
+		scene.registerBeforeRender(() => {
+			const isPointedToPlanet = () =>
+				scene.activeCamera.target === spObj.spinAxisParent.position
+			const isInRealisticView = () => abs(spObj.mesh.scaling.x - 1) < 0.001
+			if (isPointedToPlanet() && isInRealisticView()) {
+				const currentFrame =
+					animatable[spObj.animatableIndex].getAnimations()[0].currentFrame
+				this.fixStaticTrajectory(
+					scene,
+					spObj,
+					currentFrame,
+					framerate,
+					evalTraj,
+					line
+				)
+			}
+		})
+	}
 
-  /**
-   * Adds more precision to the static trajectory line by artificially moving
-   * some points alongside its spatial object.
-   * @param {BABYLON.Scene} scene - The current scene.
-   * @param {SpatialObject} spObj - The spatial object associated to the static trajectory.
-   * @param {Number} curFrame - The current frame of the animation of the spatial object.
-   * @param {Number} framerate - The framerate of the animation.
-   * @param {BABYLON.Vector3[]} stTraj - The points of the static trajectory.
-   * @param {BABYLON.LinesMesh} line - The line representing the static trajectory.
-   */
-  fixStaticTrajectory(scene, spObj, curFrame, framerate, stTraj, line) {
-    /* Calculates where the object is on its revolution (scaled from 0 to 1). */
-    const REVOLUTION_RATIO =
-      curFrame / (spObj.normalizedRevolutionPeriod * framerate)
+	/**
+	 * Adds more precision to the static trajectory line by artificially moving
+	 * some points alongside its spatial object.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 * @param {SpatialObject} spObj - The spatial object associated to the static trajectory.
+	 * @param {Number} curFrame - The current frame of the animation of the spatial object.
+	 * @param {Number} framerate - The framerate of the animation.
+	 * @param {BABYLON.Vector3[]} stTraj - The points of the static trajectory.
+	 * @param {BABYLON.LinesMesh} line - The line representing the static trajectory.
+	 */
+	fixStaticTrajectory(scene, spObj, curFrame, framerate, stTraj, line) {
+		/* Calculates where the object is on its revolution (scaled from 0 to 1). */
+		const REVOLUTION_RATIO =
+			curFrame / (spObj.normalizedRevolutionPeriod * framerate)
 
-    /* Matches the position with the nearest point of the static trajectory. */
-    const idx = Math.floor(REVOLUTION_RATIO * (stTraj.length - 1))
+		/* Matches the position with the nearest point of the static trajectory. */
+		const idx = Math.floor(REVOLUTION_RATIO * (stTraj.length - 1))
 
-    /* We only move half the points so we choose exclusively odd numbered indexes. */
-    const halfPointIndex = idx % 2 === 1 ? idx : idx + 1
+		/* We only move half the points so we choose exclusively odd numbered indexes. */
+		const halfPointIndex = idx % 2 === 1 ? idx : idx + 1
 
-    /* Copy the points to reset the trajectory once the object moves further. */
-    const stTrajCpy = stTraj.slice()
+		/* Copy the points to reset the trajectory once the object moves further. */
+		const stTrajCpy = stTraj.slice()
 
-    /* Places the wanted point exactly on the planet, and updates the line. */
-    stTrajCpy[halfPointIndex] = spObj.spinAxisParent.position
-    line = BABYLON.CreateLines(null, {
-      points: stTrajCpy,
-      updatable: true,
-      instance: line,
-      scene: scene
-    })
-  }
+		/* Places the wanted point exactly on the planet, and updates the line. */
+		stTrajCpy[halfPointIndex] = spObj.spinAxisParent.position
+		line = BABYLON.CreateLines(null, {
+			points: stTrajCpy,
+			updatable: true,
+			instance: line,
+			scene: scene,
+		})
+	}
 }
 
 export { EllipticalTrajectory }

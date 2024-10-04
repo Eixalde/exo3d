@@ -1,4 +1,4 @@
-import { convertTemperatureToRGB } from '../exo3d.mjs'
+import { convertTemperatureToRGB } from "../exo3d.mjs"
 
 /**
  * @module SpatialObject
@@ -64,167 +64,167 @@ import { convertTemperatureToRGB } from '../exo3d.mjs'
  * @property {Number} animatableIndex - The position of the animations in the animatable array.
  */
 class SpatialObject {
-  /**
-   * @param {SpatialObjectParams} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
-   * @param {BABYLON.Scene} scene - The current scene.
-   */
-  constructor(spatialObjectParams, scene) {
-    /* Creates an attribute of the same name of every parameter passed. There
+	/**
+	 * @param {SpatialObjectParams} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 */
+	constructor(spatialObjectParams, scene) {
+		/* Creates an attribute of the same name of every parameter passed. There
     may subsist redundant attributes, such as the original spin or revolution
     period, but this doesn't do much, and this structure will stay efficient
     even if parameters are added or changed. */
-    for (const [attribute, value] of Object.entries(spatialObjectParams)) {
-      switch (attribute) {
-        case 'texture':
-          if (value) {
-            this.texture = new BABYLON.Texture(value, scene)
-          }
-          break
-        default:
-          this[attribute] = value
-          break
-      }
-    }
-    this.objectMat = new BABYLON.StandardMaterial(this.name + 'Mat', scene)
-    this.objectMat.useLogarithmicDepth = true
-    this.nu = 0
-  }
+		for (const [attribute, value] of Object.entries(spatialObjectParams)) {
+			switch (attribute) {
+				case "texture":
+					if (value) {
+						this.texture = new BABYLON.Texture(value, scene)
+					}
+					break
+				default:
+					this[attribute] = value
+					break
+			}
+		}
+		this.objectMat = new BABYLON.StandardMaterial(`${this.name}Mat`, scene)
+		this.objectMat.useLogarithmicDepth = true
+		this.nu = 0
+	}
 
-  /**
-   * Creates the 'rotate on itself' animation, and the movement animation if the
-   * object does move.
-   * @param {Number} steps - The number of steps required for the animation.
-   * @param {BABYLON.Scene} scene - The current scene.
-   * @param {Boolean} showStatTraj - Defines if the static trajectory appears or not.
-   */
-  buildAnimation(steps, scene, showStatTraj, animatable) {
-    // The framerate wanted (30 or 60 if possible).
-    const FRAMERATE = 60
-    //Checks if the object is supposed to move, eventually creates its movement animation
-    if (this.trajectory.canMove) {
-      const moveAnimation = new BABYLON.Animation(
-        this.name + 'AnimMove',
-        'position',
-        FRAMERATE,
-        BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
-        BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
-      )
-      const staticTrajectory = this.trajectory.staticTrajectory
-      const animMoveKeys = new Array(staticTrajectory.length)
+	/**
+	 * Creates the 'rotate on itself' animation, and the movement animation if the
+	 * object does move.
+	 * @param {Number} steps - The number of steps required for the animation.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 * @param {Boolean} showStatTraj - Defines if the static trajectory appears or not.
+	 */
+	buildAnimation(steps, scene, showStatTraj, animatable) {
+		// The framerate wanted (30 or 60 if possible).
+		const FRAMERATE = 60
+		//Checks if the object is supposed to move, eventually creates its movement animation
+		if (this.trajectory.canMove) {
+			const moveAnimation = new BABYLON.Animation(
+				`${this.name}AnimMove`,
+				"position",
+				FRAMERATE,
+				BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+				BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
+			)
+			const staticTrajectory = this.trajectory.staticTrajectory
+			const animMoveKeys = new Array(staticTrajectory.length)
 
-      const deltaT = (this.normalizedRevolutionPeriod / steps) * FRAMERATE
-      const outTangents = new Array(animMoveKeys.length)
-      for (const i of animMoveKeys.keys()) {
-        const current = i
-        const previous = i ? i - 1 : animMoveKeys.length - 2
-        const next = i !== animMoveKeys.length - 1 ? i + 1 : 1
-        outTangents[current] = new BABYLON.Vector3(
-          (staticTrajectory[next].x - staticTrajectory[previous].x) /
-            (2 * deltaT),
-          0,
-          (staticTrajectory[next].z - staticTrajectory[previous].z) /
-            (2 * deltaT)
-        )
-      }
-      /* The first vector is always equal to the last vector of the trajectory,
+			const deltaT = (this.normalizedRevolutionPeriod / steps) * FRAMERATE
+			const outTangents = new Array(animMoveKeys.length)
+			for (const i of animMoveKeys.keys()) {
+				const current = i
+				const previous = i ? i - 1 : animMoveKeys.length - 2
+				const next = i !== animMoveKeys.length - 1 ? i + 1 : 1
+				outTangents[current] = new BABYLON.Vector3(
+					(staticTrajectory[next].x - staticTrajectory[previous].x) /
+						(2 * deltaT),
+					0,
+					(staticTrajectory[next].z - staticTrajectory[previous].z) /
+						(2 * deltaT)
+				)
+			}
+			/* The first vector is always equal to the last vector of the trajectory,
       so we also have to manually set their tangent equal. */
-      outTangents[0] = outTangents.at(-1)
+			outTangents[0] = outTangents.at(-1)
 
-      for (const current of animMoveKeys.keys()) {
-        animMoveKeys[current] = {
-          frame:
-            current * (this.normalizedRevolutionPeriod / steps) * FRAMERATE,
-          outTangent: outTangents[current],
-          inTangent: outTangents[current],
-          value: staticTrajectory[current]
-        }
-      }
+			for (const current of animMoveKeys.keys()) {
+				animMoveKeys[current] = {
+					frame:
+						current * (this.normalizedRevolutionPeriod / steps) * FRAMERATE,
+					outTangent: outTangents[current],
+					inTangent: outTangents[current],
+					value: staticTrajectory[current],
+				}
+			}
 
-      moveAnimation.setKeys(animMoveKeys)
+			moveAnimation.setKeys(animMoveKeys)
 
-      if (showStatTraj) {
-        this.trajectory.showStaticTrajectory(animatable, FRAMERATE, scene, this)
-      }
+			if (showStatTraj) {
+				this.trajectory.showStaticTrajectory(animatable, FRAMERATE, scene, this)
+			}
 
-      /* If there is any need of tilting the object on it axis, we use an
+			/* If there is any need of tilting the object on it axis, we use an
       intermediate attribute called spinAxisParent. It will use the
       movement animation in place of the spatialObject itself (because the
       spinAxisParent is defined as a parent of spObj). */
-      if (this.spinAxisParent) {
-        this.spinAxisParent.animations.push(moveAnimation)
-        /* We stock the index of the corresponding animation in that object
+			if (this.spinAxisParent) {
+				this.spinAxisParent.animations.push(moveAnimation)
+				/* We stock the index of the corresponding animation in that object
         because we will need to find it later for the fixStaticTrajectory (see
         trajectory). */
-        this.animatableIndex =
-          animatable.push(
-            scene.beginAnimation(
-              this.spinAxisParent,
-              0,
-              this.normalizedRevolutionPeriod * FRAMERATE,
-              true
-            )
-          ) - 1
-      } else {
-        this.mesh.animations.push(moveAnimation)
-        this.animatableIndex =
-          animatable.push(
-            scene.beginAnimation(
-              this.mesh,
-              0,
-              this.normalizedRevolutionPeriod * FRAMERATE,
-              true
-            )
-          ) - 1
-      }
-    }
+				this.animatableIndex =
+					animatable.push(
+						scene.beginAnimation(
+							this.spinAxisParent,
+							0,
+							this.normalizedRevolutionPeriod * FRAMERATE,
+							true
+						)
+					) - 1
+			} else {
+				this.mesh.animations.push(moveAnimation)
+				this.animatableIndex =
+					animatable.push(
+						scene.beginAnimation(
+							this.mesh,
+							0,
+							this.normalizedRevolutionPeriod * FRAMERATE,
+							true
+						)
+					) - 1
+			}
+		}
 
-    /* The motion direction factor allows to know if the planet has a prograde
+		/* The motion direction factor allows to know if the planet has a prograde
     or a retrograde movement. If the spin value is negative, then the
     rotation is retrograde and the factor is equal to 1. Otherwise if it is
     prograde, the factor is equal to -1. */
-    const motionDirectionFactor =
-      -1 * (Math.abs(this.normalizedSpin) / this.normalizedSpin)
-    const rotateAnimation = new BABYLON.Animation(
-      this.name + 'AnimRotate',
-      'rotation.y',
-      FRAMERATE,
-      BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-      BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
-    )
+		const motionDirectionFactor =
+			-1 * (Math.abs(this.normalizedSpin) / this.normalizedSpin)
+		const rotateAnimation = new BABYLON.Animation(
+			`${this.name}AnimRotate`,
+			"rotation.y",
+			FRAMERATE,
+			BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+			BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
+		)
 
-    const animRotateKeys = new Array(steps + 1)
+		const animRotateKeys = new Array(steps + 1)
 
-    for (const i of animRotateKeys.keys()) {
-      animRotateKeys[i] = {
-        frame: i * (Math.abs(this.normalizedSpin) / steps) * FRAMERATE,
-        value: (i * motionDirectionFactor * 2 * Math.PI) / steps
-      }
-    }
+		for (const i of animRotateKeys.keys()) {
+			animRotateKeys[i] = {
+				frame: i * (Math.abs(this.normalizedSpin) / steps) * FRAMERATE,
+				value: (i * motionDirectionFactor * 2 * Math.PI) / steps,
+			}
+		}
 
-    rotateAnimation.setKeys(animRotateKeys)
-    this.mesh.animations.push(rotateAnimation)
+		rotateAnimation.setKeys(animRotateKeys)
+		this.mesh.animations.push(rotateAnimation)
 
-    /* Add the animation of the spatial object to the animatable variable. This
+		/* Add the animation of the spatial object to the animatable variable. This
      lets the animation manager affect every animation by accessing animatable. */
-    animatable.push(
-      scene.beginAnimation(
-        this.mesh,
-        0,
-        this.normalizedRevolutionPeriod * FRAMERATE,
-        true
-      )
-    )
-  }
+		animatable.push(
+			scene.beginAnimation(
+				this.mesh,
+				0,
+				this.normalizedRevolutionPeriod * FRAMERATE,
+				true
+			)
+		)
+	}
 
-  /**
-   * Places the object in such a way that it has the correct inclination to the
-   * ecliptic plane. In particular, this creates a 'revolutionAxisParent' attribute that
-   * will take the role of tilting the whole plane containing the center of the
-   * system and the spatial object.
-   */
-  setEclipticInclination() {
-    if (this.spinAxisParent) {
-      /* The revolutionAxisParent is an invisible object related to its
+	/**
+	 * Places the object in such a way that it has the correct inclination to the
+	 * ecliptic plane. In particular, this creates a 'revolutionAxisParent' attribute that
+	 * will take the role of tilting the whole plane containing the center of the
+	 * system and the spatial object.
+	 */
+	setEclipticInclination() {
+		if (this.spinAxisParent) {
+			/* The revolutionAxisParent is an invisible object related to its
       SpatialObject only. By defining that object as the parent of the SpObj -
       to be exact, it is its grandparent, because we have to use that
       spinAxisParent as an other intermediate - any transformation
@@ -235,27 +235,27 @@ class SpatialObject {
       we can calculate the trajectories so easily : we consider they are
       strictly in the (X,0,Z) plane because that doesn't matter as long as the
       revAxis tilts everything. */
-      this.revolutionAxisParent = BABYLON.MeshBuilder.CreateSphere(
-        `${this.name}revolutionAxisParent`,
-        {
-          diameter: 0.01,
-          updatable: true
-        }
-      )
-      this.revolutionAxisParent.isVisible = false
-      this.spinAxisParent.parent = this.revolutionAxisParent
-      this.revolutionAxisParent.rotation.x = this.eclipticInclinationAngle
-    }
-  }
+			this.revolutionAxisParent = BABYLON.MeshBuilder.CreateSphere(
+				`${this.name}revolutionAxisParent`,
+				{
+					diameter: 0.01,
+					updatable: true,
+				}
+			)
+			this.revolutionAxisParent.isVisible = false
+			this.spinAxisParent.parent = this.revolutionAxisParent
+			this.revolutionAxisParent.rotation.x = this.eclipticInclinationAngle
+		}
+	}
 
-  /**
-   * Computes and returns the current diameter of the object, including any
-   * scaling.
-   * @returns {Number}
-   */
-  getVisualDiameter() {
-    return this.diameter * this.mesh.scaling.x
-  }
+	/**
+	 * Computes and returns the current diameter of the object, including any
+	 * scaling.
+	 * @returns {Number}
+	 */
+	getVisualDiameter() {
+		return this.diameter * this.mesh.scaling.x
+	}
 }
 
 /**
@@ -263,34 +263,34 @@ class SpatialObject {
  * @extends SpatialObject
  */
 class Star extends SpatialObject {
-  /**
-   * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
-   * @param {BABYLON.Scene} scene - The current scene.
-   */
-  constructor(spatialObjectParams, scene) {
-    super(spatialObjectParams, scene)
-    this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
-      diameter: this.diameter,
-      updatable: true
-    })
-    this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
-    this.mesh.animations = []
-    this.objectMat.diffuseTexture = this.texture // Applies both texture and color, only for the star
-    const tempToRGB = convertTemperatureToRGB(this.temperature)
-    this.color = new BABYLON.Color3(
-      tempToRGB.red,
-      tempToRGB.green,
-      tempToRGB.blue
-    )
-    this.objectMat.emissiveColor = this.color
-    this.mesh.material = this.objectMat
-    this.buildAnimation(
-      100,
-      scene,
-      spatialObjectParams.showStatTraj,
-      spatialObjectParams.animatable
-    )
-  }
+	/**
+	 * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 */
+	constructor(spatialObjectParams, scene) {
+		super(spatialObjectParams, scene)
+		this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
+			diameter: this.diameter,
+			updatable: true,
+		})
+		this.mesh.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
+		this.mesh.animations = []
+		this.objectMat.diffuseTexture = this.texture // Applies both texture and color, only for the star
+		const tempToRGB = convertTemperatureToRGB(this.temperature)
+		this.color = new BABYLON.Color3(
+			tempToRGB.red,
+			tempToRGB.green,
+			tempToRGB.blue
+		)
+		this.objectMat.emissiveColor = this.color
+		this.mesh.material = this.objectMat
+		this.buildAnimation(
+			100,
+			scene,
+			spatialObjectParams.showStatTraj,
+			spatialObjectParams.animatable
+		)
+	}
 }
 
 /**
@@ -299,19 +299,19 @@ class Star extends SpatialObject {
  * @extends SpatialObject
  */
 class Planet extends SpatialObject {
-  /**
-   * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
-   * @param {BABYLON.Scene} scene - The current scene.
-   */
-  constructor(spatialObjectParams, scene) {
-    super(spatialObjectParams, scene)
-    this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
-      diameter: this.diameter,
-      updatable: true
-    })
-    this.mesh.animations = []
+	/**
+	 * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 */
+	constructor(spatialObjectParams, scene) {
+		super(spatialObjectParams, scene)
+		this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
+			diameter: this.diameter,
+			updatable: true,
+		})
+		this.mesh.animations = []
 
-    /* To make the planet rotate correctly on its Y-axis, we need to use an
+		/* To make the planet rotate correctly on its Y-axis, we need to use an
     intermediate object to tilt the planet in the first place. See the detailled
     documentation for more explanation on that. In any case, the
     spinAxisParent mesh replaces the planet for the movement animation,
@@ -319,35 +319,35 @@ class Planet extends SpatialObject {
     permanently to keep the correct self-inclination. Making the planet move on
     top of its parent already moving would cause wrong and higly disturbed
     trajectories anyway.*/
-    this.spinAxisParent = new BABYLON.CreateSphere(
-      `fakeSelfInclination${this.name}`,
-      { diameter: 0.01, updatable: true }
-    )
-    this.spinAxisParent.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
-    this.spinAxisParent.animations = []
-    this.spinAxisParent.rotation.x = this.selfInclinationAngle
-    this.spinAxisParent.isVisible = false
-    this.mesh.parent = this.spinAxisParent
+		this.spinAxisParent = new BABYLON.CreateSphere(
+			`fakeSelfInclination${this.name}`,
+			{ diameter: 0.01, updatable: true }
+		)
+		this.spinAxisParent.position = new BABYLON.Vector3(this.trajectory.a, 0, 0)
+		this.spinAxisParent.animations = []
+		this.spinAxisParent.rotation.x = this.selfInclinationAngle
+		this.spinAxisParent.isVisible = false
+		this.mesh.parent = this.spinAxisParent
 
-    this.setEclipticInclination()
+		this.setEclipticInclination()
 
-    this.satellites = []
-    if (this.texture) {
-      this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the planet, texture by default (if existing)
-    } else {
-      this.objectMat.diffuseColor = this.color
-    }
-    /* Setting emissive color of planets to black to avoid them glowing or
+		this.satellites = []
+		if (this.texture) {
+			this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the planet, texture by default (if existing)
+		} else {
+			this.objectMat.diffuseColor = this.color
+		}
+		/* Setting emissive color of planets to black to avoid them glowing or
     letting light pass through them (because of occlusion). */
-    this.objectMat.emissiveColor = BABYLON.Color3.Black()
-    this.mesh.material = this.objectMat
-    this.buildAnimation(
-      100,
-      scene,
-      spatialObjectParams.showStatTraj,
-      spatialObjectParams.animatable
-    )
-  }
+		this.objectMat.emissiveColor = BABYLON.Color3.Black()
+		this.mesh.material = this.objectMat
+		this.buildAnimation(
+			100,
+			scene,
+			spatialObjectParams.showStatTraj,
+			spatialObjectParams.animatable
+		)
+	}
 }
 /**
  * The class for the satellites. It is essentially the same object as a planet,
@@ -356,34 +356,34 @@ class Planet extends SpatialObject {
  * @extends SpatialObject
  */
 class Satellite extends SpatialObject {
-  /**
-   * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
-   * @param {BABYLON.Scene} scene - The current scene.
-   */
-  constructor(spatialObjectParams, scene) {
-    super(spatialObjectParams, scene)
-    this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
-      diameter: this.diameter,
-      updatable: true
-    })
-    this.mesh.animations = []
+	/**
+	 * @param {SpatialObjectParams} spatialObjectParams - The multiple paramaters needed for any spatial object.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 */
+	constructor(spatialObjectParams, scene) {
+		super(spatialObjectParams, scene)
+		this.mesh = BABYLON.MeshBuilder.CreateSphere(this.name, {
+			diameter: this.diameter,
+			updatable: true,
+		})
+		this.mesh.animations = []
 
-    if (this.texture) {
-      this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the satellite, texture by default (if existing)
-    } else {
-      this.objectMat.diffuseColor = this.color
-    }
-    /* Setting emissive color of satellites to black to avoid them glowing or
+		if (this.texture) {
+			this.objectMat.diffuseTexture = this.texture // Applies either texture or color to the satellite, texture by default (if existing)
+		} else {
+			this.objectMat.diffuseColor = this.color
+		}
+		/* Setting emissive color of satellites to black to avoid them glowing or
     letting light pass through them (because of occlusion). */
-    this.objectMat.emissiveColor = BABYLON.Color3.Black()
-    this.mesh.material = this.objectMat
-    this.buildAnimation(
-      100,
-      scene,
-      spatialObjectParams.showStatTraj,
-      spatialObjectParams.animatable
-    )
-  }
+		this.objectMat.emissiveColor = BABYLON.Color3.Black()
+		this.mesh.material = this.objectMat
+		this.buildAnimation(
+			100,
+			scene,
+			spatialObjectParams.showStatTraj,
+			spatialObjectParams.animatable
+		)
+	}
 }
 
 /**
@@ -391,22 +391,22 @@ class Satellite extends SpatialObject {
  * @extends SpatialObject
  */
 class Ring extends SpatialObject {
-  /**
-   * @param {SpatialObjectParams} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
-   * @param {BABYLON.Scene} scene - The current scene.
-   */
-  constructor(spatialObjectParams, scene) {
-    super(spatialObjectParams, scene)
-    this.mesh = BABYLON.CreateDisc(`${this.parentName}Rings`, {
-      radius: spatialObjectParams.diameter / 2,
-      sideOrientation: BABYLON.Mesh.DOUBLESIDE
-    })
-    this.texture.hasAlpha = true
-    this.objectMat.diffuseTexture = this.texture
-    this.objectMat.useAlphaFromDiffuseTexture = true // Using the alpha included in the texture (for spaces between rings)
-    this.mesh.material = this.objectMat
-    this.mesh.rotation.x = spatialObjectParams.eclipticInclinationAngle
-  }
+	/**
+	 * @param {SpatialObjectParams} spatialObjectParams - Parameters needed for the creation of a SpatialObject.
+	 * @param {BABYLON.Scene} scene - The current scene.
+	 */
+	constructor(spatialObjectParams, scene) {
+		super(spatialObjectParams, scene)
+		this.mesh = BABYLON.CreateDisc(`${this.parentName}Rings`, {
+			radius: spatialObjectParams.diameter / 2,
+			sideOrientation: BABYLON.Mesh.DOUBLESIDE,
+		})
+		this.texture.hasAlpha = true
+		this.objectMat.diffuseTexture = this.texture
+		this.objectMat.useAlphaFromDiffuseTexture = true // Using the alpha included in the texture (for spaces between rings)
+		this.mesh.material = this.objectMat
+		this.mesh.rotation.x = spatialObjectParams.eclipticInclinationAngle
+	}
 }
 
 export { Star, Planet, Ring, Satellite }
