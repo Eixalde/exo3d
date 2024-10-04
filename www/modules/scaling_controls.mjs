@@ -167,7 +167,7 @@ class ScalingControls {
 						button.setAttribute("aria-disabled", "true")
 					}
 					setTimeout(() => {
-						for (const button of buttonsLock.forEach) {
+						for (const button of buttonsLock) {
 							button.disabled = false
 							button.setAttribute("aria-disabled", "false")
 						}
