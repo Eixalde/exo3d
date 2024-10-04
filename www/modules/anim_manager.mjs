@@ -105,6 +105,12 @@ class AnimManager {
 			updateSimulationSpeedInfo(speedSlider)
 		}
 	}
+
+	randomizeAnimationStartPosition() {
+		for (const anim of this.animatable) {
+			anim.goToFrame(Math.random() * anim.toFrame)
+		}
+	}
 }
 
 export { AnimManager }

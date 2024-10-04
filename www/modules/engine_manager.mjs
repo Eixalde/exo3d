@@ -110,6 +110,8 @@ class EngineManager {
     of Planet 'planets' */
 		this.gravitationalSystem = systemBuilder.build()
 
+		this.animManager.randomizeAnimationStartPosition()
+
 		/* HTML modifier methods to implement planets' based controls. */
 		addPlanetRadioButtons(this.gravitationalSystem.planets)
 		modifyPlanetSpeedSlider(this.gravitationalSystem.planets)
