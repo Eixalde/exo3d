@@ -166,6 +166,14 @@ class EngineManager {
 		this.glowLayer.intensity = 0.5
 		this.glowLayer.blurKernelSize = 48
 
+		this.ambiantLight = new BABYLON.HemisphericLight(
+			"hemiLight",
+			new BABYLON.Vector3(0, 1, 0),
+			scene
+		)
+		this.ambiantLight.intensity = 0.15
+		this.ambiantLight.specular = new BABYLON.Color3.Black()
+
 		/* For occlusion reasons - to ensure that glowing objects are correctly
     rendered relative to the not-glowing objects - we include every planet in
     the glow effect as well as the star itself. */
