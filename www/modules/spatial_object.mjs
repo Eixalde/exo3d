@@ -406,6 +406,7 @@ class Ring extends SpatialObject {
 		this.objectMat.useAlphaFromDiffuseTexture = true // Using the alpha included in the texture (for spaces between rings)
 		this.mesh.material = this.objectMat
 		this.mesh.rotation.x = spatialObjectParams.eclipticInclinationAngle
+		this.mesh.visibility = 0.8 // Add extra transparency to make the rings look like better
 	}
 }
 
